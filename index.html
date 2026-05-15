@@ -25,31 +25,57 @@ var BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logist
 var KC={ki:G,rpa:"#00aaff",robotik:"#ff7700",daten:"#aa44ff"};
 var KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"};
 
-// Feste Bereiche basierend auf Branche — kein JSON-Parsing nötig!
-var BEREICHE_MAP = {
-  "Gesundheit / Pflege": [
-    {id:"b1",label:"Patientenverwaltung",icon:"🏥",kiKat:"ki",hint:"KI kann Termine, Akten und Anfragen automatisch verwalten.",fragen:[{f:"Wie werden Patiententermine vereinbart?",o:["Nur telefonisch und handschriftlich","Per E-Mail oder einfache Software","Online-System, aber manuelle Nachbearbeitung","Vollautomatische Online-Buchung mit Bestätigung"]},{f:"Wie wird die Patientenakte geführt?",o:["Ausschließlich auf Papier","Teilweise digital, viel manuelle Eingabe","Digital, aber nicht vernetzt","Volldigital und automatisch synchronisiert"]}]},
-    {id:"b2",label:"Abrechnung & KV",icon:"💊",kiKat:"rpa",hint:"RPA kann Kassenabrechnung und Dokumentation automatisieren.",fragen:[{f:"Wie läuft die Kassenabrechnung ab?",o:["Manuell mit Papierformularen","Software, aber viel manuelle Eingabe","Halbautomatisch, manuelle Prüfung","Vollautomatisch mit digitaler Übermittlung"]},{f:"Wie wird die Abrechnung mit Privatpatienten durchgeführt?",o:["Handschriftliche Rechnung","Word/Excel manuell","Software mit Vorlagen","Automatisch erstellt und versendet"]}]},
-    {id:"b3",label:"Dienstplan & HR",icon:"👥",kiKat:"rpa",hint:"Automatische Schichtplanung spart bis zu 5h pro Woche.",fragen:[{f:"Wie wird der Dienstplan erstellt?",o:["Handschriftlich","Excel, manuell","Software, manuell eingeplant","Automatisch nach Verfügbarkeit"]},{f:"Wie werden Urlaubsanträge verwaltet?",o:["Zettel oder mündlich","Per E-Mail","HR-Software, manuell genehmigt","Automatisierter digitaler Prozess"]}]},
-    {id:"b4",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Chatbots können Standardanfragen automatisch beantworten.",fragen:[{f:"Wie werden Patienten an Termine erinnert?",o:["Gar nicht oder per Anruf","SMS manuell verschickt","Automatische SMS/E-Mail","App mit Push-Benachrichtigungen"]},{f:"Wie kommuniziert das Team intern?",o:["Mündlich bei Übergabe","Telefon oder Zettel","Digitales System, manuell","Automatische Benachrichtigungen bei Änderungen"]}]},
-    {id:"b5",label:"Dokumentation",icon:"📋",kiKat:"ki",hint:"Sprach-KI kann Dokumentation automatisch erstellen.",fragen:[{f:"Wie werden Behandlungen dokumentiert?",o:["Handschriftlich","Word/Excel","Praxissoftware, manuell","Sprach- oder KI-gestützt automatisch"]},{f:"Wie werden Hygieneprotokolle geführt?",o:["Papier-Checklisten","Excel-Listen","Digitale Erfassung, manuell","Automatische digitale Protokollierung"]}]},
-    {id:"b6",label:"Materialverwaltung",icon:"📦",kiKat:"daten",hint:"Automatische Bestandsüberwachung verhindert Engpässe.",fragen:[{f:"Wie wird der Medikamenten- und Materialbestand verwaltet?",o:["Sichtprüfung und manuelle Bestellung","Listen, manuell geführt","Software, manuelle Kontrolle","Automatische Überwachung und Nachbestellung"]},{f:"Wie werden Geräte gewartet?",o:["Nur bei Ausfall","Feste Intervalle auf Papier","Digitale Wartungspläne","Automatische Fernüberwachung"]}]}
-  ],
-  "default": [
-    {id:"b1",label:"Geschäftsprozesse",icon:"⚙️",kiKat:"rpa",hint:"RPA kann wiederkehrende Prozesse vollständig automatisieren.",fragen:[{f:"Wie werden Aufträge bearbeitet?",o:["Alles manuell auf Papier","Einzelne Tools, nicht verbunden","Meistens automatisch, einzelne manuelle Schritte","Vollständig automatisierter digitaler Ablauf"]},{f:"Wie werden Genehmigungen abgewickelt?",o:["Mündlich oder per Zettel","Per E-Mail ohne System","Software, manuell weitergeleitet","Automatisch — System informiert und leitet weiter"]}]},
-    {id:"b2",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Automatische Dashboards sparen täglich wertvolle Arbeitszeit.",fragen:[{f:"Wie werden Kundendaten erfasst?",o:["Auf Papier oder Excel","Verschiedene Systeme, nicht verbunden","Zentrales System, manuelle Eingabe","Automatisch erfasst und synchronisiert"]},{f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen, manuell befüllt","Software erstellt sie, manuell gestartet","Automatisch in Echtzeit"]}]},
-    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-gestützte Tools können Kundenkommunikation automatisieren.",fragen:[{f:"Wie kommuniziert Ihr Unternehmen mit Kunden?",o:["Nur Telefon und persönlich","E-Mail, alles manuell","E-Mail mit Vorlagen, teilweise automatisiert","Multi-Kanal mit KI-Unterstützung"]},{f:"Gibt es automatisierte Kundenbenachrichtigungen?",o:["Nein, alles manuell","Gelegentlich, nicht systematisch","Ja, für bestimmte Ereignisse","Vollautomatisch mit personalisierten Nachrichten"]}]},
-    {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitales Onboarding und Zeiterfassung spart bis zu 10h/Woche.",fragen:[{f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr, manuelle Auswertung","Software mit automatischer Auswertung","Vollautomatisch mit Lohnabrechnung verknüpft"]},{f:"Wie läuft das Onboarding ab?",o:["Informell, jemand zeigt alles","Checkliste auf Papier","Digitale Checkliste, manuell begleitet","Automatisiertes System mit Selbstlernmodulen"]}]},
-    {id:"b5",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung können Betriebskosten stark senken.",fragen:[{f:"Wie wird die Lagerhaltung organisiert?",o:["Manuell mit Listen","Excel oder einfache Software","Lagersoftware, manuelle Buchungen","Automatisch mit Scanner oder RFID"]},{f:"Wie wird der Lieferantenprozess abgewickelt?",o:["Telefon oder E-Mail, alles manuell","Formulare, manuelle Weiterverarbeitung","Halbautomatisch über ERP","Vollautomatisch mit EDI"]}]},
-    {id:"b6",label:"Finanzen & Buchhaltung",icon:"💰",kiKat:"rpa",hint:"Automatische Rechnungsverarbeitung reduziert Fehler um 90%.",fragen:[{f:"Wie werden Rechnungen erstellt?",o:["Manuell in Word oder Excel","Per E-Mail, manuell erstellt","Buchhaltungssoftware, teilweise automatisch","Vollautomatisch ausgelöst und verschickt"]},{f:"Wie wird die Buchhaltung durchgeführt?",o:["Alles manuell eingetippt","Belege gescannt, manuell verbucht","OCR-Erkennung, manuelle Kontrolle","Vollautomatisch mit KI-Verbuchung"]}]}
-  ]
-};
+function safe(s){return(s||"").replace(/[^\w\s.,\-äöüÄÖÜß]/g," ").replace(/\s+/g," ").trim();}
 
-function getBereiche(branche){
-  return BEREICHE_MAP[branche] || BEREICHE_MAP["default"];
+// Parst den KI-Text in Bereiche ohne JSON
+function parseBereicheText(text, branche){
+  var bereiche=[];
+  var blocks=text.split(/\n(?=BEREICH)/);
+  for(var i=0;i<blocks.length&&bereiche.length<6;i++){
+    var block=blocks[i].trim();
+    if(!block)continue;
+    var lines=block.split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
+    if(lines.length<4)continue;
+    var label=lines[0].replace(/^BEREICH\s*\d*[:.\s]*/i,"").trim();
+    var icon=lines[1]||"⚙️";
+    var hint=lines[2]||"";
+    var kat="rpa";
+    var ll=label.toLowerCase()+hint.toLowerCase();
+    if(ll.indexOf("ki ")>=0||ll.indexOf("chatbot")>=0||ll.indexOf("agent")>=0||ll.indexOf("sprach")>=0)kat="ki";
+    else if(ll.indexOf("robot")>=0||ll.indexOf("maschine")>=0||ll.indexOf("cobots")>=0)kat="robotik";
+    else if(ll.indexOf("daten")>=0||ll.indexOf("analytic")>=0||ll.indexOf("dashboard")>=0||ll.indexOf("bericht")>=0)kat="daten";
+    var fragen=[];
+    var fragenBlock=lines.slice(3).join("\n");
+    var fmatches=fragenBlock.split(/FRAGE\s*\d*[:.\s]*/i).filter(function(f){return f.trim();});
+    for(var j=0;j<fmatches.length&&fragen.length<2;j++){
+      var flines=fmatches[j].split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
+      if(flines.length<5)continue;
+      var frage=flines[0];
+      var optionen=flines.slice(1,5);
+      if(optionen.length===4)fragen.push({f:frage,o:optionen});
+    }
+    if(fragen.length>0){
+      bereiche.push({id:"b"+(i+1),label:label,icon:icon,hint:hint,kiKat:kat,fragen:fragen});
+    }
+  }
+  // Fallback falls Parsing fehlschlägt
+  if(bereiche.length<3){
+    return getDefaultBereiche(branche);
+  }
+  return bereiche;
 }
 
-function safe(s){return (s||"").replace(/[<>&]/g,"").trim();}
+function getDefaultBereiche(branche){
+  var isPflege=branche==="Gesundheit / Pflege";
+  return [
+    {id:"b1",label:isPflege?"Patientenverwaltung":"Geschäftsprozesse",icon:isPflege?"🏥":"⚙️",kiKat:"rpa",hint:"Automatisierung spart täglich wertvolle Zeit.",fragen:[{f:isPflege?"Wie werden Patiententermine verwaltet?":"Wie werden Aufträge bearbeitet?",o:["Vollständig manuell","Teilweise digital","Größtenteils automatisiert","Vollständig automatisiert"]},{f:"Wie werden Dokumente und Formulare verarbeitet?",o:["Nur auf Papier","Eingescannt, manuell","Digital, teilweise automatisch","Vollautomatisch"]}]},
+    {id:"b2",label:isPflege?"Abrechnung":"Finanzen & Buchhaltung",icon:"💰",kiKat:"rpa",hint:"RPA kann Rechnungen und Abrechnungen automatisieren.",fragen:[{f:isPflege?"Wie läuft die Kassenabrechnung ab?":"Wie werden Rechnungen erstellt?",o:["Manuell mit Papier","Software, viel manuell","Halbautomatisch","Vollautomatisch"]},{f:"Wie werden Zahlungen verbucht?",o:["Manuell eingetippt","Teilweise digital","Software mit Kontrolle","Vollautomatisch"]}]},
+    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Agenten können Standardanfragen automatisch beantworten.",fragen:[{f:"Wie werden Kundenanfragen bearbeitet?",o:["Nur Telefon/persönlich","E-Mail manuell","E-Mail mit Vorlagen","KI-gestützt automatisch"]},{f:"Gibt es automatisierte Benachrichtigungen?",o:["Nein","Gelegentlich","Für bestimmte Ereignisse","Vollautomatisch personalisiert"]}]},
+    {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitale HR-Prozesse sparen bis zu 10h pro Woche.",fragen:[{f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr","Software automatisch","Mit Lohnabrechnung verknüpft"]},{f:"Wie läuft das Onboarding ab?",o:["Informell persönlich","Checkliste Papier","Digitale Checkliste","Automatisiertes System"]}]},
+    {id:"b5",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Echtzeit-Dashboards ersetzen manuelle Excel-Berichte.",fragen:[{f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen manuell","Software, manuell gestartet","Automatisch in Echtzeit"]},{f:"Wie werden Daten zwischen Systemen übertragen?",o:["Per E-Mail oder Telefon","Manuell kopiert","Teilweise automatisch","Vollautomatisch per API"]}]},
+    {id:"b6",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung senken Betriebskosten stark.",fragen:[{f:"Wie wird der Bestand verwaltet?",o:["Manuell mit Listen","Einfache Software","Lagersoftware teilweise","Automatisch mit RFID/Scanner"]},{f:"Wie läuft die Wartung ab?",o:["Nur bei Ausfall","Feste Intervalle Papier","Digitale Wartungspläne","Automatische Überwachung"]}]}
+  ];
+}
 
 function Logo(){
   return(<div style={{marginBottom:28}}>
@@ -93,21 +119,22 @@ function App(){
   var s3=us(""),firma=s3[0],setFirma=s3[1];
   var s4=us(""),desc=s4[0],setDesc=s4[1];
   var s5=us(""),email=s5[0],setEmail=s5[1];
-  var s6=us([]),aktiv=s6[0],setAktiv=s6[1];
-  var s7=us(0),bIdx=s7[0],setBIdx=s7[1];
-  var s8=us({}),antw=s8[0],setAntw=s8[1];
-  var s9=us(false),loadR=s9[0],setLoadR=s9[1];
-  var s10=us(""),bericht=s10[0],setBericht=s10[1];
-  var s11=us([]),loes=s11[0],setLoes=s11[1];
-  var s12=us(false),loadL=s12[0],setLoadL=s12[1];
-  var s13=us(""),err=s13[0],setErr=s13[1];
-  var s14=us(""),shareMsg=s14[0],setShareMsg=s14[1];
-  var s15=us(""),mailShare=s15[0],setMailShare=s15[1];
-  var s16=us(false),mailSent=s16[0],setMailSent=s16[1];
-  var s17=us({name:"",email:"",tel:"",datum:"",msg:""}),termin=s17[0],setTermin=s17[1];
-  var s18=us(false),terminSent=s18[0],setTerminSent=s18[1];
+  var s6=us([]),bereiche=s6[0],setBereiche=s6[1];
+  var s7=us([]),aktiv=s7[0],setAktiv=s7[1];
+  var s8=us(false),loadB=s8[0],setLoadB=s8[1];
+  var s9=us(0),bIdx=s9[0],setBIdx=s9[1];
+  var s10=us({}),antw=s10[0],setAntw=s10[1];
+  var s11=us(false),loadR=s11[0],setLoadR=s11[1];
+  var s12=us(""),bericht=s12[0],setBericht=s12[1];
+  var s13=us([]),loes=s13[0],setLoes=s13[1];
+  var s14=us(false),loadL=s14[0],setLoadL=s14[1];
+  var s15=us(""),err=s15[0],setErr=s15[1];
+  var s16=us(""),shareMsg=s16[0],setShareMsg=s16[1];
+  var s17=us(""),mailShare=s17[0],setMailShare=s17[1];
+  var s18=us(false),mailSent=s18[0],setMailSent=s18[1];
+  var s19=us({name:"",email:"",tel:"",datum:"",msg:""}),termin=s19[0],setTermin=s19[1];
+  var s20=us(false),terminSent=s20[0],setTerminSent=s20[1];
 
-  var bereiche=branche?getBereiche(branche):[];
   var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
   var curB=gefB[bIdx];
   var totalF=gefB.reduce(function(s,b){return s+(b.fragen?b.fragen.length:0);},0);
@@ -125,17 +152,48 @@ function App(){
   function ov(i){return[0,33,67,100][i];}
 
   async function callApi(prompt,mt){
-    var payload={model:"claude-haiku-4-5",max_tokens:mt||800,messages:[{role:"user",content:prompt}]};
+    var payload={model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]};
     var r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     var d=await r.json();
     if(d.error)throw new Error(typeof d.error==="string"?d.error:JSON.stringify(d.error));
     return d.content?d.content.map(function(c){return c.text||"";}).join(""):"";
   }
 
-  function startAnalyse(){
+  async function ladeBereiche(){
     if(!email||!branche){setErr("Bitte E-Mail und Branche eingeben.");return;}
-    setAktiv(bereiche.map(function(b){return b.id;}));
-    setStep("bereiche");
+    setLoadB(true);setErr("");
+    var b=safe(branche),f=safe(firma),dc=safe(desc);
+    var prompt="Erstelle 6 Analysebereiche fuer ein Unternehmen. Branche: "+b+". Firma: "+f+". Info: "+dc+"."
+      +"\n\nSchreibe jeden Bereich EXAKT in diesem Format (keine anderen Zeichen):"
+      +"\n\nBEREICH 1: [Bereichsname passend zum Unternehmen]"
+      +"\n[Ein einzelnes Emoji]"
+      +"\n[Ein Satz: welches KI oder Automatisierungs-Potenzial dieser Bereich hat]"
+      +"\nFRAGE 1: [Konkrete Frage zur aktuellen Situation]"
+      +"\n[Antwort Option A: vollstaendig manuell]"
+      +"\n[Antwort Option B: teilweise digital]"
+      +"\n[Antwort Option C: groesstenteils automatisiert]"
+      +"\n[Antwort Option D: vollstaendig automatisiert]"
+      +"\nFRAGE 2: [Zweite konkrete Frage]"
+      +"\n[Antwort Option A]"
+      +"\n[Antwort Option B]"
+      +"\n[Antwort Option C]"
+      +"\n[Antwort Option D]"
+      +"\n\nBEREICH 2: ..."
+      +"\n\nWichtig: Nur dieses Format, kein JSON, keine Erklaerungen, keine Nummerierungen bei Antworten.";
+    try{
+      var t=await callApi(prompt,2000);
+      var parsed=parseBereicheText(t,branche);
+      setBereiche(parsed);
+      setAktiv(parsed.map(function(b){return b.id;}));
+      setStep("bereiche");
+    }catch(e){
+      // Fallback zu festen Bereichen
+      var def=getDefaultBereiche(branche);
+      setBereiche(def);
+      setAktiv(def.map(function(b){return b.id;}));
+      setStep("bereiche");
+    }
+    setLoadB(false);
   }
 
   async function analysiereReport(){
@@ -144,8 +202,8 @@ function App(){
       var g=ges();
       var info=gefB.map(function(b){return b.label+" "+gs(b.id)+"%";}).join(", ");
       var prompt="Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "
-        +safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. "
-        +"Bereiche: "+info+". "
+        +safe(firma||branche)+" ("+safe(branche)+"). "
+        +"IQ-Score: "+g+" Prozent. Bereiche: "+info+". "
         +"Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. "
         +"Maximal 350 Woerter. Konkret und praxisnah.";
       var t=await callApi(prompt,800);
@@ -160,10 +218,10 @@ function App(){
     setLoadL(true);
     try{
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).join(", ")||"alle Bereiche";
-      var prompt="Nenne 6 konkrete Software-Tools oder KI-Loesungen fuer "+safe(branche)
-        +" mit Schwachstellen in: "+safe(schwach)+". "
-        +"Fuer jedes Tool: Name, Kategorie (ki/rpa/robotik/daten), Emoji, 1 Satz Beschreibung, geschaetzte Zeitersparnis pro Woche, Website-URL. "
-        +"Trenne die 6 Tools jeweils mit --- (drei Bindestriche).";
+      var prompt="Nenne 6 konkrete Software-Tools fuer "+safe(branche)+" mit Schwachstellen in: "+safe(schwach)+"."
+        +" Trenne die Tools mit ---."
+        +" Fuer jedes Tool: Name in Zeile 1, Beschreibung in Zeile 2, URL in Zeile 3, Zeitersparnis in Zeile 4."
+        +" Kein JSON, nur Text.";
       var t=await callApi(prompt,600);
       var tools=parseLoes(t);
       setLoes(tools);
@@ -174,26 +232,22 @@ function App(){
   function parseLoes(text){
     var parts=text.split("---");
     var result=[];
+    var icons={ki:"🤖",rpa:"⚙️",robotik:"🦾",daten:"📊"};
     for(var i=0;i<parts.length&&result.length<6;i++){
       var p=parts[i].trim();
       if(!p)continue;
-      var lines=p.split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
+      var lines=p.split("\n").map(function(l){return l.replace(/^\*+|\*+$/g,"").trim();}).filter(function(l){return l;});
       if(lines.length<2)continue;
-      var name=lines[0].replace(/^\*+/,"").replace(/\*+$/,"").trim();
+      var name=lines[0];
       var desc=lines[1]||"";
-      var kat="ki";
-      var plower=p.toLowerCase();
-      if(plower.indexOf("rpa")>=0||plower.indexOf("automatisierung")>=0)kat="rpa";
-      else if(plower.indexOf("robotik")>=0||plower.indexOf("robot")>=0)kat="robotik";
-      else if(plower.indexOf("analytics")>=0||plower.indexOf("daten")>=0||plower.indexOf("dashboard")>=0)kat="daten";
-      var url="https://google.com/search?q="+encodeURIComponent(name);
-      var einsparung="bis zu 5h/Woche";
-      for(var j=0;j<lines.length;j++){
-        if(lines[j].toLowerCase().indexOf("http")>=0){url=lines[j].replace(/.*?(https?:\/\/\S+).*/,"$1");break;}
-        if(lines[j].toLowerCase().indexOf("h/woche")>=0||lines[j].toLowerCase().indexOf("stunden")>=0){einsparung=lines[j];break;}
-      }
-      var icons={ki:"🤖",rpa:"⚙️",robotik:"🦾",daten:"📊"};
-      result.push({name:name,tag:KL[kat]||"KI",icon:icons[kat]||"🤖",kategorie:kat,desc:desc,url:url,einsparung:einsparung});
+      var url=lines.filter(function(l){return l.indexOf("http")>=0;})[0]||"https://google.com/search?q="+encodeURIComponent(name);
+      var einsparung=lines.filter(function(l){return l.indexOf("h/")>=0||l.indexOf("Stunden")>=0||l.indexOf("Minuten")>=0;})[0]||"bis zu 5h/Woche";
+      var kat="rpa";
+      var pl=name.toLowerCase()+desc.toLowerCase();
+      if(pl.indexOf("ki ")>=0||pl.indexOf("chatbot")>=0||pl.indexOf("gpt")>=0||pl.indexOf("copilot")>=0)kat="ki";
+      else if(pl.indexOf("robot")>=0||pl.indexOf("cobot")>=0)kat="robotik";
+      else if(pl.indexOf("analytics")>=0||pl.indexOf("dashboard")>=0||pl.indexOf("bi ")>=0)kat="daten";
+      result.push({name:name,tag:KL[kat],icon:icons[kat],kategorie:kat,desc:desc,url:url,einsparung:einsparung});
     }
     return result;
   }
@@ -222,7 +276,7 @@ function App(){
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
       <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>Wie intelligent arbeitet Ihr Unternehmen?</h1>
-      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert Ihr Automatisierungspotenzial — kostenlos in 5 Minuten.</p>
+      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert mit KI Ihr Automatisierungspotenzial — kostenlos in 5 Minuten.</p>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
         {[{k:"ki",l:"KI & Agenten",i:"🤖",d:"KI, Chatbots, LLMs"},{k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}].map(function(k){return(
           <div key={k.k} style={{...card,marginBottom:0,display:"flex",gap:10,alignItems:"flex-start"}}>
@@ -247,7 +301,10 @@ function App(){
       </select>
       <textarea placeholder="Beschreiben Sie Ihr Unternehmen kurz..." value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:16}}/>
       {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
-      <button disabled={!branche||!email} onClick={startAnalyse} style={{...btnG,opacity:branche&&email?1:0.4}}>IQ-Analyse starten →</button>
+      {loadB
+        ?<LoadBox msg="KI erstellt Ihre Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
+        :<button disabled={!branche||!email} onClick={ladeBereiche} style={{...btnG,opacity:branche&&email?1:0.4}}>IQ-Analyse starten →</button>
+      }
       <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Ihre E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
     </div>
   );
@@ -258,7 +315,7 @@ function App(){
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
         <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>Analysebereiche auswählen</h1>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>KI-generierte Analysebereiche</h1>
         <p style={{color:T2,fontSize:13,marginBottom:20}}>Für: <span style={{color:G}}>{firma||branche}</span></p>
         <div style={{...card,marginBottom:16}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
@@ -424,7 +481,7 @@ function App(){
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
           <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setAktiv([]);setLoes([]);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
         </div>
       </div>
     );
