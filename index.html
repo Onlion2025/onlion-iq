@@ -112,7 +112,8 @@ function App(){
     if(!email){setError("Bitte E-Mail eingeben.");return;}
     if(!branche){setError("Bitte Branche auswählen.");return;}
     setLoadingB(true);setError("");
-    const prompt=`Du bist KI-Experte. Erstelle 6 Analysebereiche für:\nBranche: ${branche}\nFirma: ${firmenname||"–"}\nBeschreibung: ${beschreibung||"–"}\n\nBenenne Bereiche spezifisch (z.B. Arztpraxis: "Patientenverwaltung").\nJe Bereich: 3 Fragen mit 4 Antworten (manuell bis vollautomatisiert).\nKategorie: ki, rpa, robotik oder daten.\n\nNur JSON:\n{"bereiche":[{"id":"b1","label":"Name","icon":"emoji","beschreibung":"Kurz","kiKategorie":"ki","kiHinweis":"1 Satz Potenzial","fragen":[{"frage":"?","optionen":["Manuell","Teilweise","Größtenteils","Vollautomatisch"]}]}]}`;
+    const prompt=`Du bist KI-Experte. Erstelle 6 Analysebereiche für:\nBranche: ${branche}\nFirma: ${firmenname||"–"}\nBeschreibung: ${(beschreibung||"–").replace(/"/g,"'").replace(/
+/g," ")}\n\nBenenne Bereiche spezifisch (z.B. Arztpraxis: "Patientenverwaltung").\nJe Bereich: 3 Fragen mit 4 Antworten (manuell bis vollautomatisiert).\nKategorie: ki, rpa, robotik oder daten.\n\nNur JSON:\n{"bereiche":[{"id":"b1","label":"Name","icon":"emoji","beschreibung":"Kurz","kiKategorie":"ki","kiHinweis":"1 Satz Potenzial","fragen":[{"frage":"?","optionen":["Manuell","Teilweise","Größtenteils","Vollautomatisch"]}]}]}`;
     try{
       const t=await apiCall(prompt,1500);
       const p=JSON.parse(t.replace(/```json|```/g,"").trim());
@@ -125,7 +126,8 @@ function App(){
     setLoading(true);setError("");
     const sd=gefB.map(b=>({bereich:b.label,score:getScore(b.id),antworten:b.fragen.map((f,i)=>{const v=antworten[`${b.id}_${i}`];const oi=[0,33,67,100].indexOf(v);return{frage:f.frage,antwort:oi>=0?f.optionen[oi]:"–"};})}));
     const g=getGesamt();
-    const prompt=`KI-Experte. Bericht auf Deutsch.\nFirma: ${firmenname||"–"} | Branche: ${branche} | Beschreibung: ${beschreibung||"–"}\nIQ: ${g}% | Potenzial: ${100-g}%\n\n${sd.map(b=>`${b.bereich} (${b.score}%):\n${b.antworten.map(a=>`- ${a.frage}: ${a.antwort}`).join("\n")}`).join("\n\n")}\n\nAbschnitte (## Überschrift):\n## IQ-Bewertung\n## Stärken\n## KI & Automatisierungspotenzial je Bereich\n## Konkrete Tool-Empfehlungen\n## Roadmap — 3 Phasen\n(Phase 1: Quick Wins, Phase 2: Automatisierung, Phase 3: Skalierung)`;
+    const prompt=`KI-Experte. Bericht auf Deutsch.\nFirma: ${firmenname||"–"} | Branche: ${branche} | Beschreibung: ${(beschreibung||"–").replace(/"/g,"'").replace(/
+/g," ")}\nIQ: ${g}% | Potenzial: ${100-g}%\n\n${sd.map(b=>`${b.bereich} (${b.score}%):\n${b.antworten.map(a=>`- ${a.frage}: ${a.antwort}`).join("\n")}`).join("\n\n")}\n\nAbschnitte (## Überschrift):\n## IQ-Bewertung\n## Stärken\n## KI & Automatisierungspotenzial je Bereich\n## Konkrete Tool-Empfehlungen\n## Roadmap — 3 Phasen\n(Phase 1: Quick Wins, Phase 2: Automatisierung, Phase 3: Skalierung)`;
     try{
       const t=await apiCall(prompt,1500);
       setBericht(t);setStep("bericht");
@@ -137,7 +139,8 @@ function App(){
     if(loesungen.length)return;
     setLoadingL(true);
     const schwach=gefB.filter(b=>getScore(b.id)<60).map(b=>b.label).join(", ")||"Alle";
-    const prompt=`6 Tool-Empfehlungen für: ${branche}, ${beschreibung||"–"}, schwach: ${schwach}.\nNur JSON:\n{"loesungen":[{"name":"Tool","tag":"KI-Agent","icon":"emoji","kategorie":"ki","desc":"2 Sätze","url":"https://...","einsparung":"z.B. 8h/Woche"}]}`;
+    const prompt=`6 Tool-Empfehlungen für: ${branche}, ${(beschreibung||"–").replace(/"/g,"'").replace(/
+/g," ")}, schwach: ${schwach}.\nNur JSON:\n{"loesungen":[{"name":"Tool","tag":"KI-Agent","icon":"emoji","kategorie":"ki","desc":"2 Sätze","url":"https://...","einsparung":"z.B. 8h/Woche"}]}`;
     try{
       const t=await apiCall(prompt,800);
       const p=JSON.parse(t.replace(/```json|```/g,"").trim());
