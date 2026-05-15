@@ -252,7 +252,105 @@ function App(){
     return result;
   }
 
-  function renderMd(t){
+  function generatePDF(){
+    var g=ges(),p=100-g;
+    var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
+    var bereicheHTML=gefB.map(function(b){
+      var sc=gs(b.id);
+      var barW=sc+"%";
+      var barC=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";
+      return "<div style='margin-bottom:16px'>"
+        +"<div style='display:flex;justify-content:space-between;margin-bottom:6px'>"
+        +"<span style='font-size:13px;color:#f0f0f0'>"+b.icon+" "+b.label+"</span>"
+        +"<span style='font-size:13px;color:#7AC800'>"+sc+"% <span style=\"color:#888\">+"+( 100-sc)+"% Potenzial</span></span>"
+        +"</div>"
+        +"<div style='height:6px;background:#1e1e1e;border-radius:4px;overflow:hidden'>"
+        +"<div style='height:100%;width:"+barW+";background:"+barC+";border-radius:4px'></div>"
+        +"</div></div>";
+    }).join("");
+
+    var berichtHTML=bericht
+      .replace(/\*\*(.+?)\*\*/g,"<strong style='color:#f0f0f0'>$1</strong>")
+      .replace(/^## (.+)$/gm,"<h3 style='font-size:14px;font-weight:600;color:#7AC800;margin:16px 0 6px;border-bottom:1px solid #2a2a2a;padding-bottom:4px'>$1</h3>")
+      .replace(/^- (.+)$/gm,"<li style='margin:4px 0;color:#888;line-height:1.6;font-size:12px'>$1</li>")
+      .replace(/(<li[^>]*>[\s\S]*?<\/li>)/gm,"$1")
+      .replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
+
+    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/>"
+      +"<title>ONLION IQ Bericht - "+(firma||branche)+"</title>"
+      +"<style>"
+      +"*{box-sizing:border-box;margin:0;padding:0}"
+      +"body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,-apple-system,sans-serif;padding:0}"
+      +"@media print{"
+      +"body{-webkit-print-color-adjust:exact;print-color-adjust:exact}"
+      +"@page{margin:0;size:A4}"
+      +"}"
+      +"</style></head><body>"
+
+      // TITELSEITE
+      +"<div style='background:#000;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;page-break-after:always'>"
+      +"<div style='position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.95) 40%, #000 100%);z-index:0'></div>"
+      +"<div style='position:relative;z-index:1'>"
+      +"<div style='text-align:right;margin-bottom:60px'>"
+      +"<span style='font-size:28px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span>"
+      +"</div>"
+      +"<div style='margin-top:80px'>"
+      +"<div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px'>Automatisierungs-Analyse</div>"
+      +"<h1 style='font-size:42px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:16px'>"+(firma||branche)+"</h1>"
+      +"<p style='font-size:16px;color:#888;margin-bottom:48px'>"+branche+" · "+datum+"</p>"
+      +"<div style='display:flex;gap:40px'>"
+      +"<div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:8px'>IQ-SCORE</div><div style='font-size:56px;font-weight:700;color:#fff'>"+g+"%</div></div>"
+      +"<div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:8px'>KI-POTENZIAL</div><div style='font-size:56px;font-weight:700;color:#7AC800'>"+p+"%</div></div>"
+      +"</div>"
+      +"</div>"
+      +"</div>"
+      +"<div style='position:relative;z-index:1;border-top:1px solid #2a2a2a;padding-top:20px'>"
+      +"<p style='font-size:11px;color:#444'>Erstellt mit ONLION IQ · onlion-iq.netlify.app</p>"
+      +"</div>"
+      +"</div>"
+
+      // SEITE 2: ERGEBNISSE
+      +"<div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'>"
+      +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;border-bottom:1px solid #2a2a2a;padding-bottom:20px'>"
+      +"<span style='font-size:18px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span>"
+      +"<span style='font-size:12px;color:#888'>"+datum+"</span>"
+      +"</div>"
+      +"<h2 style='font-size:22px;font-weight:600;color:#fff;margin-bottom:8px'>Ergebnisse je Bereich</h2>"
+      +"<p style='font-size:13px;color:#888;margin-bottom:32px'>"+firma+" · "+branche+"</p>"
+      +"<div style='display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px'>"
+      +"<div style='background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:20px'>"
+      +"<div style='font-size:11px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px'>Aktueller IQ-Score</div>"
+      +"<div style='font-size:36px;font-weight:700;color:#fff'>"+g+"%</div>"
+      +"</div>"
+      +"<div style='background:#081200;border:0.5px solid #7AC80040;border-radius:10px;padding:20px'>"
+      +"<div style='font-size:11px;color:#7AC80099;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px'>Ungenutztes KI-Potenzial</div>"
+      +"<div style='font-size:36px;font-weight:700;color:#7AC800'>"+p+"%</div>"
+      +"</div>"
+      +"</div>"
+      +bereicheHTML
+      +"</div>"
+
+      // SEITE 3: KI-BERICHT
+      +"<div style='background:#0a0a0a;min-height:100vh;padding:48px'>"
+      +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;border-bottom:1px solid #2a2a2a;padding-bottom:20px'>"
+      +"<span style='font-size:18px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span>"
+      +"<span style='font-size:12px;color:#888'>KI-Analyse & Roadmap</span>"
+      +"</div>"
+      +"<div style='font-size:13px;color:#888;line-height:1.8'>"+berichtHTML+"</div>"
+      +"<div style='margin-top:48px;padding:24px;background:#081200;border:1px solid #7AC80040;border-radius:10px;text-align:center'>"
+      +"<div style='font-size:14px;font-weight:600;color:#7AC800;margin-bottom:8px'>Kostenloses KI-Beratungsgespräch buchen</div>"
+      +"<div style='font-size:12px;color:#888;margin-bottom:12px'>30 Minuten · kostenlos · unverbindlich</div>"
+      +"<div style='font-size:13px;color:#7AC800'>onlion-iq.netlify.app</div>"
+      +"</div>"
+      +"</div>"
+
+      +"</body></html>";
+
+    var w=window.open("","_blank");
+    w.document.write(html);
+    w.document.close();
+    setTimeout(function(){w.print();},800);
+  }
     return t
       .replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>")
       .replace(/^## (.+)$/gm,"<h2 style='font-size:15px;font-weight:500;margin:1.2rem 0 0.4rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:4px'>$1</h2>")
@@ -456,8 +554,8 @@ function App(){
         <div style={{...card,marginBottom:16}}>
           <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht teilen</div>
           <div style={{display:"flex",gap:8,marginBottom:12}}>
-            <button onClick={function(){navigator.clipboard.writeText(btxt()).then(function(){setShareMsg("Kopiert!");setTimeout(function(){setShareMsg("");},2500);});}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>📋 Kopieren</button>
-            <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ-"+(firma||"Bericht")+".txt";a.click();}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>⬇ Download</button>
+            <button onClick={generatePDF} style={{flex:1,padding:"9px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>📄 PDF herunterladen</button>
+            <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ-"+(firma||"Bericht")+".txt";a.click();}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>⬇ Text</button>
           </div>
           <div style={{display:"flex",gap:8}}>
             <input placeholder="Per E-Mail senden..." value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
@@ -519,38 +617,33 @@ function App(){
     </div>
   );
 
-  termin{
+  if(step==="termin"){
     var tg=ges();
+    React.useEffect(function(){
+      var s=document.createElement("script");
+      s.src="https://assets.calendly.com/assets/external/widget.js";
+      s.async=true;
+      document.body.appendChild(s);
+      return function(){document.body.removeChild(s);};
+    },[]);
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
         <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        {!terminSent
-          ?<>
-            <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>Kostenloses KI-Beratungsgespräch</h1>
-            <p style={{color:T2,fontSize:13,marginBottom:20}}>30 Minuten · kostenlos · unverbindlich</p>
-            <div style={{...cardG,marginBottom:20}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>Ihr KI-Potenzial</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div></div>
-                <div style={{fontSize:36}}>🚀</div>
-              </div>
-            </div>
-            <div style={card}>
-              <input placeholder="Name *" value={termin.name} onChange={function(e){setTermin(function(t){return Object.assign({},t,{name:e.target.value});});}}/>
-              <input placeholder="E-Mail *" value={termin.email} onChange={function(e){setTermin(function(t){return Object.assign({},t,{email:e.target.value});});}}/>
-              <input placeholder="Telefon (optional)" value={termin.tel} onChange={function(e){setTermin(function(t){return Object.assign({},t,{tel:e.target.value});});}}/>
-              <input type="date" value={termin.datum} onChange={function(e){setTermin(function(t){return Object.assign({},t,{datum:e.target.value});});}} style={{colorScheme:"dark"}}/>
-              <textarea placeholder="Was interessiert Sie?" value={termin.msg} onChange={function(e){setTermin(function(t){return Object.assign({},t,{msg:e.target.value});});}} rows={3} style={{resize:"vertical",marginBottom:0}}/>
-            </div>
-            <button disabled={!termin.name||!termin.email} onClick={function(){window.open("mailto:onlion-@outlook.de?subject=Beratung ONLION IQ&body=Name: "+termin.name+"%0AEmail: "+termin.email+"%0ATel: "+(termin.tel||"-")+"%0ADatum: "+(termin.datum||"-")+"%0ANachricht: "+(termin.msg||"-")+"%0A%0AIQ: "+tg+"%25%0ABranche: "+branche);setTerminSent(true);}} style={{...btnG,opacity:termin.name&&termin.email?1:0.4}}>Termin anfragen →</button>
-          </>
-          :<div style={{textAlign:"center",paddingTop:"2rem"}}>
-            <div style={{fontSize:48,marginBottom:16}}>✅</div>
-            <h2 style={{fontSize:20,fontWeight:500,marginBottom:8,color:G}}>Anfrage gesendet!</h2>
-            <p style={{color:T2,fontSize:14,lineHeight:1.7,marginBottom:24}}>Vielen Dank, {termin.name}!<br/>Wir melden uns innerhalb von 24 Stunden.</p>
-            <button onClick={function(){setStep("bericht");}} style={btnG}>← Zurück zum Bericht</button>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>Kostenloses KI-Beratungsgespräch</h1>
+        <p style={{color:T2,fontSize:13,marginBottom:16}}>30 Minuten · kostenlos · unverbindlich</p>
+        <div style={{...cardG,marginBottom:20}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>Ihr KI-Potenzial</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div></div>
+            <div style={{fontSize:36}}>🚀</div>
           </div>
-        }
+          <p style={{fontSize:12,color:T2,marginTop:8,marginBottom:0,lineHeight:1.5}}>Wählen Sie direkt einen freien Termin — keine E-Mail nötig.</p>
+        </div>
+        <div
+          className="calendly-inline-widget"
+          data-url="https://calendly.com/ridge-linear5958-eagereverest/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=141414&text_color=f0f0f0&primary_color=7AC800"
+          style={{minWidth:280,height:630,borderRadius:10,overflow:"hidden"}}
+        />
       </div>
     );
   }
