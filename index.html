@@ -192,13 +192,15 @@ export default function App(){
       </select>
       <textarea placeholder="Beschreiben Sie Ihr Unternehmen kurz..." value={desc} onChange={e=>setDesc(e.target.value)} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:16}}/>
       {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
-      <button disabled={!branche||!email||loadingB} onClick={ladeBereiche} style={{...s.btnG,opacity:branche&&email&&!loadingB?1:0.4}}>
-        {loadingB
-          ?<span style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}><Spin/> KI erstellt Ihre Bereiche... (ca. 10 Sek.)</span>
-          :"IQ-Analyse starten →"}
-      </button>
-      {loadingB&&<p style={{fontSize:12,color:T2,textAlign:"center",marginTop:10}}>Die KI analysiert Ihre Unternehmensbeschreibung und erstellt individuelle Fragen.</p>}
-      <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Ihre E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
+      {loadingB
+        ? <LoadingBox msg="KI erstellt Ihre individuellen Analysebereiche..." sub="Analysiere Unternehmensbeschreibung und erstelle passende Fragen (ca. 10 Sek.)"/>
+        : <>
+            <button disabled={!branche||!email} onClick={ladeBereiche} style={{...s.btnG,opacity:branche&&email?1:0.4}}>
+              IQ-Analyse starten →
+            </button>
+            <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Ihre E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
+          </>
+      }
     </div>
   );
 
