@@ -291,6 +291,10 @@ function App(){
         :<button disabled={!branche||!email} onClick={ladeBereiche} style={{...btnG,opacity:branche&&email?1:0.4}}>IQ-Analyse starten →</button>
       }
       <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Ihre E-Mail wird nur fuer den Bericht verwendet. Kein Spam.</p>
+      <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:20,paddingTop:16,borderTop:"0.5px solid "+BD}}>
+        <button onClick={function(){setStep("impressum");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Impressum</button>
+        <button onClick={function(){setStep("datenschutz");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Datenschutz</button>
+      </div>
     </div>
   );
 
@@ -537,6 +541,80 @@ function App(){
       </div>
     );
   }
+
+  if(step==="impressum") return(
+    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
+      <Logo/>
+      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>Impressum</h1>
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Angaben gemäß § 5 TMG</div>
+        <p style={{fontSize:14,color:TX,marginBottom:4}}>Adam Cebulla</p>
+        <p style={{fontSize:13,color:T2,marginBottom:2}}>ONLION (Einzelunternehmen)</p>
+        <p style={{fontSize:13,color:T2,marginBottom:2}}>Loher Hauptstrasse 81a</p>
+        <p style={{fontSize:13,color:T2,marginBottom:16}}>90427 Nürnberg</p>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>Kontakt</div>
+        <p style={{fontSize:13,color:T2}}>E-Mail: onlion-@outlook.de</p>
+      </div>
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Verantwortlich für den Inhalt</div>
+        <p style={{fontSize:13,color:T2}}>Adam Cebulla, Loher Hauptstrasse 81a, 90427 Nürnberg</p>
+      </div>
+      <div style={{...card}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Haftungsausschluss</div>
+        <p style={{fontSize:12,color:T2,lineHeight:1.7}}>Die Inhalte dieser App wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte übernehmen wir keine Gewähr. Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.</p>
+      </div>
+    </div>
+  );
+
+  if(step==="datenschutz") return(
+    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
+      <Logo/>
+      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>Datenschutzerklärung</h1>
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Verantwortlicher</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Adam Cebulla · ONLION · Loher Hauptstrasse 81a · 90427 Nürnberg · onlion-@outlook.de</p>
+      </div>
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Welche Daten wir erheben</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:8}}>Bei der Nutzung von ONLION IQ erheben wir folgende Daten:</p>
+        {["E-Mail-Adresse (freiwillige Angabe für den Bericht)","Firmenname und Branche (freiwillige Angabe)","Antworten des Analyse-Fragebogens","Technische Daten (IP-Adresse, Browser) durch Netlify-Hosting"].map(function(t,i){return(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
+            <span style={{color:G,flexShrink:0}}>→</span>
+            <span style={{fontSize:13,color:T2}}>{t}</span>
+          </div>
+        );})}
+      </div>
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Zweck der Datenverarbeitung</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Die eingegebenen Daten werden ausschließlich zur Erstellung Ihrer persönlichen Automatisierungs-Analyse verwendet. E-Mail-Adressen werden nicht gespeichert, weitergegeben oder für Werbezwecke genutzt.</p>
+      </div>
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Drittanbieter</div>
+        <p style={{fontSize:13,color:TX,marginBottom:6}}>Anthropic API</p>
+        <p style={{fontSize:12,color:T2,lineHeight:1.7,marginBottom:12}}>Zur KI-gestützten Analyse werden Ihre Eingaben an die Anthropic API übermittelt. Datenschutzerklärung: anthropic.com/privacy</p>
+        <p style={{fontSize:13,color:TX,marginBottom:6}}>Netlify</p>
+        <p style={{fontSize:12,color:T2,lineHeight:1.7,marginBottom:12}}>Das Hosting erfolgt über Netlify Inc. Datenschutzerklärung: netlify.com/privacy</p>
+        <p style={{fontSize:13,color:TX,marginBottom:6}}>Calendly</p>
+        <p style={{fontSize:12,color:T2,lineHeight:1.7}}>Für die Terminbuchung wird Calendly verwendet. Datenschutzerklärung: calendly.com/privacy</p>
+      </div>
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Ihre Rechte (DSGVO)</div>
+        {["Auskunft über gespeicherte Daten (Art. 15 DSGVO)","Berichtigung unrichtiger Daten (Art. 16 DSGVO)","Löschung Ihrer Daten (Art. 17 DSGVO)","Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)"].map(function(t,i){return(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
+            <span style={{color:G,flexShrink:0}}>✓</span>
+            <span style={{fontSize:13,color:T2}}>{t}</span>
+          </div>
+        );})}
+        <p style={{fontSize:12,color:T2,lineHeight:1.7,marginTop:10}}>Anfragen richten Sie bitte an: onlion-@outlook.de</p>
+      </div>
+      <div style={card}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Beschwerderecht</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Sie haben das Recht, sich bei der zuständigen Aufsichtsbehörde zu beschweren. In Bayern: Bayerisches Landesamt für Datenschutzaufsicht (BayLDA), Promenade 18, 91522 Ansbach.</p>
+      </div>
+    </div>
+  );
 
   return null;
 }
