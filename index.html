@@ -95,7 +95,7 @@ function App(){
   function optVal(i){return[0,33,67,100][i];}
 
   async function apiCall(prompt,mt){
-    const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
+    const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
     const d=await r.json();
     if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
     return d.content?.map(c=>c.text||"").join("")||"";
