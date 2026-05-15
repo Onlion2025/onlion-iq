@@ -20,126 +20,108 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7AC800}
 <body>
 <div id="root"></div>
 <script type="text/babel">
-
 var G="#7AC800",GL="#9AE020",D="#0a0a0a",D2="#141414",D3="#1e1e1e",BD="#2a2a2a",TX="#f0f0f0",T2="#888";
 var BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"];
-var KK=[{key:"ki",label:"KI & Agenten",icon:"🤖",desc:"KI, Chatbots, LLMs"},{key:"rpa",label:"Automatisierung",icon:"⚙️",desc:"Workflows, RPA"},{key:"robotik",label:"Robotik",icon:"🦾",desc:"Roboter, Cobots"},{key:"daten",label:"Analytics",icon:"📊",desc:"Dashboards, BI"}];
 var KC={ki:G,rpa:"#00aaff",robotik:"#ff7700",daten:"#aa44ff"};
 var KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"};
 
-function safe(s){
-  return (s||"").replace(/[^a-zA-Z0-9 .,\-äöüÄÖÜß!?]/g,"").trim();
+// Feste Bereiche basierend auf Branche — kein JSON-Parsing nötig!
+var BEREICHE_MAP = {
+  "Gesundheit / Pflege": [
+    {id:"b1",label:"Patientenverwaltung",icon:"🏥",kiKat:"ki",hint:"KI kann Termine, Akten und Anfragen automatisch verwalten.",fragen:[{f:"Wie werden Patiententermine vereinbart?",o:["Nur telefonisch und handschriftlich","Per E-Mail oder einfache Software","Online-System, aber manuelle Nachbearbeitung","Vollautomatische Online-Buchung mit Bestätigung"]},{f:"Wie wird die Patientenakte geführt?",o:["Ausschließlich auf Papier","Teilweise digital, viel manuelle Eingabe","Digital, aber nicht vernetzt","Volldigital und automatisch synchronisiert"]}]},
+    {id:"b2",label:"Abrechnung & KV",icon:"💊",kiKat:"rpa",hint:"RPA kann Kassenabrechnung und Dokumentation automatisieren.",fragen:[{f:"Wie läuft die Kassenabrechnung ab?",o:["Manuell mit Papierformularen","Software, aber viel manuelle Eingabe","Halbautomatisch, manuelle Prüfung","Vollautomatisch mit digitaler Übermittlung"]},{f:"Wie wird die Abrechnung mit Privatpatienten durchgeführt?",o:["Handschriftliche Rechnung","Word/Excel manuell","Software mit Vorlagen","Automatisch erstellt und versendet"]}]},
+    {id:"b3",label:"Dienstplan & HR",icon:"👥",kiKat:"rpa",hint:"Automatische Schichtplanung spart bis zu 5h pro Woche.",fragen:[{f:"Wie wird der Dienstplan erstellt?",o:["Handschriftlich","Excel, manuell","Software, manuell eingeplant","Automatisch nach Verfügbarkeit"]},{f:"Wie werden Urlaubsanträge verwaltet?",o:["Zettel oder mündlich","Per E-Mail","HR-Software, manuell genehmigt","Automatisierter digitaler Prozess"]}]},
+    {id:"b4",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Chatbots können Standardanfragen automatisch beantworten.",fragen:[{f:"Wie werden Patienten an Termine erinnert?",o:["Gar nicht oder per Anruf","SMS manuell verschickt","Automatische SMS/E-Mail","App mit Push-Benachrichtigungen"]},{f:"Wie kommuniziert das Team intern?",o:["Mündlich bei Übergabe","Telefon oder Zettel","Digitales System, manuell","Automatische Benachrichtigungen bei Änderungen"]}]},
+    {id:"b5",label:"Dokumentation",icon:"📋",kiKat:"ki",hint:"Sprach-KI kann Dokumentation automatisch erstellen.",fragen:[{f:"Wie werden Behandlungen dokumentiert?",o:["Handschriftlich","Word/Excel","Praxissoftware, manuell","Sprach- oder KI-gestützt automatisch"]},{f:"Wie werden Hygieneprotokolle geführt?",o:["Papier-Checklisten","Excel-Listen","Digitale Erfassung, manuell","Automatische digitale Protokollierung"]}]},
+    {id:"b6",label:"Materialverwaltung",icon:"📦",kiKat:"daten",hint:"Automatische Bestandsüberwachung verhindert Engpässe.",fragen:[{f:"Wie wird der Medikamenten- und Materialbestand verwaltet?",o:["Sichtprüfung und manuelle Bestellung","Listen, manuell geführt","Software, manuelle Kontrolle","Automatische Überwachung und Nachbestellung"]},{f:"Wie werden Geräte gewartet?",o:["Nur bei Ausfall","Feste Intervalle auf Papier","Digitale Wartungspläne","Automatische Fernüberwachung"]}]}
+  ],
+  "default": [
+    {id:"b1",label:"Geschäftsprozesse",icon:"⚙️",kiKat:"rpa",hint:"RPA kann wiederkehrende Prozesse vollständig automatisieren.",fragen:[{f:"Wie werden Aufträge bearbeitet?",o:["Alles manuell auf Papier","Einzelne Tools, nicht verbunden","Meistens automatisch, einzelne manuelle Schritte","Vollständig automatisierter digitaler Ablauf"]},{f:"Wie werden Genehmigungen abgewickelt?",o:["Mündlich oder per Zettel","Per E-Mail ohne System","Software, manuell weitergeleitet","Automatisch — System informiert und leitet weiter"]}]},
+    {id:"b2",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Automatische Dashboards sparen täglich wertvolle Arbeitszeit.",fragen:[{f:"Wie werden Kundendaten erfasst?",o:["Auf Papier oder Excel","Verschiedene Systeme, nicht verbunden","Zentrales System, manuelle Eingabe","Automatisch erfasst und synchronisiert"]},{f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen, manuell befüllt","Software erstellt sie, manuell gestartet","Automatisch in Echtzeit"]}]},
+    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-gestützte Tools können Kundenkommunikation automatisieren.",fragen:[{f:"Wie kommuniziert Ihr Unternehmen mit Kunden?",o:["Nur Telefon und persönlich","E-Mail, alles manuell","E-Mail mit Vorlagen, teilweise automatisiert","Multi-Kanal mit KI-Unterstützung"]},{f:"Gibt es automatisierte Kundenbenachrichtigungen?",o:["Nein, alles manuell","Gelegentlich, nicht systematisch","Ja, für bestimmte Ereignisse","Vollautomatisch mit personalisierten Nachrichten"]}]},
+    {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitales Onboarding und Zeiterfassung spart bis zu 10h/Woche.",fragen:[{f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr, manuelle Auswertung","Software mit automatischer Auswertung","Vollautomatisch mit Lohnabrechnung verknüpft"]},{f:"Wie läuft das Onboarding ab?",o:["Informell, jemand zeigt alles","Checkliste auf Papier","Digitale Checkliste, manuell begleitet","Automatisiertes System mit Selbstlernmodulen"]}]},
+    {id:"b5",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung können Betriebskosten stark senken.",fragen:[{f:"Wie wird die Lagerhaltung organisiert?",o:["Manuell mit Listen","Excel oder einfache Software","Lagersoftware, manuelle Buchungen","Automatisch mit Scanner oder RFID"]},{f:"Wie wird der Lieferantenprozess abgewickelt?",o:["Telefon oder E-Mail, alles manuell","Formulare, manuelle Weiterverarbeitung","Halbautomatisch über ERP","Vollautomatisch mit EDI"]}]},
+    {id:"b6",label:"Finanzen & Buchhaltung",icon:"💰",kiKat:"rpa",hint:"Automatische Rechnungsverarbeitung reduziert Fehler um 90%.",fragen:[{f:"Wie werden Rechnungen erstellt?",o:["Manuell in Word oder Excel","Per E-Mail, manuell erstellt","Buchhaltungssoftware, teilweise automatisch","Vollautomatisch ausgelöst und verschickt"]},{f:"Wie wird die Buchhaltung durchgeführt?",o:["Alles manuell eingetippt","Belege gescannt, manuell verbucht","OCR-Erkennung, manuelle Kontrolle","Vollautomatisch mit KI-Verbuchung"]}]}
+  ]
+};
+
+function getBereiche(branche){
+  return BEREICHE_MAP[branche] || BEREICHE_MAP["default"];
 }
 
-function buildBereichePrompt(branche,firma,desc){
-  var b=safe(branche),f=safe(firma),d=safe(desc);
-  return "Erstelle 6 Analysebereiche fuer " + f + " in der Branche " + b + ". Info: " + d + ". Benenne Bereiche passend zum Unternehmen. Je Bereich 2 Fragen mit je 4 Antworten von manuell bis vollautomatisiert. Kategorie: ki, rpa, robotik oder daten. Antworte nur mit validem JSON. Format: Objekt mit bereiche-Array. Jedes Element hat: id, label, icon, beschreibung, kiKategorie, kiHinweis, fragen-Array. Jede Frage hat: frage und optionen-Array mit 4 Eintraegen.";
-}
-
-function buildBerichtPrompt(firma,branche,g,info){
-  var f=safe(firma),b=safe(branche),i=safe(info);
-  return [
-    "Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer",f,"in der Branche",b+".",
-    "IQ-Score ist "+g+" Prozent.",
-    "Bereiche: "+i+".",
-    "Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen.",
-    "Maximal 350 Woerter. Konkret und praxisnah."
-  ].join(" ");
-}
-
-function buildLoesungenPrompt(branche,schwach){
-  var b=safe(branche),s=safe(schwach);
-  return "Gib 6 konkrete Tool-Empfehlungen fuer " + b + " mit schwachen Bereichen: " + s + ". Antworte nur mit validem JSON. Format: Objekt mit loesungen-Array. Jedes Element hat: name, tag, icon, kategorie, desc, url, einsparung.";
-}
+function safe(s){return (s||"").replace(/[<>&]/g,"").trim();}
 
 function Logo(){
-  return React.createElement("div",{style:{marginBottom:28}},
-    React.createElement("div",{style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}},
-      React.createElement("span",null,"ON"),
-      React.createElement("span",{style:{color:G}},"L"),
-      React.createElement("span",null,"ION"),
-      React.createElement("span",{style:{color:G,marginLeft:6}},"IQ")
-    ),
-    React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
-  );
+  return(<div style={{marginBottom:28}}>
+    <div style={{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}}>
+      <span>ON</span><span style={{color:G}}>L</span><span>ION</span><span style={{color:G,marginLeft:6}}>IQ</span>
+    </div>
+    <div style={{fontSize:11,color:T2,letterSpacing:2,marginTop:2}}>INTELLIGENCE QUOTIENT</div>
+  </div>);
 }
 
-function Spin(){
-  return React.createElement("span",{style:{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}});
-}
+function Spin(){return <span style={{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>;}
 
 function LoadBox(props){
-  return React.createElement("div",{style:{background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"2rem",textAlign:"center",marginBottom:16}},
-    React.createElement("div",{style:{marginBottom:16,display:"flex",justifyContent:"center"}},React.createElement(Spin)),
-    React.createElement("div",{style:{fontSize:15,color:TX,marginBottom:6,fontWeight:500}},props.msg),
-    React.createElement("div",{style:{fontSize:12,color:T2,marginBottom:20}},props.sub),
-    React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}},
-      (props.steps||[]).map(function(t,i){
-        return React.createElement("span",{key:i,style:{fontSize:11,color:T2,background:D3,padding:"4px 12px",borderRadius:20,animation:"pulse "+(1+i*0.4)+"s ease-in-out infinite"}},t);
-      })
-    )
-  );
+  return(<div style={{background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"2rem",textAlign:"center",marginBottom:16}}>
+    <div style={{marginBottom:16,display:"flex",justifyContent:"center"}}><Spin/></div>
+    <div style={{fontSize:15,color:TX,marginBottom:6,fontWeight:500}}>{props.msg}</div>
+    <div style={{fontSize:12,color:T2,marginBottom:20}}>{props.sub}</div>
+    <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}}>
+      {(props.steps||[]).map(function(t,i){return <span key={i} style={{fontSize:11,color:T2,background:D3,padding:"4px 12px",borderRadius:20,animation:"pulse "+(1+i*0.4)+"s ease-in-out infinite"}}>{t}</span>;})}
+    </div>
+  </div>);
 }
 
 function IQMeter(props){
   var score=props.score;
   var c=score>66?G:score>33?"#d4a000":"#c0392b";
-  var l=score>66?"Gut automatisiert":score>33?"Ausbaufähig":"Hohes Potenzial";
-  return React.createElement("div",{style:{textAlign:"center",padding:"1.5rem 0"}},
-    React.createElement("svg",{width:"140",height:"80",viewBox:"0 0 140 80"},
-      React.createElement("path",{d:"M 10 70 A 60 60 0 0 1 130 70",fill:"none",stroke:D3,strokeWidth:"10",strokeLinecap:"round"}),
-      React.createElement("path",{d:"M 10 70 A 60 60 0 0 1 130 70",fill:"none",stroke:c,strokeWidth:"10",strokeLinecap:"round",strokeDasharray:(score/100*188)+" 188"}),
-      React.createElement("text",{x:"70",y:"68",textAnchor:"middle",fontSize:"22",fontWeight:"500",fill:TX},score+"%")
-    ),
-    React.createElement("div",{style:{fontSize:12,color:c,marginTop:4}},l)
-  );
+  return(<div style={{textAlign:"center",padding:"1.5rem 0"}}>
+    <svg width="140" height="80" viewBox="0 0 140 80">
+      <path d="M 10 70 A 60 60 0 0 1 130 70" fill="none" stroke={D3} strokeWidth="10" strokeLinecap="round"/>
+      <path d="M 10 70 A 60 60 0 0 1 130 70" fill="none" stroke={c} strokeWidth="10" strokeLinecap="round" strokeDasharray={(score/100*188)+" 188"}/>
+      <text x="70" y="68" textAnchor="middle" fontSize="22" fontWeight="500" fill={TX}>{score}%</text>
+    </svg>
+    <div style={{fontSize:12,color:c,marginTop:4}}>{score>66?"Gut automatisiert":score>33?"Ausbaufähig":"Hohes Potenzial"}</div>
+  </div>);
 }
 
 function App(){
-  var useState=React.useState;
-  var s=useState("intro"),step=s[0],setStep=s[1];
-  var e1=useState(""),branche=e1[0],setBranche=e1[1];
-  var e2=useState(""),firma=e2[0],setFirma=e2[1];
-  var e3=useState(""),ma=e3[0],setMa=e3[1];
-  var e4=useState(""),desc=e4[0],setDesc=e4[1];
-  var e5=useState(""),email=e5[0],setEmail=e5[1];
-  var e6=useState([]),bereiche=e6[0],setBereiche=e6[1];
-  var e7=useState([]),aktiv=e7[0],setAktiv=e7[1];
-  var e8=useState(false),loadB=e8[0],setLoadB=e8[1];
-  var e9=useState(0),bIdx=e9[0],setBIdx=e9[1];
-  var e10=useState({}),antw=e10[0],setAntw=e10[1];
-  var e11=useState(false),loadR=e11[0],setLoadR=e11[1];
-  var e12=useState(""),bericht=e12[0],setBericht=e12[1];
-  var e13=useState([]),loes=e13[0],setLoes=e13[1];
-  var e14=useState(false),loadL=e14[0],setLoadL=e14[1];
-  var e15=useState(""),err=e15[0],setErr=e15[1];
-  var e16=useState(""),shareMsg=e16[0],setShareMsg=e16[1];
-  var e17=useState(""),mailShare=e17[0],setMailShare=e17[1];
-  var e18=useState(false),mailSent=e18[0],setMailSent=e18[1];
-  var e19=useState({name:"",email:"",tel:"",datum:"",msg:""}),termin=e19[0],setTermin=e19[1];
-  var e20=useState(false),terminSent=e20[0],setTerminSent=e20[1];
+  var us=React.useState;
+  var s1=us("intro"),step=s1[0],setStep=s1[1];
+  var s2=us(""),branche=s2[0],setBranche=s2[1];
+  var s3=us(""),firma=s3[0],setFirma=s3[1];
+  var s4=us(""),desc=s4[0],setDesc=s4[1];
+  var s5=us(""),email=s5[0],setEmail=s5[1];
+  var s6=us([]),aktiv=s6[0],setAktiv=s6[1];
+  var s7=us(0),bIdx=s7[0],setBIdx=s7[1];
+  var s8=us({}),antw=s8[0],setAntw=s8[1];
+  var s9=us(false),loadR=s9[0],setLoadR=s9[1];
+  var s10=us(""),bericht=s10[0],setBericht=s10[1];
+  var s11=us([]),loes=s11[0],setLoes=s11[1];
+  var s12=us(false),loadL=s12[0],setLoadL=s12[1];
+  var s13=us(""),err=s13[0],setErr=s13[1];
+  var s14=us(""),shareMsg=s14[0],setShareMsg=s14[1];
+  var s15=us(""),mailShare=s15[0],setMailShare=s15[1];
+  var s16=us(false),mailSent=s16[0],setMailSent=s16[1];
+  var s17=us({name:"",email:"",tel:"",datum:"",msg:""}),termin=s17[0],setTermin=s17[1];
+  var s18=us(false),terminSent=s18[0],setTerminSent=s18[1];
 
+  var bereiche=branche?getBereiche(branche):[];
   var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
   var curB=gefB[bIdx];
   var totalF=gefB.reduce(function(s,b){return s+(b.fragen?b.fragen.length:0);},0);
   var prog=totalF>0?Math.round(Object.keys(antw).length/totalF*100):0;
 
   function setA(bid,fi,val){setAntw(function(p){var n=Object.assign({},p);n[bid+"_"+fi]=val;return n;});}
-
   function gs(bid){
     var b=bereiche.filter(function(x){return x.id===bid;})[0];
-    if(!b||!b.fragen)return 0;
+    if(!b)return 0;
     var v=b.fragen.map(function(_,i){var x=antw[bid+"_"+i];return x!=null?x:null;}).filter(function(x){return x!==null;});
     return v.length?Math.round(v.reduce(function(s,x){return s+x;},0)/v.length):0;
   }
-
   function ges(){return gefB.length?Math.round(gefB.map(function(b){return gs(b.id);}).reduce(function(s,v){return s+v;},0)/gefB.length):0;}
-
-  function komp(bid){
-    var b=bereiche.filter(function(x){return x.id===bid;})[0];
-    return b?b.fragen.every(function(_,i){return antw[bid+"_"+i]!==undefined;}):false;
-  }
-
+  function komp(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];return b?b.fragen.every(function(_,i){return antw[bid+"_"+i]!==undefined;}):false;}
   function ov(i){return[0,33,67,100][i];}
 
   async function callApi(prompt,mt){
@@ -150,27 +132,22 @@ function App(){
     return d.content?d.content.map(function(c){return c.text||"";}).join(""):"";
   }
 
-  async function ladeBereiche(){
+  function startAnalyse(){
     if(!email||!branche){setErr("Bitte E-Mail und Branche eingeben.");return;}
-    setLoadB(true);setErr("");
-    try{
-      var prompt=buildBereichePrompt(branche,firma,desc);
-      var t=await callApi(prompt,2000);
-      var clean=t.replace(/```json/g,"").replace(/```/g,"").trim();
-      var j=JSON.parse(clean);
-      setBereiche(j.bereiche);
-      setAktiv(j.bereiche.map(function(b){return b.id;}));
-      setStep("bereiche");
-    }catch(e){setErr("Fehler: "+e.message);}
-    setLoadB(false);
+    setAktiv(bereiche.map(function(b){return b.id;}));
+    setStep("bereiche");
   }
 
   async function analysiereReport(){
     setLoadR(true);setErr("");
     try{
       var g=ges();
-      var info=gefB.map(function(b){return b.label+"("+gs(b.id)+"%)";}).join(", ");
-      var prompt=buildBerichtPrompt(firma||branche,branche,g,info);
+      var info=gefB.map(function(b){return b.label+" "+gs(b.id)+"%";}).join(", ");
+      var prompt="Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "
+        +safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. "
+        +"Bereiche: "+info+". "
+        +"Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. "
+        +"Maximal 350 Woerter. Konkret und praxisnah.";
       var t=await callApi(prompt,800);
       setBericht(t);
       setStep("bericht");
@@ -183,13 +160,42 @@ function App(){
     setLoadL(true);
     try{
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).join(", ")||"alle Bereiche";
-      var prompt=buildLoesungenPrompt(branche,schwach);
+      var prompt="Nenne 6 konkrete Software-Tools oder KI-Loesungen fuer "+safe(branche)
+        +" mit Schwachstellen in: "+safe(schwach)+". "
+        +"Fuer jedes Tool: Name, Kategorie (ki/rpa/robotik/daten), Emoji, 1 Satz Beschreibung, geschaetzte Zeitersparnis pro Woche, Website-URL. "
+        +"Trenne die 6 Tools jeweils mit --- (drei Bindestriche).";
       var t=await callApi(prompt,600);
-      var clean=t.replace(/```json/g,"").replace(/```/g,"").trim();
-      var j=JSON.parse(clean);
-      setLoes(j.loesungen);
+      var tools=parseLoes(t);
+      setLoes(tools);
     }catch(e){setLoes([]);}
     setLoadL(false);
+  }
+
+  function parseLoes(text){
+    var parts=text.split("---");
+    var result=[];
+    for(var i=0;i<parts.length&&result.length<6;i++){
+      var p=parts[i].trim();
+      if(!p)continue;
+      var lines=p.split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
+      if(lines.length<2)continue;
+      var name=lines[0].replace(/^\*+/,"").replace(/\*+$/,"").trim();
+      var desc=lines[1]||"";
+      var kat="ki";
+      var plower=p.toLowerCase();
+      if(plower.indexOf("rpa")>=0||plower.indexOf("automatisierung")>=0)kat="rpa";
+      else if(plower.indexOf("robotik")>=0||plower.indexOf("robot")>=0)kat="robotik";
+      else if(plower.indexOf("analytics")>=0||plower.indexOf("daten")>=0||plower.indexOf("dashboard")>=0)kat="daten";
+      var url="https://google.com/search?q="+encodeURIComponent(name);
+      var einsparung="bis zu 5h/Woche";
+      for(var j=0;j<lines.length;j++){
+        if(lines[j].toLowerCase().indexOf("http")>=0){url=lines[j].replace(/.*?(https?:\/\/\S+).*/,"$1");break;}
+        if(lines[j].toLowerCase().indexOf("h/woche")>=0||lines[j].toLowerCase().indexOf("stunden")>=0){einsparung=lines[j];break;}
+      }
+      var icons={ki:"🤖",rpa:"⚙️",robotik:"🦾",daten:"📊"};
+      result.push({name:name,tag:KL[kat]||"KI",icon:icons[kat]||"🤖",kategorie:kat,desc:desc,url:url,einsparung:einsparung});
+    }
+    return result;
   }
 
   function renderMd(t){
@@ -197,13 +203,12 @@ function App(){
       .replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>")
       .replace(/^## (.+)$/gm,"<h2 style='font-size:15px;font-weight:500;margin:1.2rem 0 0.4rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:4px'>$1</h2>")
       .replace(/^- (.+)$/gm,"<li style='margin:4px 0;color:"+T2+";line-height:1.5'>$1</li>")
-      .replace(/(<li[^>]*>[\s\S]*?<\/li>)/gm,"$1")
       .replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
   }
 
   function btxt(){
     var g=ges();
-    return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;
+    return "ONLION IQ\n"+("=".repeat(30))+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;
   }
 
   var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1.25rem",marginBottom:16};
@@ -211,44 +216,38 @@ function App(){
   var btnG={width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:14,color:G,fontWeight:500};
   var btn={width:"100%",padding:"11px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:14,color:TX,marginTop:8};
   var btnO={width:"100%",padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2,marginTop:8};
-  function badge(c){return{display:"inline-block",padding:"2px 8px",borderRadius:20,background:c+"22",border:"0.5px solid "+c+"66",fontSize:10,color:c};}
-  function lbl(){return{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:4};}
-  function div(){return{height:1,background:BD,margin:"20px 0"};}
+  function bdg(c){return{display:"inline-block",padding:"2px 8px",borderRadius:20,background:c+"22",border:"0.5px solid "+c+"66",fontSize:10,color:c};}
 
   if(step==="intro") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
       <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>Wie intelligent arbeitet Ihr Unternehmen?</h1>
-      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert mit KI Ihr Automatisierungspotenzial — kostenlos in 5 Minuten.</p>
+      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert Ihr Automatisierungspotenzial — kostenlos in 5 Minuten.</p>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
-        {KK.map(function(k){return(
-          <div key={k.key} style={{...card,marginBottom:0,display:"flex",gap:10,alignItems:"flex-start"}}>
-            <span style={{fontSize:20}}>{k.icon}</span>
-            <div><div style={{fontSize:12,fontWeight:500,color:KC[k.key]}}>{k.label}</div><div style={{fontSize:11,color:T2,marginTop:2}}>{k.desc}</div></div>
+        {[{k:"ki",l:"KI & Agenten",i:"🤖",d:"KI, Chatbots, LLMs"},{k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}].map(function(k){return(
+          <div key={k.k} style={{...card,marginBottom:0,display:"flex",gap:10,alignItems:"flex-start"}}>
+            <span style={{fontSize:20}}>{k.i}</span>
+            <div><div style={{fontSize:12,fontWeight:500,color:KC[k.k]}}>{k.l}</div><div style={{fontSize:11,color:T2,marginTop:2}}>{k.d}</div></div>
           </div>
         );})}
       </div>
       <div style={{...card,marginBottom:20}}>
-        <div style={lbl()}>In 5 Minuten erhalten Sie</div>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>In 5 Minuten erhalten Sie</div>
         {[["🧠","IQ-Score (0–100%)"],["🤖","KI-Potenzial je Bereich"],["⚙️","Automatisierungs-Empfehlungen"],["🗺️","3-Phasen KI-Roadmap"]].map(function(x,i){return(
-          <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8,marginTop:i===0?8:0}}>
+          <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
             <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span><span style={{fontSize:13,color:T2}}>{x[1]}</span>
           </div>
         );})}
       </div>
       <input placeholder="Ihre E-Mail *" value={email} onChange={function(e){setEmail(e.target.value);}} type="email"/>
       <input placeholder="Firmenname (optional)" value={firma} onChange={function(e){setFirma(e.target.value);}}/>
-      <input placeholder="Mitarbeiter (optional)" value={ma} onChange={function(e){setMa(e.target.value);}}/>
       <select value={branche} onChange={function(e){setBranche(e.target.value);}} style={{marginBottom:10}}>
         <option value="">Branche auswählen *</option>
         {BRANCHEN.map(function(b){return <option key={b} value={b}>{b}</option>;})}
       </select>
       <textarea placeholder="Beschreiben Sie Ihr Unternehmen kurz..." value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:16}}/>
       {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
-      {loadB
-        ?<LoadBox msg="KI erstellt Ihre Analysebereiche..." sub="ca. 10 Sekunden" steps={["Daten lesen","Bereiche erstellen","Fragen generieren"]}/>
-        :<button disabled={!branche||!email} onClick={ladeBereiche} style={{...btnG,opacity:branche&&email?1:0.4}}>IQ-Analyse starten →</button>
-      }
+      <button disabled={!branche||!email} onClick={startAnalyse} style={{...btnG,opacity:branche&&email?1:0.4}}>IQ-Analyse starten →</button>
       <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Ihre E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
     </div>
   );
@@ -259,7 +258,7 @@ function App(){
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
         <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>KI-generierte Analysebereiche</h1>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>Analysebereiche auswählen</h1>
         <p style={{color:T2,fontSize:13,marginBottom:20}}>Für: <span style={{color:G}}>{firma||branche}</span></p>
         <div style={{...card,marginBottom:16}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
@@ -267,7 +266,7 @@ function App(){
             <button onClick={function(){setAktiv(alle?[]:bereiche.map(function(b){return b.id;}));}} style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid "+(alle?G:BD),background:alle?G+"18":"transparent",cursor:"pointer",fontSize:12,color:alle?G:T2}}>{alle?"Alle abwählen":"Alle auswählen"}</button>
           </div>
           {bereiche.map(function(b){
-            var a=aktiv.indexOf(b.id)>=0,kc=KC[b.kiKategorie]||G,kl=KL[b.kiKategorie]||"KI";
+            var a=aktiv.indexOf(b.id)>=0,kc=KC[b.kiKat]||G,kl=KL[b.kiKat]||"KI";
             return(
               <div key={b.id} onClick={function(){setAktiv(function(p){return a?p.filter(function(id){return id!==b.id;}):[...p,b.id];});}} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"12px 14px",borderRadius:8,border:"0.5px solid "+(a?G:BD),background:a?G+"0d":"transparent",marginBottom:8,cursor:"pointer"}}>
                 <div style={{width:20,height:20,borderRadius:5,border:"1.5px solid "+(a?G:BD),background:a?G:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:D,fontWeight:700,marginTop:3}}>{a?"✓":""}</div>
@@ -275,10 +274,9 @@ function App(){
                 <div style={{flex:1}}>
                   <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3}}>
                     <span style={{fontSize:14,color:a?TX:T2,fontWeight:a?500:400}}>{b.label}</span>
-                    <span style={badge(kc)}>{kl}</span>
+                    <span style={bdg(kc)}>{kl}</span>
                   </div>
-                  <div style={{fontSize:12,color:T2,lineHeight:1.5,marginBottom:4}}>{b.beschreibung}</div>
-                  <div style={{fontSize:11,color:kc+"99",fontStyle:"italic"}}>{b.kiHinweis}</div>
+                  <div style={{fontSize:11,color:kc+"99",fontStyle:"italic"}}>{b.hint}</div>
                 </div>
               </div>
             );
@@ -292,7 +290,7 @@ function App(){
   }
 
   if(step==="fragebogen"&&curB){
-    var kc=KC[curB.kiKategorie]||G,kl=KL[curB.kiKategorie]||"KI";
+    var kc=KC[curB.kiKat]||G,kl=KL[curB.kiKat]||"KI";
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
@@ -311,18 +309,17 @@ function App(){
         <div style={card}>
           <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:4}}>
             <h2 style={{fontSize:16,fontWeight:500,margin:0,color:TX}}>{curB.icon} {curB.label}</h2>
-            <span style={{...badge(kc),whiteSpace:"nowrap",marginTop:2}}>{kl}</span>
+            <span style={{...bdg(kc),whiteSpace:"nowrap",marginTop:2}}>{kl}</span>
           </div>
-          <p style={{fontSize:12,color:T2,margin:"0 0 6px",lineHeight:1.5}}>{curB.beschreibung}</p>
           <div style={{background:kc+"0d",border:"0.5px solid "+kc+"33",borderRadius:6,padding:"8px 10px",marginBottom:16,display:"flex",gap:8}}>
             <span style={{fontSize:14,flexShrink:0}}>💡</span>
-            <span style={{fontSize:11,color:kc+"cc",lineHeight:1.5}}><strong style={{color:kc}}>KI-Potenzial:</strong> {curB.kiHinweis}</span>
+            <span style={{fontSize:11,color:kc+"cc",lineHeight:1.5}}><strong style={{color:kc}}>KI-Potenzial:</strong> {curB.hint}</span>
           </div>
           {(curB.fragen||[]).map(function(item,i){
             return(
               <div key={i} style={{marginBottom:20,borderBottom:i<curB.fragen.length-1?"0.5px solid "+BD:"none",paddingBottom:i<curB.fragen.length-1?16:0}}>
-                <p style={{fontSize:14,marginBottom:10,lineHeight:1.6,color:TX,fontWeight:500}}>{i+1}. {item.frage}</p>
-                {(item.optionen||[]).map(function(opt,oi){
+                <p style={{fontSize:14,marginBottom:10,lineHeight:1.6,color:TX,fontWeight:500}}>{i+1}. {item.f}</p>
+                {(item.o||[]).map(function(opt,oi){
                   var val=ov(oi),key=curB.id+"_"+i,sel=antw[key]===val;
                   return <button key={oi} onClick={function(){setA(curB.id,i,val);}} style={{padding:"10px 14px",borderRadius:8,border:"0.5px solid "+(sel?G:BD),background:sel?G+"18":"transparent",fontSize:13,textAlign:"left",cursor:"pointer",color:sel?G:TX,marginBottom:8,width:"100%",display:"block",lineHeight:1.5}}><span style={{color:sel?G:T2,marginRight:8}}>{sel?"◉":"○"}</span>{opt}</button>;
                 })}
@@ -350,17 +347,17 @@ function App(){
         <p style={{color:T2,fontSize:13,marginBottom:0}}>{firma||"Ihr Unternehmen"} · {branche}</p>
         <IQMeter score={g}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-          <div style={card}><div style={lbl()}>IQ-Score</div><div style={{fontSize:28,fontWeight:500}}>{g}%</div></div>
-          <div style={cardG}><div style={{...lbl(),color:G+"99"}}>KI-Potenzial</div><div style={{fontSize:28,fontWeight:500,color:G}}>{p}%</div></div>
+          <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>IQ-Score</div><div style={{fontSize:28,fontWeight:500}}>{g}%</div></div>
+          <div style={cardG}><div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>KI-Potenzial</div><div style={{fontSize:28,fontWeight:500,color:G}}>{p}%</div></div>
         </div>
         {gefB.map(function(b){
-          var sc=gs(b.id),kc=KC[b.kiKategorie]||G,kl=KL[b.kiKategorie]||"KI";
+          var sc=gs(b.id),kc=KC[b.kiKat]||G;
           return(
             <div key={b.id} style={{marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
                 <div style={{display:"flex",alignItems:"center",gap:6}}>
                   <span style={{fontSize:13,color:T2}}>{b.icon} {b.label}</span>
-                  <span style={{...badge(kc),fontSize:9}}>{kl}</span>
+                  <span style={{...bdg(kc),fontSize:9}}>{KL[b.kiKat]||"KI"}</span>
                 </div>
                 <span style={{fontSize:12,color:TX}}>{sc}% <span style={{color:G}}>+{100-sc}%</span></span>
               </div>
@@ -371,7 +368,7 @@ function App(){
           );
         })}
         {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
-        <div style={div()}/>
+        <div style={{height:1,background:BD,margin:"20px 0"}}/>
         {loadR
           ?<LoadBox msg="KI erstellt Ihren Bericht..." sub="ca. 10 Sekunden" steps={["Auswerten","Empfehlungen","Roadmap"]}/>
           :<button onClick={analysiereReport} style={btnG}>KI-Bericht & Roadmap erstellen →</button>
@@ -391,18 +388,17 @@ function App(){
           <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>KI-POTENZIAL</div></div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat("+Math.min(gefB.length,3)+",1fr)",gap:8,marginBottom:16}}>
-          {gefB.map(function(b){var kc=KC[b.kiKategorie]||G;return(
+          {gefB.map(function(b){var kc=KC[b.kiKat]||G;return(
             <div key={b.id} style={{...card,padding:"0.75rem",textAlign:"center",marginBottom:0}}>
               <div style={{fontSize:9,color:T2,marginBottom:2}}>{b.label}</div>
               <div style={{fontSize:18,fontWeight:500,color:gs(b.id)<50?kc:TX}}>{gs(b.id)}%</div>
-              <div style={{fontSize:9,color:kc,marginTop:2}}>{KL[b.kiKategorie]||""}</div>
             </div>
           );})}
         </div>
         <div style={{...card,lineHeight:1.7,fontSize:13,color:T2,marginBottom:16}} dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
         <div style={{...card,marginBottom:16}}>
-          <div style={lbl()}>Bericht teilen</div>
-          <div style={{display:"flex",gap:8,marginBottom:12,marginTop:8}}>
+          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht teilen</div>
+          <div style={{display:"flex",gap:8,marginBottom:12}}>
             <button onClick={function(){navigator.clipboard.writeText(btxt()).then(function(){setShareMsg("Kopiert!");setTimeout(function(){setShareMsg("");},2500);});}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>📋 Kopieren</button>
             <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ-"+(firma||"Bericht")+".txt";a.click();}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>⬇ Download</button>
           </div>
@@ -412,9 +408,9 @@ function App(){
           </div>
           {shareMsg&&<p style={{fontSize:12,color:G,marginTop:8,marginBottom:0}}>{shareMsg}</p>}
         </div>
-        <div style={div()}/>
-        <div style={lbl()}>Nächste Schritte</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10,marginTop:8}}>
+        <div style={{height:1,background:BD,margin:"20px 0"}}/>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Nächste Schritte</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
           <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}>
             <div style={{fontSize:20,marginBottom:6}}>🤖</div>
             <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>KI-Lösungen</div>
@@ -428,7 +424,7 @@ function App(){
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
           <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setMa("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setAktiv([]);setLoes([]);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
         </div>
       </div>
     );
@@ -447,12 +443,12 @@ function App(){
             <div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
                 <span style={{fontSize:22}}>{l.icon}</span>
-                <span style={{...badge(kc),fontSize:9}}>{l.tag}</span>
+                <span style={{...bdg(kc),fontSize:9}}>{l.tag}</span>
               </div>
               <div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div>
               <div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>
               {l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}
-              {l.url&&<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">Mehr →</a>}
+              <a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">Mehr →</a>
             </div>
           );})}
         </div>
@@ -460,7 +456,7 @@ function App(){
       <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}>
         <div style={{fontSize:24,marginBottom:8}}>🎯</div>
         <div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div>
-        <p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos — welche Lösungen wirklich passen.</p>
+        <p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p>
         <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>Kostenloses Gespräch buchen →</button>
       </div>
     </div>
@@ -489,7 +485,7 @@ function App(){
               <input type="date" value={termin.datum} onChange={function(e){setTermin(function(t){return Object.assign({},t,{datum:e.target.value});});}} style={{colorScheme:"dark"}}/>
               <textarea placeholder="Was interessiert Sie?" value={termin.msg} onChange={function(e){setTermin(function(t){return Object.assign({},t,{msg:e.target.value});});}} rows={3} style={{resize:"vertical",marginBottom:0}}/>
             </div>
-            <button disabled={!termin.name||!termin.email} onClick={function(){window.open("mailto:info@onlion.de?subject=Beratung ONLION IQ&body=Name: "+termin.name+"%0AEmail: "+termin.email+"%0ATel: "+(termin.tel||"-")+"%0ADatum: "+(termin.datum||"-")+"%0ANachricht: "+(termin.msg||"-")+"%0A%0AIQ: "+tg+"%25 | Potenzial: "+(100-tg)+"%25%0ABranche: "+branche);setTerminSent(true);}} style={{...btnG,opacity:termin.name&&termin.email?1:0.4}}>Termin anfragen →</button>
+            <button disabled={!termin.name||!termin.email} onClick={function(){window.open("mailto:info@onlion.de?subject=Beratung ONLION IQ&body=Name: "+termin.name+"%0AEmail: "+termin.email+"%0ATel: "+(termin.tel||"-")+"%0ADatum: "+(termin.datum||"-")+"%0ANachricht: "+(termin.msg||"-")+"%0A%0AIQ: "+tg+"%25%0ABranche: "+branche);setTerminSent(true);}} style={{...btnG,opacity:termin.name&&termin.email?1:0.4}}>Termin anfragen →</button>
           </>
           :<div style={{textAlign:"center",paddingTop:"2rem"}}>
             <div style={{fontSize:48,marginBottom:16}}>✅</div>
@@ -503,7 +499,6 @@ function App(){
   }
   return null;
 }
-
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
 </script>
 </body>
