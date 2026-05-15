@@ -155,7 +155,7 @@ function App(){
     setLoadB(true);setErr("");
     try{
       var prompt=buildBereichePrompt(branche,firma,desc);
-      var t=await callApi(prompt,1200);
+      var t=await callApi(prompt,2000);
       var clean=t.replace(/```json/g,"").replace(/```/g,"").trim();
       var j=JSON.parse(clean);
       setBereiche(j.bereiche);
