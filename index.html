@@ -542,7 +542,7 @@ function App(){
               <input type="date" value={termin.datum} onChange={function(e){setTermin(function(t){return Object.assign({},t,{datum:e.target.value});});}} style={{colorScheme:"dark"}}/>
               <textarea placeholder="Was interessiert Sie?" value={termin.msg} onChange={function(e){setTermin(function(t){return Object.assign({},t,{msg:e.target.value});});}} rows={3} style={{resize:"vertical",marginBottom:0}}/>
             </div>
-            <button disabled={!termin.name||!termin.email} onClick={function(){window.open("mailto:info@onlion.de?subject=Beratung ONLION IQ&body=Name: "+termin.name+"%0AEmail: "+termin.email+"%0ATel: "+(termin.tel||"-")+"%0ADatum: "+(termin.datum||"-")+"%0ANachricht: "+(termin.msg||"-")+"%0A%0AIQ: "+tg+"%25%0ABranche: "+branche);setTerminSent(true);}} style={{...btnG,opacity:termin.name&&termin.email?1:0.4}}>Termin anfragen →</button>
+            <button disabled={!termin.name||!termin.email} onClick={function(){window.open("mailto:onlion-@outlook.de?subject=Beratung ONLION IQ&body=Name: "+termin.name+"%0AEmail: "+termin.email+"%0ATel: "+(termin.tel||"-")+"%0ADatum: "+(termin.datum||"-")+"%0ANachricht: "+(termin.msg||"-")+"%0A%0AIQ: "+tg+"%25%0ABranche: "+branche);setTerminSent(true);}} style={{...btnG,opacity:termin.name&&termin.email?1:0.4}}>Termin anfragen →</button>
           </>
           :<div style={{textAlign:"center",paddingTop:"2rem"}}>
             <div style={{fontSize:48,marginBottom:16}}>✅</div>
