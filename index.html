@@ -27,8 +27,7 @@ var KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"}
 
 function safe(s){return(s||"").replace(/[^\w\s.,\-äöüÄÖÜß]/g," ").replace(/\s+/g," ").trim();}
 
-// Parst den KI-Text in Bereiche ohne JSON
-function parseBereicheText(text, branche){
+function parseBereicheText(text,branche){
   var bereiche=[];
   var blocks=text.split(/\n(?=BEREICH)/);
   for(var i=0;i<blocks.length&&bereiche.length<6;i++){
@@ -41,99 +40,97 @@ function parseBereicheText(text, branche){
     var hint=lines[2]||"";
     var kat="rpa";
     var ll=label.toLowerCase()+hint.toLowerCase();
-    if(ll.indexOf("ki ")>=0||ll.indexOf("chatbot")>=0||ll.indexOf("agent")>=0||ll.indexOf("sprach")>=0)kat="ki";
-    else if(ll.indexOf("robot")>=0||ll.indexOf("maschine")>=0||ll.indexOf("cobots")>=0)kat="robotik";
-    else if(ll.indexOf("daten")>=0||ll.indexOf("analytic")>=0||ll.indexOf("dashboard")>=0||ll.indexOf("bericht")>=0)kat="daten";
+    if(ll.indexOf("ki ")>=0||ll.indexOf("chatbot")>=0||ll.indexOf("agent")>=0)kat="ki";
+    else if(ll.indexOf("robot")>=0||ll.indexOf("maschine")>=0)kat="robotik";
+    else if(ll.indexOf("daten")>=0||ll.indexOf("analytic")>=0||ll.indexOf("dashboard")>=0)kat="daten";
     var fragen=[];
     var fragenBlock=lines.slice(3).join("\n");
     var fmatches=fragenBlock.split(/FRAGE\s*\d*[:.\s]*/i).filter(function(f){return f.trim();});
     for(var j=0;j<fmatches.length&&fragen.length<2;j++){
       var flines=fmatches[j].split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
       if(flines.length<5)continue;
-      var frage=flines[0];
       var optionen=flines.slice(1,5);
-      if(optionen.length===4)fragen.push({f:frage,o:optionen});
+      if(optionen.length===4)fragen.push({f:flines[0],o:optionen});
     }
-    if(fragen.length>0){
-      bereiche.push({id:"b"+(i+1),label:label,icon:icon,hint:hint,kiKat:kat,fragen:fragen});
-    }
+    if(fragen.length>0)bereiche.push({id:"b"+(i+1),label:label,icon:icon,hint:hint,kiKat:kat,fragen:fragen});
   }
-  // Fallback falls Parsing fehlschlägt
-  if(bereiche.length<3){
-    return getDefaultBereiche(branche);
-  }
+  if(bereiche.length<3)return getDefault(branche);
   return bereiche;
 }
 
-function getDefaultBereiche(branche){
-  var isPflege=branche==="Gesundheit / Pflege";
-  return [
-    {id:"b1",label:isPflege?"Patientenverwaltung":"Geschäftsprozesse",icon:isPflege?"🏥":"⚙️",kiKat:"rpa",hint:"Automatisierung spart täglich wertvolle Zeit.",fragen:[{f:isPflege?"Wie werden Patiententermine verwaltet?":"Wie werden Aufträge bearbeitet?",o:["Vollständig manuell","Teilweise digital","Größtenteils automatisiert","Vollständig automatisiert"]},{f:"Wie werden Dokumente und Formulare verarbeitet?",o:["Nur auf Papier","Eingescannt, manuell","Digital, teilweise automatisch","Vollautomatisch"]}]},
-    {id:"b2",label:isPflege?"Abrechnung":"Finanzen & Buchhaltung",icon:"💰",kiKat:"rpa",hint:"RPA kann Rechnungen und Abrechnungen automatisieren.",fragen:[{f:isPflege?"Wie läuft die Kassenabrechnung ab?":"Wie werden Rechnungen erstellt?",o:["Manuell mit Papier","Software, viel manuell","Halbautomatisch","Vollautomatisch"]},{f:"Wie werden Zahlungen verbucht?",o:["Manuell eingetippt","Teilweise digital","Software mit Kontrolle","Vollautomatisch"]}]},
-    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Agenten können Standardanfragen automatisch beantworten.",fragen:[{f:"Wie werden Kundenanfragen bearbeitet?",o:["Nur Telefon/persönlich","E-Mail manuell","E-Mail mit Vorlagen","KI-gestützt automatisch"]},{f:"Gibt es automatisierte Benachrichtigungen?",o:["Nein","Gelegentlich","Für bestimmte Ereignisse","Vollautomatisch personalisiert"]}]},
+function getDefault(branche){
+  var p=branche==="Gesundheit / Pflege";
+  return[
+    {id:"b1",label:p?"Patientenverwaltung":"Geschäftsprozesse",icon:p?"🏥":"⚙️",kiKat:"rpa",hint:"Automatisierung spart täglich wertvolle Zeit.",fragen:[{f:p?"Wie werden Patiententermine verwaltet?":"Wie werden Aufträge bearbeitet?",o:["Vollständig manuell","Teilweise digital","Größtenteils automatisiert","Vollständig automatisiert"]},{f:"Wie werden Dokumente verarbeitet?",o:["Nur auf Papier","Eingescannt manuell","Digital teilweise automatisch","Vollautomatisch"]}]},
+    {id:"b2",label:p?"Abrechnung":"Finanzen",icon:"💰",kiKat:"rpa",hint:"RPA kann Rechnungen automatisieren.",fragen:[{f:"Wie werden Rechnungen erstellt?",o:["Manuell Papier","Software viel manuell","Halbautomatisch","Vollautomatisch"]},{f:"Wie werden Zahlungen verbucht?",o:["Manuell","Teilweise digital","Software mit Kontrolle","Vollautomatisch"]}]},
+    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Agenten beantworten Standardanfragen automatisch.",fragen:[{f:"Wie werden Kundenanfragen bearbeitet?",o:["Nur Telefon","E-Mail manuell","E-Mail mit Vorlagen","KI-gestützt automatisch"]},{f:"Gibt es automatisierte Benachrichtigungen?",o:["Nein","Gelegentlich","Für bestimmte Ereignisse","Vollautomatisch"]}]},
     {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitale HR-Prozesse sparen bis zu 10h pro Woche.",fragen:[{f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr","Software automatisch","Mit Lohnabrechnung verknüpft"]},{f:"Wie läuft das Onboarding ab?",o:["Informell persönlich","Checkliste Papier","Digitale Checkliste","Automatisiertes System"]}]},
-    {id:"b5",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Echtzeit-Dashboards ersetzen manuelle Excel-Berichte.",fragen:[{f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen manuell","Software, manuell gestartet","Automatisch in Echtzeit"]},{f:"Wie werden Daten zwischen Systemen übertragen?",o:["Per E-Mail oder Telefon","Manuell kopiert","Teilweise automatisch","Vollautomatisch per API"]}]},
-    {id:"b6",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung senken Betriebskosten stark.",fragen:[{f:"Wie wird der Bestand verwaltet?",o:["Manuell mit Listen","Einfache Software","Lagersoftware teilweise","Automatisch mit RFID/Scanner"]},{f:"Wie läuft die Wartung ab?",o:["Nur bei Ausfall","Feste Intervalle Papier","Digitale Wartungspläne","Automatische Überwachung"]}]}
+    {id:"b5",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Echtzeit-Dashboards ersetzen manuelle Excel-Berichte.",fragen:[{f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen manuell","Software manuell gestartet","Automatisch in Echtzeit"]},{f:"Wie werden Daten übertragen?",o:["Per E-Mail","Manuell kopiert","Teilweise automatisch","Vollautomatisch per API"]}]},
+    {id:"b6",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung senken Betriebskosten.",fragen:[{f:"Wie wird der Bestand verwaltet?",o:["Manuell mit Listen","Einfache Software","Lagersoftware teilweise","Automatisch mit RFID"]},{f:"Wie läuft die Wartung ab?",o:["Nur bei Ausfall","Feste Intervalle","Digitale Wartungspläne","Automatische Überwachung"]}]}
   ];
 }
 
 function Logo(){
-  return(<div style={{marginBottom:28}}>
-    <div style={{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}}>
-      <span>ON</span><span style={{color:G}}>L</span><span>ION</span><span style={{color:G,marginLeft:6}}>IQ</span>
-    </div>
-    <div style={{fontSize:11,color:T2,letterSpacing:2,marginTop:2}}>INTELLIGENCE QUOTIENT</div>
-  </div>);
+  return React.createElement("div",{style:{marginBottom:28}},
+    React.createElement("div",{style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}},
+      React.createElement("span",null,"ON"),
+      React.createElement("span",{style:{color:G}},"L"),
+      React.createElement("span",null,"ION"),
+      React.createElement("span",{style:{color:G,marginLeft:6}},"IQ")
+    ),
+    React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
+  );
 }
 
-function Spin(){return <span style={{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>;}
+function Spin(){
+  return React.createElement("span",{style:{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}});
+}
 
 function LoadBox(props){
-  return(<div style={{background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"2rem",textAlign:"center",marginBottom:16}}>
-    <div style={{marginBottom:16,display:"flex",justifyContent:"center"}}><Spin/></div>
-    <div style={{fontSize:15,color:TX,marginBottom:6,fontWeight:500}}>{props.msg}</div>
-    <div style={{fontSize:12,color:T2,marginBottom:20}}>{props.sub}</div>
-    <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}}>
-      {(props.steps||[]).map(function(t,i){return <span key={i} style={{fontSize:11,color:T2,background:D3,padding:"4px 12px",borderRadius:20,animation:"pulse "+(1+i*0.4)+"s ease-in-out infinite"}}>{t}</span>;})}
-    </div>
-  </div>);
+  return React.createElement("div",{style:{background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"2rem",textAlign:"center",marginBottom:16}},
+    React.createElement("div",{style:{marginBottom:16,display:"flex",justifyContent:"center"}},React.createElement(Spin)),
+    React.createElement("div",{style:{fontSize:15,color:TX,marginBottom:6,fontWeight:500}},props.msg),
+    React.createElement("div",{style:{fontSize:12,color:T2,marginBottom:20}},props.sub),
+    React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}},
+      (props.steps||[]).map(function(t,i){
+        return React.createElement("span",{key:i,style:{fontSize:11,color:T2,background:D3,padding:"4px 12px",borderRadius:20,animation:"pulse "+(1+i*0.4)+"s ease-in-out infinite"}},t);
+      })
+    )
+  );
 }
 
 function IQMeter(props){
   var score=props.score;
   var c=score>66?G:score>33?"#d4a000":"#c0392b";
-  return(<div style={{textAlign:"center",padding:"1.5rem 0"}}>
-    <svg width="140" height="80" viewBox="0 0 140 80">
-      <path d="M 10 70 A 60 60 0 0 1 130 70" fill="none" stroke={D3} strokeWidth="10" strokeLinecap="round"/>
-      <path d="M 10 70 A 60 60 0 0 1 130 70" fill="none" stroke={c} strokeWidth="10" strokeLinecap="round" strokeDasharray={(score/100*188)+" 188"}/>
-      <text x="70" y="68" textAnchor="middle" fontSize="22" fontWeight="500" fill={TX}>{score}%</text>
-    </svg>
-    <div style={{fontSize:12,color:c,marginTop:4}}>{score>66?"Gut automatisiert":score>33?"Ausbaufähig":"Hohes Potenzial"}</div>
-  </div>);
+  return React.createElement("div",{style:{textAlign:"center",padding:"1.5rem 0"}},
+    React.createElement("svg",{width:"140",height:"80",viewBox:"0 0 140 80"},
+      React.createElement("path",{d:"M 10 70 A 60 60 0 0 1 130 70",fill:"none",stroke:D3,strokeWidth:"10",strokeLinecap:"round"}),
+      React.createElement("path",{d:"M 10 70 A 60 60 0 0 1 130 70",fill:"none",stroke:c,strokeWidth:"10",strokeLinecap:"round",strokeDasharray:(score/100*188)+" 188"}),
+      React.createElement("text",{x:"70",y:"68",textAnchor:"middle",fontSize:"22",fontWeight:"500",fill:TX},score+"%")
+    ),
+    React.createElement("div",{style:{fontSize:12,color:c,marginTop:4}},score>66?"Gut automatisiert":score>33?"Ausbaufähig":"Hohes Potenzial")
+  );
 }
 
 function App(){
-  var us=React.useState;
-  var s1=us("intro"),step=s1[0],setStep=s1[1];
-  var s2=us(""),branche=s2[0],setBranche=s2[1];
-  var s3=us(""),firma=s3[0],setFirma=s3[1];
-  var s4=us(""),desc=s4[0],setDesc=s4[1];
-  var s5=us(""),email=s5[0],setEmail=s5[1];
-  var s6=us([]),bereiche=s6[0],setBereiche=s6[1];
-  var s7=us([]),aktiv=s7[0],setAktiv=s7[1];
-  var s8=us(false),loadB=s8[0],setLoadB=s8[1];
-  var s9=us(0),bIdx=s9[0],setBIdx=s9[1];
-  var s10=us({}),antw=s10[0],setAntw=s10[1];
-  var s11=us(false),loadR=s11[0],setLoadR=s11[1];
-  var s12=us(""),bericht=s12[0],setBericht=s12[1];
-  var s13=us([]),loes=s13[0],setLoes=s13[1];
-  var s14=us(false),loadL=s14[0],setLoadL=s14[1];
-  var s15=us(""),err=s15[0],setErr=s15[1];
-  var s16=us(""),shareMsg=s16[0],setShareMsg=s16[1];
-  var s17=us(""),mailShare=s17[0],setMailShare=s17[1];
-  var s18=us(false),mailSent=s18[0],setMailSent=s18[1];
-  var s19=us({name:"",email:"",tel:"",datum:"",msg:""}),termin=s19[0],setTermin=s19[1];
-  var s20=us(false),terminSent=s20[0],setTerminSent=s20[1];
+  var useState=React.useState;
+  var r1=useState("intro"),step=r1[0],setStep=r1[1];
+  var r2=useState(""),branche=r2[0],setBranche=r2[1];
+  var r3=useState(""),firma=r3[0],setFirma=r3[1];
+  var r4=useState(""),desc=r4[0],setDesc=r4[1];
+  var r5=useState(""),email=r5[0],setEmail=r5[1];
+  var r6=useState([]),bereiche=r6[0],setBereiche=r6[1];
+  var r7=useState([]),aktiv=r7[0],setAktiv=r7[1];
+  var r8=useState(false),loadB=r8[0],setLoadB=r8[1];
+  var r9=useState(0),bIdx=r9[0],setBIdx=r9[1];
+  var r10=useState({}),antw=r10[0],setAntw=r10[1];
+  var r11=useState(false),loadR=r11[0],setLoadR=r11[1];
+  var r12=useState(""),bericht=r12[0],setBericht=r12[1];
+  var r13=useState([]),loes=r13[0],setLoes=r13[1];
+  var r14=useState(false),loadL=r14[0],setLoadL=r14[1];
+  var r15=useState(""),err=r15[0],setErr=r15[1];
+  var r16=useState(""),mailShare=r16[0],setMailShare=r16[1];
+  var r17=useState(false),mailSent=r17[0],setMailSent=r17[1];
 
   var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
   var curB=gefB[bIdx];
@@ -152,8 +149,7 @@ function App(){
   function ov(i){return[0,33,67,100][i];}
 
   async function callApi(prompt,mt){
-    var payload={model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]};
-    var r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    var r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
     var d=await r.json();
     if(d.error)throw new Error(typeof d.error==="string"?d.error:JSON.stringify(d.error));
     return d.content?d.content.map(function(c){return c.text||"";}).join(""):"";
@@ -162,36 +158,29 @@ function App(){
   async function ladeBereiche(){
     if(!email||!branche){setErr("Bitte E-Mail und Branche eingeben.");return;}
     setLoadB(true);setErr("");
-    var b=safe(branche),f=safe(firma),dc=safe(desc);
-    var prompt="Erstelle 6 Analysebereiche fuer ein Unternehmen. Branche: "+b+". Firma: "+f+". Info: "+dc+"."
-      +"\n\nSchreibe jeden Bereich EXAKT in diesem Format (keine anderen Zeichen):"
-      +"\n\nBEREICH 1: [Bereichsname passend zum Unternehmen]"
-      +"\n[Ein einzelnes Emoji]"
-      +"\n[Ein Satz: welches KI oder Automatisierungs-Potenzial dieser Bereich hat]"
-      +"\nFRAGE 1: [Konkrete Frage zur aktuellen Situation]"
-      +"\n[Antwort Option A: vollstaendig manuell]"
-      +"\n[Antwort Option B: teilweise digital]"
-      +"\n[Antwort Option C: groesstenteils automatisiert]"
-      +"\n[Antwort Option D: vollstaendig automatisiert]"
-      +"\nFRAGE 2: [Zweite konkrete Frage]"
-      +"\n[Antwort Option A]"
-      +"\n[Antwort Option B]"
-      +"\n[Antwort Option C]"
-      +"\n[Antwort Option D]"
-      +"\n\nBEREICH 2: ..."
-      +"\n\nWichtig: Nur dieses Format, kein JSON, keine Erklaerungen, keine Nummerierungen bei Antworten.";
+    var prompt="Erstelle 6 Analysebereiche fuer ein Unternehmen. Branche: "+safe(branche)+". Firma: "+safe(firma)+". Info: "+safe(desc)+"."
+      +"\n\nFormat (exakt einhalten):"
+      +"\n\nBEREICH 1: [Name]"
+      +"\n[Emoji]"
+      +"\n[KI-Potenzial in einem Satz]"
+      +"\nFRAGE 1: [Frage]"
+      +"\n[Option A manuell]"
+      +"\n[Option B teilweise]"
+      +"\n[Option C groesstenteils]"
+      +"\n[Option D vollautomatisch]"
+      +"\nFRAGE 2: [Frage]"
+      +"\n[Option A]"
+      +"\n[Option B]"
+      +"\n[Option C]"
+      +"\n[Option D]"
+      +"\n\nBEREICH 2: ...";
     try{
       var t=await callApi(prompt,2000);
-      var parsed=parseBereicheText(t,branche);
-      setBereiche(parsed);
-      setAktiv(parsed.map(function(b){return b.id;}));
-      setStep("bereiche");
+      var p=parseBereicheText(t,branche);
+      setBereiche(p);setAktiv(p.map(function(b){return b.id;}));setStep("bereiche");
     }catch(e){
-      // Fallback zu festen Bereichen
-      var def=getDefaultBereiche(branche);
-      setBereiche(def);
-      setAktiv(def.map(function(b){return b.id;}));
-      setStep("bereiche");
+      var df=getDefault(branche);
+      setBereiche(df);setAktiv(df.map(function(b){return b.id;}));setStep("bereiche");
     }
     setLoadB(false);
   }
@@ -201,14 +190,8 @@ function App(){
     try{
       var g=ges();
       var info=gefB.map(function(b){return b.label+" "+gs(b.id)+"%";}).join(", ");
-      var prompt="Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "
-        +safe(firma||branche)+" ("+safe(branche)+"). "
-        +"IQ-Score: "+g+" Prozent. Bereiche: "+info+". "
-        +"Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. "
-        +"Maximal 350 Woerter. Konkret und praxisnah.";
-      var t=await callApi(prompt,800);
-      setBericht(t);
-      setStep("bericht");
+      var t=await callApi("Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. Bereiche: "+info+". Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. Max 350 Woerter.",800);
+      setBericht(t);setStep("bericht");
     }catch(e){setErr("Fehler: "+e.message);}
     setLoadR(false);
   }
@@ -217,140 +200,61 @@ function App(){
     if(loes.length)return;
     setLoadL(true);
     try{
-      var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).join(", ")||"alle Bereiche";
-      var prompt="Nenne 6 konkrete Software-Tools fuer "+safe(branche)+" mit Schwachstellen in: "+safe(schwach)+"."
-        +" Trenne die Tools mit ---."
-        +" Fuer jedes Tool: Name in Zeile 1, Beschreibung in Zeile 2, URL in Zeile 3, Zeitersparnis in Zeile 4."
-        +" Kein JSON, nur Text.";
-      var t=await callApi(prompt,600);
-      var tools=parseLoes(t);
-      setLoes(tools);
+      var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).join(", ")||"alle";
+      var t=await callApi("Nenne 6 Tools fuer "+safe(branche)+" schwache Bereiche: "+safe(schwach)+". Trenne mit ---. Pro Tool: Name, Beschreibung, URL, Zeitersparnis. Kein JSON.",600);
+      var parts=t.split("---");
+      var result=[];
+      var icons={ki:"🤖",rpa:"⚙️",robotik:"🦾",daten:"📊"};
+      for(var i=0;i<parts.length&&result.length<6;i++){
+        var lines=parts[i].trim().split("\n").map(function(l){return l.replace(/^\*+|\*+$/g,"").trim();}).filter(function(l){return l;});
+        if(lines.length<2)continue;
+        var kat="rpa";
+        var pl=(lines[0]+lines[1]).toLowerCase();
+        if(pl.indexOf("ki ")>=0||pl.indexOf("gpt")>=0||pl.indexOf("copilot")>=0)kat="ki";
+        else if(pl.indexOf("robot")>=0)kat="robotik";
+        else if(pl.indexOf("analytic")>=0||pl.indexOf("dashboard")>=0)kat="daten";
+        var url=lines.filter(function(l){return l.indexOf("http")>=0;})[0]||"https://google.com/search?q="+encodeURIComponent(lines[0]);
+        var esp=lines.filter(function(l){return l.indexOf("h/")>=0||l.indexOf("tunden")>=0;})[0]||"bis zu 5h/Woche";
+        result.push({name:lines[0],tag:KL[kat],icon:icons[kat],kategorie:kat,desc:lines[1]||"",url:url,einsparung:esp});
+      }
+      setLoes(result);
     }catch(e){setLoes([]);}
     setLoadL(false);
-  }
-
-  function parseLoes(text){
-    var parts=text.split("---");
-    var result=[];
-    var icons={ki:"🤖",rpa:"⚙️",robotik:"🦾",daten:"📊"};
-    for(var i=0;i<parts.length&&result.length<6;i++){
-      var p=parts[i].trim();
-      if(!p)continue;
-      var lines=p.split("\n").map(function(l){return l.replace(/^\*+|\*+$/g,"").trim();}).filter(function(l){return l;});
-      if(lines.length<2)continue;
-      var name=lines[0];
-      var desc=lines[1]||"";
-      var url=lines.filter(function(l){return l.indexOf("http")>=0;})[0]||"https://google.com/search?q="+encodeURIComponent(name);
-      var einsparung=lines.filter(function(l){return l.indexOf("h/")>=0||l.indexOf("Stunden")>=0||l.indexOf("Minuten")>=0;})[0]||"bis zu 5h/Woche";
-      var kat="rpa";
-      var pl=name.toLowerCase()+desc.toLowerCase();
-      if(pl.indexOf("ki ")>=0||pl.indexOf("chatbot")>=0||pl.indexOf("gpt")>=0||pl.indexOf("copilot")>=0)kat="ki";
-      else if(pl.indexOf("robot")>=0||pl.indexOf("cobot")>=0)kat="robotik";
-      else if(pl.indexOf("analytics")>=0||pl.indexOf("dashboard")>=0||pl.indexOf("bi ")>=0)kat="daten";
-      result.push({name:name,tag:KL[kat],icon:icons[kat],kategorie:kat,desc:desc,url:url,einsparung:einsparung});
-    }
-    return result;
   }
 
   function generatePDF(){
     var g=ges(),p=100-g;
     var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
-    var bereicheHTML=gefB.map(function(b){
+    var bHTML=gefB.map(function(b){
       var sc=gs(b.id);
-      var barW=sc+"%";
-      var barC=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";
-      return "<div style='margin-bottom:16px'>"
-        +"<div style='display:flex;justify-content:space-between;margin-bottom:6px'>"
-        +"<span style='font-size:13px;color:#f0f0f0'>"+b.icon+" "+b.label+"</span>"
-        +"<span style='font-size:13px;color:#7AC800'>"+sc+"% <span style=\"color:#888\">+"+( 100-sc)+"% Potenzial</span></span>"
-        +"</div>"
-        +"<div style='height:6px;background:#1e1e1e;border-radius:4px;overflow:hidden'>"
-        +"<div style='height:100%;width:"+barW+";background:"+barC+";border-radius:4px'></div>"
-        +"</div></div>";
+      var bc=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";
+      return "<div style='margin-bottom:14px'><div style='display:flex;justify-content:space-between;margin-bottom:5px'><span style='font-size:13px;color:#f0f0f0'>"+b.icon+" "+b.label+"</span><span style='font-size:12px;color:#7AC800'>"+sc+"%</span></div><div style='height:6px;background:#1e1e1e;border-radius:3px'><div style='height:100%;width:"+sc+"%;background:"+bc+";border-radius:3px'></div></div></div>";
     }).join("");
-
-    var berichtHTML=bericht
-      .replace(/\*\*(.+?)\*\*/g,"<strong style='color:#f0f0f0'>$1</strong>")
-      .replace(/^## (.+)$/gm,"<h3 style='font-size:14px;font-weight:600;color:#7AC800;margin:16px 0 6px;border-bottom:1px solid #2a2a2a;padding-bottom:4px'>$1</h3>")
-      .replace(/^- (.+)$/gm,"<li style='margin:4px 0;color:#888;line-height:1.6;font-size:12px'>$1</li>")
-      .replace(/(<li[^>]*>[\s\S]*?<\/li>)/gm,"$1")
-      .replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
-
-    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/>"
-      +"<title>ONLION IQ Bericht - "+(firma||branche)+"</title>"
-      +"<style>"
-      +"*{box-sizing:border-box;margin:0;padding:0}"
-      +"body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,-apple-system,sans-serif;padding:0}"
-      +"@media print{"
-      +"body{-webkit-print-color-adjust:exact;print-color-adjust:exact}"
-      +"@page{margin:0;size:A4}"
-      +"}"
-      +"</style></head><body>"
-
-      // TITELSEITE
-      +"<div style='background:#000;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;page-break-after:always'>"
-      +"<div style='position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.95) 40%, #000 100%);z-index:0'></div>"
-      +"<div style='position:relative;z-index:1'>"
-      +"<div style='text-align:right;margin-bottom:60px'>"
-      +"<span style='font-size:28px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span>"
+    var rHTML=bericht.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/^## (.+)$/gm,"<h3 style='font-size:14px;color:#7AC800;margin:16px 0 6px;border-bottom:1px solid #2a2a2a;padding-bottom:4px'>$1</h3>").replace(/^- (.+)$/gm,"<li style='margin:3px 0;color:#888;font-size:12px'>$1</li>").replace(/\n/g,"<br/>");
+    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ - "+safe(firma||branche)+"</title><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body>"
+      +"<div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'>"
+      +"<div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div>"
+      +"<div><div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>Automatisierungs-Analyse</div><h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+safe(firma||branche)+"</h1><p style='font-size:14px;color:#888;margin-bottom:40px'>"+safe(branche)+" · "+datum+"</p><div style='display:flex;gap:48px'><div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>IQ-SCORE</div><div style='font-size:52px;font-weight:700;color:#fff'>"+g+"%</div></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:6px'>KI-POTENZIAL</div><div style='font-size:52px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div></div>"
+      +"<div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ · onlion-iq.netlify.app</p></div>"
       +"</div>"
-      +"<div style='margin-top:80px'>"
-      +"<div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px'>Automatisierungs-Analyse</div>"
-      +"<h1 style='font-size:42px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:16px'>"+(firma||branche)+"</h1>"
-      +"<p style='font-size:16px;color:#888;margin-bottom:48px'>"+branche+" · "+datum+"</p>"
-      +"<div style='display:flex;gap:40px'>"
-      +"<div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:8px'>IQ-SCORE</div><div style='font-size:56px;font-weight:700;color:#fff'>"+g+"%</div></div>"
-      +"<div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:8px'>KI-POTENZIAL</div><div style='font-size:56px;font-weight:700;color:#7AC800'>"+p+"%</div></div>"
-      +"</div>"
-      +"</div>"
-      +"</div>"
-      +"<div style='position:relative;z-index:1;border-top:1px solid #2a2a2a;padding-top:20px'>"
-      +"<p style='font-size:11px;color:#444'>Erstellt mit ONLION IQ · onlion-iq.netlify.app</p>"
-      +"</div>"
-      +"</div>"
-
-      // SEITE 2: ERGEBNISSE
       +"<div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'>"
-      +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;border-bottom:1px solid #2a2a2a;padding-bottom:20px'>"
-      +"<span style='font-size:18px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span>"
-      +"<span style='font-size:12px;color:#888'>"+datum+"</span>"
+      +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;border-bottom:1px solid #2a2a2a;padding-bottom:16px'><span style='font-size:16px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span><span style='font-size:12px;color:#888'>"+datum+"</span></div>"
+      +"<h2 style='font-size:20px;font-weight:600;color:#fff;margin-bottom:6px'>Ergebnisse je Bereich</h2>"
+      +"<p style='font-size:12px;color:#888;margin-bottom:24px'>"+safe(firma||branche)+" · IQ-Score: "+g+"% · Potenzial: "+p+"%</p>"
+      +"<div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px'><div style='background:#141414;border:0.5px solid #2a2a2a;border-radius:8px;padding:16px'><div style='font-size:10px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px'>IQ-Score</div><div style='font-size:32px;font-weight:700;color:#fff'>"+g+"%</div></div><div style='background:#081200;border:0.5px solid #7AC80040;border-radius:8px;padding:16px'><div style='font-size:10px;color:#7AC80099;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px'>KI-Potenzial</div><div style='font-size:32px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div>"
+      +bHTML
       +"</div>"
-      +"<h2 style='font-size:22px;font-weight:600;color:#fff;margin-bottom:8px'>Ergebnisse je Bereich</h2>"
-      +"<p style='font-size:13px;color:#888;margin-bottom:32px'>"+firma+" · "+branche+"</p>"
-      +"<div style='display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px'>"
-      +"<div style='background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:20px'>"
-      +"<div style='font-size:11px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px'>Aktueller IQ-Score</div>"
-      +"<div style='font-size:36px;font-weight:700;color:#fff'>"+g+"%</div>"
-      +"</div>"
-      +"<div style='background:#081200;border:0.5px solid #7AC80040;border-radius:10px;padding:20px'>"
-      +"<div style='font-size:11px;color:#7AC80099;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px'>Ungenutztes KI-Potenzial</div>"
-      +"<div style='font-size:36px;font-weight:700;color:#7AC800'>"+p+"%</div>"
-      +"</div>"
-      +"</div>"
-      +bereicheHTML
-      +"</div>"
-
-      // SEITE 3: KI-BERICHT
       +"<div style='background:#0a0a0a;min-height:100vh;padding:48px'>"
-      +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;border-bottom:1px solid #2a2a2a;padding-bottom:20px'>"
-      +"<span style='font-size:18px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span>"
-      +"<span style='font-size:12px;color:#888'>KI-Analyse & Roadmap</span>"
+      +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;border-bottom:1px solid #2a2a2a;padding-bottom:16px'><span style='font-size:16px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span><span style='font-size:12px;color:#888'>KI-Analyse</span></div>"
+      +"<div style='font-size:13px;color:#888;line-height:1.8'>"+rHTML+"</div>"
+      +"<div style='margin-top:40px;padding:20px;background:#081200;border:1px solid #7AC80040;border-radius:8px;text-align:center'><div style='font-size:13px;font-weight:600;color:#7AC800;margin-bottom:6px'>Kostenloses KI-Beratungsgespräch buchen</div><div style='font-size:12px;color:#888'>calendly.com/ridge-linear5958-eagereverest/30min</div></div>"
       +"</div>"
-      +"<div style='font-size:13px;color:#888;line-height:1.8'>"+berichtHTML+"</div>"
-      +"<div style='margin-top:48px;padding:24px;background:#081200;border:1px solid #7AC80040;border-radius:10px;text-align:center'>"
-      +"<div style='font-size:14px;font-weight:600;color:#7AC800;margin-bottom:8px'>Kostenloses KI-Beratungsgespräch buchen</div>"
-      +"<div style='font-size:12px;color:#888;margin-bottom:12px'>30 Minuten · kostenlos · unverbindlich</div>"
-      +"<div style='font-size:13px;color:#7AC800'>onlion-iq.netlify.app</div>"
-      +"</div>"
-      +"</div>"
-
       +"</body></html>";
-
     var w=window.open("","_blank");
-    w.document.write(html);
-    w.document.close();
-    setTimeout(function(){w.print();},800);
+    if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
+
+  function renderMd(t){
     return t
       .replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>")
       .replace(/^## (.+)$/gm,"<h2 style='font-size:15px;font-weight:500;margin:1.2rem 0 0.4rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:4px'>$1</h2>")
@@ -360,7 +264,7 @@ function App(){
 
   function btxt(){
     var g=ges();
-    return "ONLION IQ\n"+("=".repeat(30))+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;
+    return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;
   }
 
   var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1.25rem",marginBottom:16};
@@ -561,7 +465,6 @@ function App(){
             <input placeholder="Per E-Mail senden..." value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
             <button onClick={function(){if(!mailShare)return;window.open("mailto:"+mailShare+"?subject=ONLION IQ Bericht&body="+encodeURIComponent(btxt()));setMailSent(true);setTimeout(function(){setMailSent(false);},3000);}} style={{padding:"9px 14px",borderRadius:8,border:"0.5px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,whiteSpace:"nowrap"}}>{mailSent?"Gesendet ✓":"Senden"}</button>
           </div>
-          {shareMsg&&<p style={{fontSize:12,color:G,marginTop:8,marginBottom:0}}>{shareMsg}</p>}
         </div>
         <div style={{height:1,background:BD,margin:"20px 0"}}/>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Nächste Schritte</div>
@@ -624,7 +527,7 @@ function App(){
       s.src="https://assets.calendly.com/assets/external/widget.js";
       s.async=true;
       document.body.appendChild(s);
-      return function(){document.body.removeChild(s);};
+      return function(){try{document.body.removeChild(s);}catch(e){}};
     },[]);
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
@@ -637,18 +540,16 @@ function App(){
             <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>Ihr KI-Potenzial</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div></div>
             <div style={{fontSize:36}}>🚀</div>
           </div>
-          <p style={{fontSize:12,color:T2,marginTop:8,marginBottom:0,lineHeight:1.5}}>Wählen Sie direkt einen freien Termin — keine E-Mail nötig.</p>
+          <p style={{fontSize:12,color:T2,marginTop:8,marginBottom:0}}>Wählen Sie direkt einen freien Termin.</p>
         </div>
-        <div
-          className="calendly-inline-widget"
-          data-url="https://calendly.com/ridge-linear5958-eagereverest/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=141414&text_color=f0f0f0&primary_color=7AC800"
-          style={{minWidth:280,height:630,borderRadius:10,overflow:"hidden"}}
-        />
+        <div className="calendly-inline-widget" data-url="https://calendly.com/ridge-linear5958-eagereverest/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=141414&text_color=f0f0f0&primary_color=7AC800" style={{minWidth:280,height:630,borderRadius:10,overflow:"hidden"}}/>
       </div>
     );
   }
+
   return null;
 }
+
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
 </script>
 </body>
