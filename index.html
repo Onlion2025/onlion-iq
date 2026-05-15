@@ -33,17 +33,7 @@ function safe(s){
 
 function buildBereichePrompt(branche,firma,desc){
   var b=safe(branche),f=safe(firma),d=safe(desc);
-  return [
-    "Erstelle 6 Analysebereiche fuer ein Unternehmen.",
-    "Branche ist " + b + ".",
-    "Firma ist " + f + ".",
-    "Beschreibung: " + d,
-    "Nenne Bereiche passend zum Unternehmen.",
-    "Fuer jeden Bereich 2 Fragen mit 4 Antworten von manuell bis vollautomatisiert.",
-    "Kategorie ist ki oder rpa oder robotik oder daten.",
-    "Antworte ausschliesslich mit diesem JSON-Format ohne Erklaerung:",
-    '{"bereiche":[{"id":"b1","label":"Bereichsname","icon":"emoji","beschreibung":"kurze Beschreibung","kiKategorie":"ki","kiHinweis":"Ein Satz zum Potenzial","fragen":[{"frage":"Frage?","optionen":["Vollstaendig manuell","Teilweise digital","Groesstenteils automatisiert","Vollstaendig automatisiert"]}]}]}'
-  ].join(" ");
+  return "Erstelle 6 Analysebereiche fuer " + f + " in der Branche " + b + ". Info: " + d + ". Benenne Bereiche passend zum Unternehmen. Je Bereich 2 Fragen mit je 4 Antworten von manuell bis vollautomatisiert. Kategorie: ki, rpa, robotik oder daten. Antworte nur mit validem JSON. Format: Objekt mit bereiche-Array. Jedes Element hat: id, label, icon, beschreibung, kiKategorie, kiHinweis, fragen-Array. Jede Frage hat: frage und optionen-Array mit 4 Eintraegen.";
 }
 
 function buildBerichtPrompt(firma,branche,g,info){
@@ -59,11 +49,7 @@ function buildBerichtPrompt(firma,branche,g,info){
 
 function buildLoesungenPrompt(branche,schwach){
   var b=safe(branche),s=safe(schwach);
-  return [
-    "Gib 6 konkrete Tool-Empfehlungen fuer",b,"mit schwachen Bereichen:",s+".",
-    "Antworte ausschliesslich mit diesem JSON ohne Erklaerung:",
-    '{"loesungen":[{"name":"Toolname","tag":"KI-Agent","icon":"emoji","kategorie":"ki","desc":"Ein Satz","url":"https://example.com","einsparung":"z.B. 5h pro Woche"}]}'
-  ].join(" ");
+  return "Gib 6 konkrete Tool-Empfehlungen fuer " + b + " mit schwachen Bereichen: " + s + ". Antworte nur mit validem JSON. Format: Objekt mit loesungen-Array. Jedes Element hat: name, tag, icon, kategorie, desc, url, einsparung.";
 }
 
 function Logo(){
@@ -170,7 +156,7 @@ function App(){
     try{
       var prompt=buildBereichePrompt(branche,firma,desc);
       var t=await callApi(prompt,1200);
-      var clean=t.replace(/[\u0000-\u001F\u007F]/g," ").replace(/```json/g,"").replace(/```/g,"").replace(/,\s*([}\]])/g,"$1").trim();(/```json/g,"").replace(/```/g,"").trim();
+      var clean=t.replace(/```json/g,"").replace(/```/g,"").trim();
       var j=JSON.parse(clean);
       setBereiche(j.bereiche);
       setAktiv(j.bereiche.map(function(b){return b.id;}));
@@ -199,7 +185,7 @@ function App(){
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).join(", ")||"alle Bereiche";
       var prompt=buildLoesungenPrompt(branche,schwach);
       var t=await callApi(prompt,600);
-      var clean=t.replace(/[\u0000-\u001F\u007F]/g," ").replace(/```json/g,"").replace(/```/g,"").replace(/,\s*([}\]])/g,"$1").trim();(/```json/g,"").replace(/```/g,"").trim();
+      var clean=t.replace(/```json/g,"").replace(/```/g,"").trim();
       var j=JSON.parse(clean);
       setLoes(j.loesungen);
     }catch(e){setLoes([]);}
