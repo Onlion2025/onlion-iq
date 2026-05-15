@@ -28,7 +28,6 @@ exports.handler = async (event) => {
     };
   }
 
-  let body;
   try {
     body = JSON.parse(event.body || "{}");
   } catch (e) {
@@ -39,30 +38,22 @@ exports.handler = async (event) => {
     };
   }
 
-  // Deep sanitize all string values in messages
-  function sanitize(str) {
-    if (typeof str !== "string") return str;
-    return str
-      .replace(/\\/g, "/")
-      .replace(/[\u0000-\u001F\u007F]/g, " ")
-      .replace(/"{2,}/g, '"')
-      .trim();
-  }
-
+  // Build clean request body using JSON.stringify for safety
+  const messages = [];
   if (body.messages && Array.isArray(body.messages)) {
-    body.messages = body.messages.map(function(msg) {
-      return {
-        role: msg.role,
-        content: sanitize(msg.content)
-      };
+    body.messages.forEach(function(msg) {
+      var content = typeof msg.content === "string" ? msg.content : String(msg.content || "");
+      messages.push({
+        role: msg.role || "user",
+        content: content
+      });
     });
   }
 
-  // Build clean request body
   const requestBody = {
     model: body.model || "claude-haiku-4-5",
     max_tokens: body.max_tokens || 800,
-    messages: body.messages
+    messages: messages
   };
 
   try {
