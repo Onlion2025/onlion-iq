@@ -162,6 +162,7 @@ function App(){
   var r16=useState(""),mailShare=r16[0],setMailShare=r16[1];
   var r17=useState(false),mailSent=r17[0],setMailSent=r17[1];
   var r18=useState(false),emailSent=r18[0],setEmailSent=r18[1];
+  var r19=useState(false),dsgvo=r19[0],setDsgvo=r19[1];
 
   var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
   var curB=gefB[bIdx];
@@ -302,9 +303,24 @@ function App(){
       </div>
 
       {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
+
+      {/* DSGVO Checkbox */}
+      <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:14,padding:"10px 12px",background:D2,border:"0.5px solid "+BD,borderRadius:8}}>
+        <input
+          type="checkbox"
+          id="dsgvo"
+          checked={dsgvo}
+          onChange={function(e){setDsgvo(e.target.checked);}}
+          style={{width:16,height:16,flexShrink:0,marginTop:2,marginBottom:0,accentColor:G,cursor:"pointer"}}
+        />
+        <label htmlFor="dsgvo" style={{fontSize:12,color:T2,lineHeight:1.6,cursor:"pointer"}}>
+          Ich habe die <button onClick={function(e){e.preventDefault();setStep("datenschutz");}} style={{background:"none",border:"none",color:G,cursor:"pointer",fontSize:12,textDecoration:"underline",padding:0}}>Datenschutzerklärung</button> gelesen und bin einverstanden, dass meine Daten zur Erstellung des Analyseberichts verarbeitet werden.
+        </label>
+      </div>
+
       {loadB
         ?<LoadBox msg="KI erstellt deine Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
-        :<button disabled={!canStart} onClick={ladeBereiche} style={{...btnG,opacity:canStart?1:0.4}}>IQ-Analyse starten →</button>
+        :<button disabled={!canStart||!dsgvo} onClick={ladeBereiche} style={{...btnG,opacity:(canStart&&dsgvo)?1:0.4}}>IQ-Analyse starten →</button>
       }
       <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Deine E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
       <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,paddingTop:16,borderTop:"0.5px solid "+BD}}>
@@ -459,7 +475,7 @@ function App(){
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
           <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
         </div>
       </div>
     );
