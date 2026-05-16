@@ -17,6 +17,9 @@ select option{background:#1a1a1a;color:#f0f0f0}
 ::placeholder{color:#f0f0f0;opacity:1}
 ::-webkit-input-placeholder{color:#f0f0f0}
 ::-moz-placeholder{color:#f0f0f0;opacity:1}
+textarea::placeholder{color:#888;opacity:1}
+textarea::-webkit-input-placeholder{color:#888}
+textarea::-moz-placeholder{color:#888;opacity:1}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -295,7 +298,7 @@ function App(){
           <span style={{fontSize:14,color:TX}}>Beschreib dein Unternehmen *</span>
           <span style={{fontSize:10,color:"#e05a5a"}}>Pflichtfeld</span>
         </div>
-        <textarea placeholder="Z.B. Mitarbeiteranzahl, welche Prozesse noch manuell laufen..." value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:14,color:TX,width:"100%",outline:"none"}}/>
+        <textarea placeholder="Z.B. Mitarbeiteranzahl, welche Prozesse noch manuell laufen..." value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:12,color:TX,width:"100%",outline:"none"}}/>
       </div>
 
       {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
