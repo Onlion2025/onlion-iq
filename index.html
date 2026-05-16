@@ -82,9 +82,7 @@ function Logo(){
   );
 }
 
-function Spin(){
-  return React.createElement("span",{style:{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}});
-}
+function Spin(){return React.createElement("span",{style:{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}});}
 
 function LoadBox(props){
   return React.createElement("div",{style:{background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"2rem",textAlign:"center",marginBottom:16}},
@@ -92,9 +90,7 @@ function LoadBox(props){
     React.createElement("div",{style:{fontSize:15,color:TX,marginBottom:6,fontWeight:500}},props.msg),
     React.createElement("div",{style:{fontSize:12,color:T2,marginBottom:20}},props.sub),
     React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}},
-      (props.steps||[]).map(function(t,i){
-        return React.createElement("span",{key:i,style:{fontSize:11,color:T2,background:D3,padding:"4px 12px",borderRadius:20,animation:"pulse "+(1+i*0.4)+"s ease-in-out infinite"}},t);
-      })
+      (props.steps||[]).map(function(t,i){return React.createElement("span",{key:i,style:{fontSize:11,color:T2,background:D3,padding:"4px 12px",borderRadius:20,animation:"pulse "+(1+i*0.4)+"s ease-in-out infinite"}},t);})
     )
   );
 }
@@ -131,6 +127,7 @@ function App(){
   var r15=useState(""),err=r15[0],setErr=r15[1];
   var r16=useState(""),mailShare=r16[0],setMailShare=r16[1];
   var r17=useState(false),mailSent=r17[0],setMailSent=r17[1];
+  var r18=useState(false),emailSent=r18[0],setEmailSent=r18[1];
 
   var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
   var curB=gefB[bIdx];
@@ -155,6 +152,21 @@ function App(){
     return d.content?d.content.map(function(c){return c.text||"";}).join(""):"";
   }
 
+  async function sendeEmail(g){
+    try{
+      var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,3).join(", ");
+      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+        email:email,
+        name:firma||"dort",
+        firma:firma||"",
+        branche:branche||"",
+        score:g,
+        bereiche:schwach
+      })});
+      setEmailSent(true);
+    }catch(e){console.log("E-Mail Fehler:",e);}
+  }
+
   async function ladeBereiche(){
     if(!email||!branche){setErr("Bitte E-Mail und Branche eingeben.");return;}
     setLoadB(true);setErr("");
@@ -177,7 +189,9 @@ function App(){
       var g=ges();
       var info=gefB.map(function(b){return b.label+" "+gs(b.id)+"%";}).join(", ");
       var t=await callApi("Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. Bereiche: "+info+". Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. Max 350 Woerter.",800);
-      setBericht(t);setStep("bericht");
+      setBericht(t);
+      setStep("bericht");
+      sendeEmail(g);
     }catch(e){setErr("Fehler: "+e.message);}
     setLoadR(false);
   }
@@ -212,8 +226,7 @@ function App(){
     var g=ges(),p=100-g;
     var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
     var bHTML=gefB.map(function(b){
-      var sc=gs(b.id);
-      var bc=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";
+      var sc=gs(b.id),bc=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";
       return "<div style='margin-bottom:14px'><div style='display:flex;justify-content:space-between;margin-bottom:5px'><span style='font-size:13px;color:#f0f0f0'>"+b.icon+" "+b.label+"</span><span style='font-size:12px;color:#7AC800'>"+sc+"%</span></div><div style='height:6px;background:#1e1e1e;border-radius:3px'><div style='height:100%;width:"+sc+"%;background:"+bc+";border-radius:3px'></div></div></div>";
     }).join("");
     var rHTML=bericht.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/^## (.+)$/gm,"<h3 style='font-size:14px;color:#7AC800;margin:16px 0 6px;border-bottom:1px solid #2a2a2a;padding-bottom:4px'>$1</h3>").replace(/^- (.+)$/gm,"<li style='margin:3px 0;color:#888;font-size:12px'>$1</li>").replace(/\n/g,"<br/>");
@@ -221,17 +234,16 @@ function App(){
       +"<div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'>"
       +"<div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div>"
       +"<div><div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>Automatisierungs-Analyse</div><h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+safe(firma||branche)+"</h1><p style='font-size:14px;color:#888;margin-bottom:40px'>"+safe(branche)+" - "+datum+"</p><div style='display:flex;gap:48px'><div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>IQ-SCORE</div><div style='font-size:52px;font-weight:700;color:#fff'>"+g+"%</div></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:6px'>KI-POTENZIAL</div><div style='font-size:52px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div></div>"
-      +"<div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlion-iq.netlify.app</p></div>"
-      +"</div>"
+      +"<div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlion-iq.netlify.app</p></div></div>"
       +"<div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'>"
       +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;border-bottom:1px solid #2a2a2a;padding-bottom:16px'><span style='font-size:16px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span><span style='font-size:12px;color:#888'>"+datum+"</span></div>"
       +"<h2 style='font-size:20px;font-weight:600;color:#fff;margin-bottom:24px'>Ergebnisse je Bereich</h2>"
-      +"<div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px'><div style='background:#141414;border:0.5px solid #2a2a2a;border-radius:8px;padding:16px'><div style='font-size:10px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px'>IQ-Score</div><div style='font-size:32px;font-weight:700;color:#fff'>"+g+"%</div></div><div style='background:#081200;border:0.5px solid #7AC80040;border-radius:8px;padding:16px'><div style='font-size:10px;color:#7AC80099;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px'>KI-Potenzial</div><div style='font-size:32px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div>"
+      +"<div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px'><div style='background:#141414;border:0.5px solid #2a2a2a;border-radius:8px;padding:16px'><div style='font-size:10px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px'>IQ-Score</div><div style='font-size:32px;font-weight:700;color:#fff'>"+g+"%</div></div><div style='background:#081200;border:0.5px solid rgba(122,200,0,0.3);border-radius:8px;padding:16px'><div style='font-size:10px;color:rgba(122,200,0,0.6);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px'>KI-Potenzial</div><div style='font-size:32px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div>"
       +bHTML+"</div>"
       +"<div style='background:#0a0a0a;min-height:100vh;padding:48px'>"
       +"<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;border-bottom:1px solid #2a2a2a;padding-bottom:16px'><span style='font-size:16px;font-weight:700;letter-spacing:3px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span><span style='font-size:12px;color:#888'>KI-Analyse</span></div>"
       +"<div style='font-size:13px;color:#888;line-height:1.8'>"+rHTML+"</div>"
-      +"<div style='margin-top:40px;padding:20px;background:#081200;border:1px solid #7AC80040;border-radius:8px;text-align:center'><div style='font-size:13px;font-weight:600;color:#7AC800;margin-bottom:6px'>Kostenloses KI-Beratungsgespraech buchen</div><div style='font-size:12px;color:#888'>calendly.com/ridge-linear5958-eagereverest/30min</div></div>"
+      +"<div style='margin-top:40px;padding:20px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:13px;font-weight:600;color:#7AC800;margin-bottom:6px'>Kostenloses KI-Beratungsgespraech buchen</div><div style='font-size:12px;color:#888'>calendly.com/ridge-linear5958-eagereverest/30min</div></div>"
       +"</div></body></html>";
     var w=window.open("","_blank");
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
@@ -272,7 +284,7 @@ function App(){
       </div>
       <div style={{...card,marginBottom:20}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>In 5 Minuten erhalten Sie</div>
-        {[["🧠","IQ-Score (0-100%)"],["🤖","KI-Potenzial je Bereich"],["⚙️","Automatisierungs-Empfehlungen"],["🗺️","3-Phasen KI-Roadmap"]].map(function(x,i){return(
+        {[["🧠","IQ-Score (0-100%)"],["🤖","KI-Potenzial je Bereich"],["⚙️","Automatisierungs-Empfehlungen"],["🗺️","3-Phasen KI-Roadmap"],["📧","Persönlichen Bericht per E-Mail"]].map(function(x,i){return(
           <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
             <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span><span style={{fontSize:13,color:T2}}>{x[1]}</span>
           </div>
@@ -290,8 +302,8 @@ function App(){
         ?<LoadBox msg="KI erstellt Ihre Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
         :<button disabled={!branche||!email} onClick={ladeBereiche} style={{...btnG,opacity:branche&&email?1:0.4}}>IQ-Analyse starten →</button>
       }
-      <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Ihre E-Mail wird nur fuer den Bericht verwendet. Kein Spam.</p>
-      <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:20,paddingTop:16,borderTop:"0.5px solid "+BD}}>
+      <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Ihre E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
+      <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,paddingTop:16,borderTop:"0.5px solid "+BD}}>
         <button onClick={function(){setStep("impressum");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Impressum</button>
         <button onClick={function(){setStep("datenschutz");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Datenschutz</button>
       </div>
@@ -429,6 +441,7 @@ function App(){
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
+        {emailSent&&<div style={{background:"#081200",border:"0.5px solid "+G+"40",borderRadius:8,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>📧</span><span style={{fontSize:12,color:G}}>Ihr persönlicher Bericht wurde an <strong>{email}</strong> gesendet!</span></div>}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
           <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>IQ-Bericht & KI-Roadmap</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||"Ihr Unternehmen"} - {branche}</p></div>
           <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>KI-POTENZIAL</div></div>
@@ -469,7 +482,7 @@ function App(){
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
           <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
         </div>
       </div>
     );
@@ -517,10 +530,7 @@ function App(){
         <p style={{color:T2,fontSize:13,marginBottom:20}}>30 Minuten · kostenlos · unverbindlich</p>
         <div style={{...cardG,marginBottom:24}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-            <div>
-              <div style={{fontSize:12,color:G+"99",marginBottom:4}}>Ihr KI-Potenzial</div>
-              <div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div>
-            </div>
+            <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>Ihr KI-Potenzial</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div></div>
             <div style={{fontSize:36}}>🚀</div>
           </div>
           <p style={{fontSize:13,color:T2,lineHeight:1.6}}>Wir zeigen Ihnen in 30 Minuten wie Sie dieses Potenzial konkret heben können.</p>
@@ -529,8 +539,7 @@ function App(){
           <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>Was Sie erwartet</div>
           {["Auswertung Ihres persönlichen IQ-Scores","Welche KI-Lösungen sofort einsetzbar sind","Realistische Kosten und ROI-Berechnung","Konkrete nächste Schritte"].map(function(t,i){return(
             <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:8}}>
-              <span style={{color:G}}>✓</span>
-              <span style={{fontSize:13,color:T2}}>{t}</span>
+              <span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span>
             </div>
           );})}
         </div>
@@ -560,9 +569,9 @@ function App(){
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Verantwortlich für den Inhalt</div>
         <p style={{fontSize:13,color:T2}}>Adam Cebulla, Loher Hauptstrasse 81a, 90427 Nürnberg</p>
       </div>
-      <div style={{...card}}>
+      <div style={card}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Haftungsausschluss</div>
-        <p style={{fontSize:12,color:T2,lineHeight:1.7}}>Die Inhalte dieser App wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte übernehmen wir keine Gewähr. Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.</p>
+        <p style={{fontSize:12,color:T2,lineHeight:1.7}}>Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.</p>
       </div>
     </div>
   );
@@ -578,40 +587,29 @@ function App(){
       </div>
       <div style={{...card,marginBottom:16}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Welche Daten wir erheben</div>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:8}}>Bei der Nutzung von ONLION IQ erheben wir folgende Daten:</p>
-        {["E-Mail-Adresse (freiwillige Angabe für den Bericht)","Firmenname und Branche (freiwillige Angabe)","Antworten des Analyse-Fragebogens","Technische Daten (IP-Adresse, Browser) durch Netlify-Hosting"].map(function(t,i){return(
+        {["E-Mail-Adresse (für den Bericht)","Firmenname und Branche","Antworten des Fragebogens","Technische Daten durch Netlify-Hosting"].map(function(t,i){return(
           <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
-            <span style={{color:G,flexShrink:0}}>→</span>
-            <span style={{fontSize:13,color:T2}}>{t}</span>
+            <span style={{color:G,flexShrink:0}}>→</span><span style={{fontSize:13,color:T2}}>{t}</span>
           </div>
         );})}
-      </div>
-      <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Zweck der Datenverarbeitung</div>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Die eingegebenen Daten werden ausschließlich zur Erstellung Ihrer persönlichen Automatisierungs-Analyse verwendet. E-Mail-Adressen werden nicht gespeichert, weitergegeben oder für Werbezwecke genutzt.</p>
       </div>
       <div style={{...card,marginBottom:16}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Drittanbieter</div>
-        <p style={{fontSize:13,color:TX,marginBottom:6}}>Anthropic API</p>
-        <p style={{fontSize:12,color:T2,lineHeight:1.7,marginBottom:12}}>Zur KI-gestützten Analyse werden Ihre Eingaben an die Anthropic API übermittelt. Datenschutzerklärung: anthropic.com/privacy</p>
-        <p style={{fontSize:13,color:TX,marginBottom:6}}>Netlify</p>
-        <p style={{fontSize:12,color:T2,lineHeight:1.7,marginBottom:12}}>Das Hosting erfolgt über Netlify Inc. Datenschutzerklärung: netlify.com/privacy</p>
-        <p style={{fontSize:13,color:TX,marginBottom:6}}>Calendly</p>
-        <p style={{fontSize:12,color:T2,lineHeight:1.7}}>Für die Terminbuchung wird Calendly verwendet. Datenschutzerklärung: calendly.com/privacy</p>
-      </div>
-      <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Ihre Rechte (DSGVO)</div>
-        {["Auskunft über gespeicherte Daten (Art. 15 DSGVO)","Berichtigung unrichtiger Daten (Art. 16 DSGVO)","Löschung Ihrer Daten (Art. 17 DSGVO)","Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)"].map(function(t,i){return(
-          <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
-            <span style={{color:G,flexShrink:0}}>✓</span>
-            <span style={{fontSize:13,color:T2}}>{t}</span>
+        {[["Anthropic API","anthropic.com/privacy"],["Netlify","netlify.com/privacy"],["Calendly","calendly.com/privacy"],["Brevo","brevo.com/legal/privacypolicy"]].map(function(t,i){return(
+          <div key={i} style={{marginBottom:10}}>
+            <p style={{fontSize:13,color:TX,marginBottom:3}}>{t[0]}</p>
+            <p style={{fontSize:11,color:T2}}>{t[1]}</p>
           </div>
         );})}
-        <p style={{fontSize:12,color:T2,lineHeight:1.7,marginTop:10}}>Anfragen richten Sie bitte an: onlion-@outlook.de</p>
       </div>
       <div style={card}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Beschwerderecht</div>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Sie haben das Recht, sich bei der zuständigen Aufsichtsbehörde zu beschweren. In Bayern: Bayerisches Landesamt für Datenschutzaufsicht (BayLDA), Promenade 18, 91522 Ansbach.</p>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Ihre Rechte (DSGVO)</div>
+        {["Auskunft (Art. 15)","Berichtigung (Art. 16)","Löschung (Art. 17)","Widerspruch (Art. 21)"].map(function(t,i){return(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
+            <span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span>
+          </div>
+        );})}
+        <p style={{fontSize:12,color:T2,marginTop:10}}>Anfragen: onlion-@outlook.de</p>
       </div>
     </div>
   );
