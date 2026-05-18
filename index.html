@@ -61,7 +61,7 @@ function parseBereicheText(text,branche){
     var fragen=[];
     var fragenBlock=lines.slice(3).join("\n");
     var fmatches=fragenBlock.split(/FRAGE\s*\d*[:.\s]*/i).filter(function(f){return f.trim();});
-    for(var j=0;j<fmatches.length&&fragen.length<2;j++){
+    for(var j=0;j<fmatches.length&&fragen.length<4;j++){
       var flines=fmatches[j].split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
       if(flines.length<5)continue;
       var optionen=flines.slice(1,5);
@@ -76,12 +76,42 @@ function parseBereicheText(text,branche){
 function getDefault(branche){
   var p=branche==="Gesundheit / Pflege";
   return[
-    {id:"b1",label:p?"Patientenverwaltung":"Geschäftsprozesse",icon:p?"🏥":"⚙️",kiKat:"rpa",hint:"Automatisierung spart täglich wertvolle Zeit.",fragen:[{f:p?"Wie werden Patiententermine verwaltet?":"Wie werden Aufträge bearbeitet?",o:["Vollständig manuell","Teilweise digital","Größtenteils automatisiert","Vollständig automatisiert"]},{f:"Wie werden Dokumente verarbeitet?",o:["Nur auf Papier","Eingescannt manuell","Digital teilweise automatisch","Vollautomatisch"]}]},
-    {id:"b2",label:p?"Abrechnung":"Finanzen",icon:"💰",kiKat:"rpa",hint:"RPA kann Rechnungen automatisieren.",fragen:[{f:"Wie werden Rechnungen erstellt?",o:["Manuell Papier","Software viel manuell","Halbautomatisch","Vollautomatisch"]},{f:"Wie werden Zahlungen verbucht?",o:["Manuell","Teilweise digital","Software mit Kontrolle","Vollautomatisch"]}]},
-    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Agenten beantworten Standardanfragen automatisch.",fragen:[{f:"Wie werden Kundenanfragen bearbeitet?",o:["Nur Telefon","E-Mail manuell","E-Mail mit Vorlagen","KI-gestützt automatisch"]},{f:"Gibt es automatisierte Benachrichtigungen?",o:["Nein","Gelegentlich","Für bestimmte Ereignisse","Vollautomatisch"]}]},
-    {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitale HR-Prozesse sparen bis zu 10h pro Woche.",fragen:[{f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr","Software automatisch","Mit Lohnabrechnung verknüpft"]},{f:"Wie läuft das Onboarding ab?",o:["Informell persönlich","Checkliste Papier","Digitale Checkliste","Automatisiertes System"]}]},
-    {id:"b5",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Echtzeit-Dashboards ersetzen manuelle Excel-Berichte.",fragen:[{f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen manuell","Software manuell gestartet","Automatisch in Echtzeit"]},{f:"Wie werden Daten übertragen?",o:["Per E-Mail","Manuell kopiert","Teilweise automatisch","Vollautomatisch per API"]}]},
-    {id:"b6",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung senken Betriebskosten.",fragen:[{f:"Wie wird der Bestand verwaltet?",o:["Manuell mit Listen","Einfache Software","Lagersoftware teilweise","Automatisch mit RFID"]},{f:"Wie läuft die Wartung ab?",o:["Nur bei Ausfall","Feste Intervalle","Digitale Wartungspläne","Automatische Überwachung"]}]}
+    {id:"b1",label:p?"Patientenverwaltung":"Geschäftsprozesse",icon:p?"🏥":"⚙️",kiKat:"rpa",hint:"Automatisierung spart täglich wertvolle Zeit.",fragen:[
+      {f:p?"Wie werden Patiententermine verwaltet?":"Wie werden Aufträge bearbeitet?",o:["Vollständig manuell","Teilweise digital","Größtenteils automatisiert","Vollständig automatisiert"]},
+      {f:"Wie werden Dokumente verarbeitet?",o:["Nur auf Papier","Eingescannt manuell","Digital teilweise automatisch","Vollautomatisch"]},
+      {f:"Wie lange dauert die Bearbeitung eines Vorgangs durchschnittlich?",o:["Über 1 Stunde","30-60 Minuten","10-30 Minuten","Unter 10 Minuten"]},
+      {f:"Wie werden Status-Updates an Kunden/Patienten kommuniziert?",o:["Nur auf Nachfrage","Manuell per Telefon/Mail","Teilweise automatisch","Vollautomatisch"]}
+    ]},
+    {id:"b2",label:p?"Abrechnung":"Finanzen",icon:"💰",kiKat:"rpa",hint:"RPA kann Rechnungen automatisieren.",fragen:[
+      {f:"Wie werden Rechnungen erstellt?",o:["Manuell auf Papier","Software, viel manuell","Halbautomatisch","Vollautomatisch"]},
+      {f:"Wie werden Zahlungen verbucht?",o:["Manuell","Teilweise digital","Software mit Kontrolle","Vollautomatisch"]},
+      {f:"Wie wird das Mahnwesen gehandhabt?",o:["Manuell per Post/Mail","Excel-gestützt","Halbautomatisch","Vollautomatisch"]},
+      {f:"Wie lange dauert der Monatsabschluss?",o:["Über 3 Tage","1-3 Tage","Halber Tag","Vollautomatisch in Echtzeit"]}
+    ]},
+    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Agenten beantworten Standardanfragen automatisch.",fragen:[
+      {f:"Wie werden Kundenanfragen bearbeitet?",o:["Nur Telefon manuell","E-Mail manuell","E-Mail mit Vorlagen","KI-gestützt automatisch"]},
+      {f:"Gibt es automatisierte Benachrichtigungen?",o:["Nein","Gelegentlich","Für bestimmte Ereignisse","Vollautomatisch"]},
+      {f:"Wie schnell werden Anfragen durchschnittlich beantwortet?",o:["Über 24 Stunden","Innerhalb 24 Stunden","Innerhalb 4 Stunden","Unter 1 Stunde"]},
+      {f:"Wie wird interne Kommunikation organisiert?",o:["Nur mündlich/Telefon","E-Mail","Chat-Tools","Integrierte Plattform"]}
+    ]},
+    {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitale HR-Prozesse sparen bis zu 10h pro Woche.",fragen:[
+      {f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr","Software automatisch","Mit Lohnabrechnung verknüpft"]},
+      {f:"Wie läuft das Onboarding ab?",o:["Informell persönlich","Checkliste auf Papier","Digitale Checkliste","Automatisiertes System"]},
+      {f:"Wie werden Urlaubsanträge verwaltet?",o:["Manuell per Formular","Per E-Mail","Software mit Genehmigung","Vollautomatisch"]},
+      {f:"Wie werden Lohnzahlungen abgewickelt?",o:["Manuell berechnet","Externe Lohnbuchhaltung","Software mit Kontrolle","Vollautomatisch"]}
+    ]},
+    {id:"b5",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Echtzeit-Dashboards ersetzen manuelle Excel-Berichte.",fragen:[
+      {f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen manuell befüllt","Software manuell gestartet","Automatisch in Echtzeit"]},
+      {f:"Wie werden Daten zwischen Systemen übertragen?",o:["Per E-Mail","Manuell kopiert","Teilweise automatisch","Vollautomatisch per API"]},
+      {f:"Wie aktuell sind die Geschäftszahlen?",o:["Monatsweise","Wöchentlich","Täglich","Echtzeit"]},
+      {f:"Wie werden Entscheidungen getroffen?",o:["Aus dem Bauch heraus","Auf Basis alter Daten","Auf Basis aktueller Reports","Datengetrieben in Echtzeit"]}
+    ]},
+    {id:"b6",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung senken Betriebskosten.",fragen:[
+      {f:"Wie wird der Bestand verwaltet?",o:["Manuell mit Listen","Einfache Software","Lagersoftware teilweise","Automatisch mit RFID"]},
+      {f:"Wie läuft die Wartung ab?",o:["Nur bei Ausfall","Feste Intervalle","Digitale Wartungspläne","Automatische Überwachung"]},
+      {f:"Wie werden Lieferungen koordiniert?",o:["Telefonisch manuell","Per E-Mail","Software teilweise","Vollautomatisch"]},
+      {f:"Wie wird die Qualitätskontrolle durchgeführt?",o:["Nur manuell","Stichproben manuell","Software-gestützt","Automatisiert mit Sensorik"]}
+    ]}
   ];
 }
 
@@ -195,9 +225,9 @@ function App(){
   async function ladeBereiche(){
     if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
     setLoadB(true);setErr("");
-    var prompt="Erstelle 6 Analysebereiche fuer ein Unternehmen. Branche: "+safe(branche)+". Firma: "+safe(firma)+". Info: "+safe(desc)+".\n\nFormat:\n\nBEREICH 1: [Name]\n[Emoji]\n[KI-Potenzial 1 Satz]\nFRAGE 1: [Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 2: [Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: ...";
+    var prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirma: "+safe(firma)+"\nBeschreibung: "+safe(desc)+"\n\nWichtig: Die Fragen sollen DIREKT auf die Beschreibung eingehen und konkrete Situationen aus dem Unternehmen ansprechen.\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[KI-Potenzial in 1 Satz]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
     try{
-      var t=await callApi(prompt,2000);
+      var t=await callApi(prompt,3500);
       var p=parseBereicheText(t,branche);
       setBereiche(p);setAktiv(p.map(function(b){return b.id;}));setStep("bereiche");
     }catch(e){
