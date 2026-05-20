@@ -430,7 +430,7 @@ function App(){
       {err&&<p style={{color:"#cc3333",fontSize:12,marginBottom:10}}>{err}</p>}
       {loadB
         ?<LoadBox msg="KI erstellt deine Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
-        :<GreenBtn disabled={!canStart} onClick={ladeBereiche}>IQ-Analyse starten -></GreenBtn>
+        :<GreenBtn disabled={!canStart} onClick={ladeBereiche}>IQ-Analyse starten  </GreenBtn>
       }
       <p style={{fontSize:11,color:T3,marginTop:10,textAlign:"center"}}>Deine E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
 
@@ -448,7 +448,7 @@ function App(){
     return(
       <div style={wrap}>
         <Logo/>
-        <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"flex",alignItems:"center",gap:4}}><- Zurück</button>
+        <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"flex",alignItems:"center",gap:4}}> Zuruck  Zurück</button>
         <h1 style={{fontSize:20,fontWeight:500,marginBottom:4}}>KI-generierte Analysebereiche</h1>
         <p style={{color:T2,fontSize:13,marginBottom:20}}>Individuell erstellt für: <span style={{color:G,fontWeight:500}}>{firma||branche}</span></p>
         <Card>
@@ -478,7 +478,7 @@ function App(){
           })}
         </Card>
         <GreenBtn disabled={aktiv.length===0} onClick={()=>{setBIdx(0);setAntw({});setStep("fragebogen");}}>
-          Analyse starten ({aktiv.length} Bereiche) ->
+          Analyse starten ({aktiv.length} Bereiche)  
         </GreenBtn>
       </div>
     );
@@ -539,10 +539,10 @@ function App(){
         </Card>
 
         <div style={{display:"flex",gap:8}}>
-          {bIdx>0&&<OutlineBtn onClick={()=>setBIdx(i=>i-1)} style={{flex:1,marginTop:0}}><- Zurück</OutlineBtn>}
+          {bIdx>0&&<OutlineBtn onClick={()=>setBIdx(i=>i-1)} style={{flex:1,marginTop:0}}> Zuruck  Zurück</OutlineBtn>}
           {bIdx<gefB.length-1
-            ?<OutlineBtn onClick={()=>setBIdx(i=>i+1)} style={{flex:2,marginTop:0}}>Weiter -></OutlineBtn>
-            :<GreenBtn onClick={()=>setStep("auswertung")} style={{flex:2}}>Zum IQ-Score -></GreenBtn>
+            ?<OutlineBtn onClick={()=>setBIdx(i=>i+1)} style={{flex:2,marginTop:0}}>Weiter  </OutlineBtn>
+            :<GreenBtn onClick={()=>setStep("auswertung")} style={{flex:2}}>Zum IQ-Score  </GreenBtn>
           }
         </div>
       </div>
@@ -579,7 +579,7 @@ function App(){
           <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>
             Wie viel das konkret in Euro bedeutet  -  das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an.
           </p>
-          <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Jetzt Termin sichern -></GreenBtn>
+          <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Jetzt Termin sichern  </GreenBtn>
         </Card>
 
         {gefB.map(b=>{
@@ -604,9 +604,9 @@ function App(){
         <div style={divider}/>
         {loadR
           ?<LoadBox msg="KI erstellt deinen Bericht..." sub="ca. 10 Sekunden" steps={["Auswerten","Empfehlungen","Roadmap"]}/>
-          :<GreenBtn onClick={analysiereReport}>KI-Bericht & Roadmap erstellen -></GreenBtn>
+          :<GreenBtn onClick={analysiereReport}>KI-Bericht & Roadmap erstellen  </GreenBtn>
         }
-        {!loadR&&<OutlineBtn onClick={()=>setStep("fragebogen")}><- Antworten bearbeiten</OutlineBtn>}
+        {!loadR&&<OutlineBtn onClick={()=>setStep("fragebogen")}> Zuruck  Antworten bearbeiten</OutlineBtn>}
       </div>
     );
   }
@@ -656,7 +656,7 @@ function App(){
           <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>
             Was das konkret in Euro bedeutet, besprechen wir im persönlichen Gespräch  -  kostenlos, individuell und ohne Verpflichtung.
           </p>
-          <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Termin sichern & Potenzial erfahren -></GreenBtn>
+          <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Termin sichern & Potenzial erfahren  </GreenBtn>
         </Card>
 
         <Card style={{lineHeight:1.8,fontSize:13,color:T2,marginBottom:16}}>
@@ -690,7 +690,7 @@ function App(){
           </button>
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
-          <OutlineBtn onClick={()=>setStep("auswertung")} style={{flex:1,marginTop:0}}><- IQ-Score</OutlineBtn>
+          <OutlineBtn onClick={()=>setStep("auswertung")} style={{flex:1,marginTop:0}}> Zuruck  IQ-Score</OutlineBtn>
           <OutlineBtn onClick={()=>{setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{flex:1,marginTop:0}}>Neue Analyse</OutlineBtn>
         </div>
       </div>
@@ -701,7 +701,7 @@ function App(){
   if(step==="loesungen") return(
     <div style={wrap}>
       <Logo/>
-      <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}><- Zurück</button>
+      <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}> Zuruck  Zurück</button>
       <h1 style={{fontSize:20,fontWeight:500,marginBottom:4}}>KI & Automatisierungs-Lösungen</h1>
       <p style={{color:T2,fontSize:13,marginBottom:20}}>Individuell für <span style={{color:G,fontWeight:500}}>{firma||branche}</span></p>
       {loadL
@@ -718,7 +718,7 @@ function App(){
                 <div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:4}}>{l.name}</div>
                 <div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>
                 {l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6,fontWeight:500}}>💰 {l.einsparung}</div>}
-                <a href={l.url} style={{fontSize:11,color:kc,textDecoration:"none",fontWeight:500}} target="_blank">Mehr -></a>
+                <a href={l.url} style={{fontSize:11,color:kc,textDecoration:"none",fontWeight:500}} target="_blank">Mehr  </a>
               </Card>
             );
           })}
@@ -728,7 +728,7 @@ function App(){
         <div style={{fontSize:24,marginBottom:8}}>🎯</div>
         <div style={{fontSize:15,fontWeight:500,color:GD,marginBottom:8}}>Individuelle KI-Beratung?</div>
         <p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos, unverbindlich.</p>
-        <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>Kostenloses Gespräch buchen -></GreenBtn>
+        <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>Kostenloses Gespräch buchen  </GreenBtn>
       </Card>
     </div>
   );
@@ -739,7 +739,7 @@ function App(){
     return(
       <div style={wrap}>
         <Logo/>
-        <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}><- Zurück</button>
+        <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}> Zuruck  Zurück</button>
         <h1 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Kostenloses KI-Beratungsgespräch</h1>
         <p style={{color:T2,fontSize:13,marginBottom:20}}>30 Minuten   kostenlos   unverbindlich</p>
 
@@ -765,9 +765,9 @@ function App(){
           ))}
         </Card>
 
-        <GreenBtn onClick={()=>{window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("leitfaden");}}>📅 Termin buchen -></GreenBtn>
+        <GreenBtn onClick={()=>{window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("leitfaden");}}>📅 Termin buchen  </GreenBtn>
         <p style={{fontSize:11,color:T3,marginTop:10,textAlign:"center"}}>Du wirst zu Calendly weitergeleitet</p>
-        <OutlineBtn onClick={()=>setStep("leitfaden")} style={{marginTop:12,color:GD,borderColor:G+"40"}}>📋 Gesprächsleitfaden öffnen -></OutlineBtn>
+        <OutlineBtn onClick={()=>setStep("leitfaden")} style={{marginTop:12,color:GD,borderColor:G+"40"}}>📋 Gesprächsleitfaden öffnen  </OutlineBtn>
       </div>
     );
   }
@@ -788,7 +788,7 @@ function App(){
     return(
       <div style={wrap}>
         <Logo/>
-        <button onClick={()=>setStep("termin")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}><- Zurück</button>
+        <button onClick={()=>setStep("termin")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}> Zuruck  Zurück</button>
 
         {/* Header */}
         <Card style={{background:GLight,borderColor:G+"40",marginBottom:20}}>
@@ -864,7 +864,7 @@ function App(){
             </div>
             {ph.items.map((t,i)=>(
               <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8,padding:"8px 10px",background:BG3,borderRadius:8}}>
-                <span style={{color:ph.c,fontSize:12,flexShrink:0,fontWeight:600}}>-></span>
+                <span style={{color:ph.c,fontSize:12,flexShrink:0,fontWeight:600}}> </span>
                 <span style={{fontSize:12,color:T2,lineHeight:1.5}}>{t}</span>
               </div>
             ))}
@@ -886,7 +886,7 @@ function App(){
           </div>
           {["QCG erklären (Qualifizierungschancengesetz)",""Haben Sie sozialversicherungspflichtige Mitarbeiter?"",""Würden Sie eine Förderprüfung in Anspruch nehmen?\""].map((t,i)=>(
             <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:6}}>
-              <span style={{color:G,flexShrink:0,fontWeight:600}}>-></span>
+              <span style={{color:G,flexShrink:0,fontWeight:600}}> </span>
               <span style={{fontSize:12,color:T2}}>{t}</span>
             </div>
           ))}
@@ -919,7 +919,7 @@ function App(){
           ))}
         </Card>
 
-        <OutlineBtn onClick={()=>setStep("termin")} style={{marginTop:0}}><- Zurück</OutlineBtn>
+        <OutlineBtn onClick={()=>setStep("termin")} style={{marginTop:0}}> Zuruck  Zurück</OutlineBtn>
       </div>
     );
   }
@@ -928,7 +928,7 @@ function App(){
   if(step==="foerderung") return(
     <div style={wrap}>
       <Logo/>
-      <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}><- Zurück</button>
+      <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}> Zuruck  Zurück</button>
 
       <div style={{background:GLight,border:`1px solid ${G}40`,borderRadius:12,padding:"1.5rem",marginBottom:20,textAlign:"center"}}>
         <div style={{fontSize:36,marginBottom:10}}>🏛️</div>
@@ -970,12 +970,12 @@ function App(){
       <Card style={{background:GLight,borderColor:G+"40",textAlign:"center",padding:"1.5rem",marginBottom:14}}>
         <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Erfahre in einem kostenlosen Gespräch wie viel Förderung du für deine KI-Projekte bekommst.</p>
         <GreenBtn onClick={()=>window.open("https://mittelstandsfoerderung-deutschland.de/ac/#survey-question-GwiJBsJn","_blank")} style={{padding:"10px"}}>
-          🏛️ Jetzt Förderfähigkeit prüfen ->
+          🏛️ Jetzt Förderfähigkeit prüfen  
         </GreenBtn>
         <p style={{fontSize:11,color:T3,marginTop:10}}>Du wirst zur Förderberatung weitergeleitet</p>
       </Card>
 
-      <OutlineBtn onClick={()=>setStep("bericht")} style={{marginTop:0}}><- Zurück zum Bericht</OutlineBtn>
+      <OutlineBtn onClick={()=>setStep("bericht")} style={{marginTop:0}}> Zuruck  Zurück zum Bericht</OutlineBtn>
     </div>
   );
 
@@ -983,7 +983,7 @@ function App(){
   if(step==="impressum") return(
     <div style={wrap}>
       <Logo/>
-      <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}><- Zurück</button>
+      <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}> Zuruck  Zurück</button>
       <h1 style={{fontSize:20,fontWeight:500,marginBottom:20}}>Impressum</h1>
       <Card style={{marginBottom:12}}>
         <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Angaben gemäß § 5 TMG</div>
@@ -1005,7 +1005,7 @@ function App(){
   if(step==="datenschutz") return(
     <div style={wrap}>
       <Logo/>
-      <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}><- Zurück</button>
+      <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}> Zuruck  Zurück</button>
       <h1 style={{fontSize:20,fontWeight:500,marginBottom:20}}>Datenschutzerklärung</h1>
       <Card style={{marginBottom:12}}>
         <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Verantwortlicher</div>
@@ -1015,7 +1015,7 @@ function App(){
         <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Erhobene Daten</div>
         {["E-Mail-Adresse (für den Bericht)","Firmenname und Branche","Antworten des Fragebogens","Technische Daten durch Netlify-Hosting"].map((t,i)=>(
           <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
-            <span style={{color:G,flexShrink:0}}>-></span><span style={{fontSize:13,color:T2}}>{t}</span>
+            <span style={{color:G,flexShrink:0}}> </span><span style={{fontSize:13,color:T2}}>{t}</span>
           </div>
         ))}
       </Card>
