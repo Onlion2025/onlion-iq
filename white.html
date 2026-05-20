@@ -53,10 +53,10 @@ const BD="#e0ddd5",BD2="#ccc";
 const KC={ki:G,rpa:"#0066cc",robotik:"#cc4400",daten:"#6600cc"};
 const KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"};
 const KT={
-  ki:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit — rund um die Uhr.",
-  rpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen — ohne Programmierung, sofort einsetzbar.",
-  robotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik — präzise und ermüdungsfrei.",
-  daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen — Entscheidungen auf Basis aktueller Daten."
+  ki:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit  -  rund um die Uhr.",
+  rpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen  -  ohne Programmierung, sofort einsetzbar.",
+  robotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik  -  präzise und ermüdungsfrei.",
+  daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen  -  Entscheidungen auf Basis aktueller Daten."
 };
 const BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"];
 
@@ -376,7 +376,7 @@ function App(){
         Wie intelligent arbeitet<br/><span style={{fontWeight:600,color:G}}>dein Unternehmen?</span>
       </h1>
       <p style={{color:T2,lineHeight:1.8,fontSize:14,marginBottom:28}}>
-        KI-gestützte Analyse deines Automatisierungspotenzials — kostenlos in 5 Minuten.
+        KI-gestützte Analyse deines Automatisierungspotenzials  -  kostenlos in 5 Minuten.
       </p>
 
       {/* Kategorien */}
@@ -577,7 +577,7 @@ function App(){
             Basierend auf deinem IQ-Score steckt in deinem Unternehmen <strong>erhebliches Automatisierungspotenzial</strong>.
           </p>
           <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>
-            Wie viel das konkret in Euro bedeutet — das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an.
+            Wie viel das konkret in Euro bedeutet  -  das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an.
           </p>
           <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Jetzt Termin sichern →</GreenBtn>
         </Card>
@@ -654,7 +654,7 @@ function App(){
             Dein IQ-Score zeigt: In deinem Unternehmen steckt <strong>erhebliches ungenutztes Potenzial</strong>.
           </p>
           <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>
-            Was das konkret in Euro bedeutet, besprechen wir im persönlichen Gespräch — kostenlos, individuell und ohne Verpflichtung.
+            Was das konkret in Euro bedeutet, besprechen wir im persönlichen Gespräch  -  kostenlos, individuell und ohne Verpflichtung.
           </p>
           <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Termin sichern & Potenzial erfahren →</GreenBtn>
         </Card>
@@ -778,11 +778,11 @@ function App(){
     const schwachB=gefB.filter(b=>gs(b.id)<50).sort((a,b)=>gs(a.id)-gs(b.id));
     const starkB=gefB.filter(b=>gs(b.id)>=50);
     const phase=lg<30?"Einsteiger":lg<60?"Fortgeschritten":"Optimierer";
-    const fragenMap={"Geschäftsprozesse":"Wie viel Zeit verbringt Ihr Team täglich mit manuellen, wiederkehrenden Aufgaben?","Finanzen":"Wie lange dauert aktuell der Monatsabschluss und die Rechnungsstellung?","Kommunikation":"Wie viele Kundenanfragen bekommen Sie täglich und wie werden diese bearbeitet?","Personal & HR":"Wie hoch ist der Zeitaufwand für HR-Prozesse wie Zeiterfassung und Lohnabrechnung?","Datenverarbeitung":"Wie treffen Sie Entscheidungen — auf Basis welcher Daten und wie aktuell sind diese?","Betrieb & Logistik":"Wie wird der Lagerbestand überwacht und wie oft kommt es zu Engpässen?","Patientenverwaltung":"Wie viele Termine werden täglich telefonisch vereinbart und wie hoch ist die Ausfallquote?","Abrechnung":"Wie lange dauert die Abrechnung und gibt es dabei häufige Fehler?"};
+    const fragenMap={"Geschäftsprozesse":"Wie viel Zeit verbringt Ihr Team täglich mit manuellen, wiederkehrenden Aufgaben?","Finanzen":"Wie lange dauert aktuell der Monatsabschluss und die Rechnungsstellung?","Kommunikation":"Wie viele Kundenanfragen bekommen Sie täglich und wie werden diese bearbeitet?","Personal & HR":"Wie hoch ist der Zeitaufwand für HR-Prozesse wie Zeiterfassung und Lohnabrechnung?","Datenverarbeitung":"Wie treffen Sie Entscheidungen  -  auf Basis welcher Daten und wie aktuell sind diese?","Betrieb & Logistik":"Wie wird der Lagerbestand überwacht und wie oft kommt es zu Engpässen?","Patientenverwaltung":"Wie viele Termine werden täglich telefonisch vereinbart und wie hoch ist die Ausfallquote?","Abrechnung":"Wie lange dauert die Abrechnung und gibt es dabei häufige Fehler?"};
     const phasen=[
-      {n:"1",t:"Einstieg & Rapport",d:"5 Min",c:"#0066cc",items:["Kurze Vorstellung — wer bist du, was macht ONLION","„Wie sind Sie auf uns aufmerksam geworden?"","„Haben Sie den IQ-Bericht bekommen und angeschaut?\""]},
-      {n:"4",t:"Lösungsvorschlag",d:"5 Min",c:"#cc4400",items:["Quick Wins zeigen — welche 1-2 Bereiche sofort automatisierbar sind","Roadmap skizzieren: Phase 1 → Phase 2 → Phase 3","Kosten & ROI nennen — konkret und ehrlich"]},
-      {n:"6",t:"Abschluss & Next Steps",d:"4 Min",c:"#6600cc",items:["Zusammenfassen: „Ihre größten Hebel sind [Bereich 1] und [Bereich 2]..."","Klare Handlungsempfehlung: „Ich empfehle, mit [Quick Win] zu starten."","„Darf ich Ihnen ein konkretes Angebot zusenden?" → Ja/Nein klären"]}
+      {n:"1",t:"Einstieg & Rapport",d:"5 Min",c:"#0066cc",items:["Kurze Vorstellung  -  wer bist du, was macht ONLION",""Wie sind Sie auf uns aufmerksam geworden?"",""Haben Sie den IQ-Bericht bekommen und angeschaut?\""]},
+      {n:"4",t:"Lösungsvorschlag",d:"5 Min",c:"#cc4400",items:["Quick Wins zeigen  -  welche 1-2 Bereiche sofort automatisierbar sind","Roadmap skizzieren: Phase 1 → Phase 2 → Phase 3","Kosten & ROI nennen  -  konkret und ehrlich"]},
+      {n:"6",t:"Abschluss & Next Steps",d:"4 Min",c:"#6600cc",items:["Zusammenfassen: "Ihre größten Hebel sind [Bereich 1] und [Bereich 2]..."","Klare Handlungsempfehlung: "Ich empfehle, mit [Quick Win] zu starten."",""Darf ich Ihnen ein konkretes Angebot zusenden?" → Ja/Nein klären"]}
     ];
 
     return(
@@ -825,11 +825,11 @@ function App(){
                 <span style={{fontSize:11,color:"#0066cc",fontWeight:500}}>{b.icon} {b.label}</span>
                 <span style={{fontSize:10,color:"#cc3333",background:"#cc333310",padding:"2px 8px",borderRadius:10,border:"1px solid #cc333330"}}>Score: {gs(b.id)}%</span>
               </div>
-              <div style={{fontSize:12,color:TX,lineHeight:1.6,marginBottom:4}}>💬 „{fragenMap[b.label]||"Wie läuft der Bereich "+b.label+" aktuell ab?"}"</div>
-              <div style={{fontSize:11,color:T3}}>→ Nachfragen: „Was kostet Sie das pro Woche?"</div>
+              <div style={{fontSize:12,color:TX,lineHeight:1.6,marginBottom:4}}>💬 "{fragenMap[b.label]||"Wie läuft der Bereich "+b.label+" aktuell ab?"}"</div>
+              <div style={{fontSize:11,color:T3}}>→ Nachfragen: "Was kostet Sie das pro Woche?"</div>
             </div>
           ))}
-          {schwachB.length===0&&<p style={{fontSize:12,color:T2,fontStyle:"italic"}}>Dieser Kunde ist bereits gut aufgestellt — Fokus auf Optimierung.</p>}
+          {schwachB.length===0&&<p style={{fontSize:12,color:T2,fontStyle:"italic"}}>Dieser Kunde ist bereits gut aufgestellt  -  Fokus auf Optimierung.</p>}
         </Card>
 
         {/* Stärken */}
@@ -882,9 +882,9 @@ function App(){
           </div>
           <div style={{padding:"10px 12px",background:BG2,borderRadius:8,marginBottom:10,border:`1px solid ${G}30`}}>
             <div style={{fontSize:12,color:GD,fontWeight:500,marginBottom:6}}>💬 Einstieg:</div>
-            <div style={{fontSize:12,color:TX,lineHeight:1.7,fontStyle:"italic"}}>„Wussten Sie, dass ein Großteil dieser Maßnahmen staatlich gefördert werden kann — in manchen Fällen bis zu 100% der Kosten?"</div>
+            <div style={{fontSize:12,color:TX,lineHeight:1.7,fontStyle:"italic"}}>"Wussten Sie, dass ein Großteil dieser Maßnahmen staatlich gefördert werden kann  -  in manchen Fällen bis zu 100% der Kosten?"</div>
           </div>
-          {["QCG erklären (Qualifizierungschancengesetz)","„Haben Sie sozialversicherungspflichtige Mitarbeiter?"","„Würden Sie eine Förderprüfung in Anspruch nehmen?\""].map((t,i)=>(
+          {["QCG erklären (Qualifizierungschancengesetz)",""Haben Sie sozialversicherungspflichtige Mitarbeiter?"",""Würden Sie eine Förderprüfung in Anspruch nehmen?\""].map((t,i)=>(
             <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:6}}>
               <span style={{color:G,flexShrink:0,fontWeight:600}}>→</span>
               <span style={{fontSize:12,color:T2}}>{t}</span>
@@ -896,10 +896,10 @@ function App(){
         <Card style={{marginBottom:14}}>
           <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>⚡ Einwand-Handling</div>
           {[
-            {e:"„Wir haben keine Zeit"",a:"„Genau deshalb lohnt Automatisierung — der Aufwand ist einmalig, die Zeitersparnis dauerhaft.""},
-            {e:"„Zu teuer"",a:"„Mit staatlicher Förderung trägt der Staat bis zu 100% der Kosten.""},
-            {e:"„Wir sind zu klein"",a:"„Gerade kleine Unternehmen profitieren am meisten — jede gesparte Stunde wiegt schwerer.""},
-            {e:"„Wir machen das intern"",a:"„Super — dann helfen wir, den richtigen Weg zu wählen und Fördermittel zu sichern.""}
+            {e:""Wir haben keine Zeit"",a:""Genau deshalb lohnt Automatisierung  -  der Aufwand ist einmalig, die Zeitersparnis dauerhaft.""},
+            {e:""Zu teuer"",a:""Mit staatlicher Förderung trägt der Staat bis zu 100% der Kosten.""},
+            {e:""Wir sind zu klein"",a:""Gerade kleine Unternehmen profitieren am meisten  -  jede gesparte Stunde wiegt schwerer.""},
+            {e:""Wir machen das intern"",a:""Super  -  dann helfen wir, den richtigen Weg zu wählen und Fördermittel zu sichern.""}
           ].map((x,i)=>(
             <div key={i} style={{marginBottom:12,borderBottom:i<3?`1px solid ${BD}`:"none",paddingBottom:i<3?12:0}}>
               <div style={{fontSize:12,color:"#cc3333",marginBottom:4,fontWeight:500}}>❓ {x.e}</div>
@@ -956,7 +956,7 @@ function App(){
 
       <Card style={{marginBottom:14}}>
         <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>So einfach funktioniert es</div>
-        {[["1","Beratungsgespräch","Wir prüfen gemeinsam deine Förderfähigkeit."],["2","Antragstellung","Wir unterstützen dich — Aufwand: ca. 1 Stunde."],["3","Förderung erhalten","Nach Bewilligung startet die Maßnahme."]].map((x,i)=>(
+        {[["1","Beratungsgespräch","Wir prüfen gemeinsam deine Förderfähigkeit."],["2","Antragstellung","Wir unterstützen dich  -  Aufwand: ca. 1 Stunde."],["3","Förderung erhalten","Nach Bewilligung startet die Maßnahme."]].map((x,i)=>(
           <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:i<2?14:0}}>
             <div style={{width:28,height:28,borderRadius:"50%",background:GLight,border:`1px solid ${G}40`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:GD,fontWeight:600}}>{x[0]}</div>
             <div>
