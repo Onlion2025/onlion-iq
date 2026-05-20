@@ -503,6 +503,25 @@ function App(){
           <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>🤖</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>KI-Lösungen</div><div style={{fontSize:12,color:T2}}>Tools entdecken</div></button>
           <button onClick={function(){setStep("termin");}} style={{background:"#0d0d0d",border:"1px solid "+BD,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>📅</div><div style={{fontSize:14,fontWeight:500,color:TX,marginBottom:4}}>Kostenloses Gespräch</div><div style={{fontSize:12,color:T2}}>Termin buchen</div></button>
         </div>
+
+        {/* Förderung Banner */}
+        <div onClick={function(){setStep("foerderung");}} style={{
+          background:"linear-gradient(135deg,#0a1a00,#0f2200)",
+          border:"1px solid "+G+"60",
+          borderRadius:10,padding:"1rem",cursor:"pointer",
+          marginBottom:10,display:"flex",alignItems:"center",gap:14,
+          transition:"border-color 0.2s"
+        }}
+          onMouseEnter={function(e){e.currentTarget.style.borderColor=G}}
+          onMouseLeave={function(e){e.currentTarget.style.borderColor=G+"60"}}
+        >
+          <span style={{fontSize:28,flexShrink:0}}>🏛️</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:3}}>Staatliche Förderung sichern</div>
+            <div style={{fontSize:12,color:T2,lineHeight:1.5}}>Bis zu 100% der Kosten können staatlich gefördert werden → mehr erfahren</div>
+          </div>
+          <span style={{color:G,fontSize:18,flexShrink:0}}>→</span>
+        </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
           <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
           <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
@@ -545,11 +564,299 @@ function App(){
           <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>Was dich erwartet</div>
           {["Auswertung deines persönlichen IQ-Scores","Welche KI-Lösungen sofort einsetzbar sind","Dein konkretes Einsparpotenzial in Euro","Realistische Kosten und ROI-Berechnung","Konkrete nächste Schritte"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:8}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}
         </div>
-        <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");}} style={btnG}>📅 Termin buchen →</button>
+        <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("leitfaden");}} style={btnG}>📅 Termin buchen →</button>
         <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Du wirst zu Calendly weitergeleitet</p>
+        <button onClick={function(){setStep("leitfaden");}} style={{...btn,marginTop:12,color:G,borderColor:G+"40"}}>📋 Gesprächsleitfaden öffnen →</button>
       </div>
     );
   }
+
+  if(step==="leitfaden"){
+    var lg=ges(),lp=100-lg;
+    var schwachB=gefB.filter(function(b){return gs(b.id)<50;}).sort(function(a,b){return gs(a.id)-gs(b.id);});
+    var starkB=gefB.filter(function(b){return gs(b.id)>=50;});
+    var phase=lg<30?"Einsteiger":lg<60?"Fortgeschritten":"Optimierer";
+
+    // Individuelle Einstiegsfragen basierend auf schwächsten Bereichen
+    var einstiegsFragen=schwachB.slice(0,3).map(function(b){
+      var fragen={
+        "Geschäftsprozesse":"Wie viel Zeit verbringt Ihr Team täglich mit manuellen, wiederkehrenden Aufgaben?",
+        "Finanzen":"Wie lange dauert bei Ihnen aktuell der Monatsabschluss und die Rechnungsstellung?",
+        "Kommunikation":"Wie viele Kundenanfragen bekommen Sie täglich und wie werden diese aktuell bearbeitet?",
+        "Personal & HR":"Wie hoch ist der Zeitaufwand für Ihre HR-Prozesse wie Zeiterfassung und Lohnabrechnung?",
+        "Datenverarbeitung":"Wie treffen Sie aktuell Entscheidungen — auf Basis welcher Daten und wie aktuell sind diese?",
+        "Betrieb & Logistik":"Wie wird bei Ihnen aktuell der Lagerbestand überwacht und wie oft kommt es zu Engpässen?",
+        "Patientenverwaltung":"Wie viele Termine werden täglich telefonisch vereinbart und wie hoch ist die Ausfallquote?",
+        "Abrechnung":"Wie lange dauert die Abrechnung nach einer Behandlung und gibt es dabei häufige Fehler?"
+      };
+      return {bereich:b.label,score:gs(b.id),frage:fragen[b.label]||"Wie läuft der Bereich "+b.label+" aktuell in Ihrem Unternehmen ab?"};
+    });
+
+    return(
+      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
+        <Logo/>
+        <button onClick={function(){setStep("termin");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+
+        {/* Header */}
+        <div style={{...cardG,marginBottom:20}}>
+          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>📋 Dein Gesprächsleitfaden</div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+            <div>
+              <div style={{fontSize:18,fontWeight:500,color:TX,marginBottom:2}}>{firma||"Kunde"}</div>
+              <div style={{fontSize:12,color:T2}}>{branche}</div>
+            </div>
+            <div style={{textAlign:"right"}}>
+              <div style={{fontSize:26,fontWeight:700,color:lg<30?"#e05a5a":lg<60?"#d4a000":G}}>{lg}%</div>
+              <div style={{fontSize:9,color:T2,letterSpacing:1}}>IQ-SCORE</div>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            <span style={{...bdg(lg<30?"#e05a5a":lg<60?"#d4a000":G),fontSize:10}}>Phase: {phase}</span>
+            <span style={{...bdg("#00aaff"),fontSize:10}}>{lp}% Potenzial</span>
+            <span style={{...bdg(G),fontSize:10}}>{schwachB.length} kritische Bereiche</span>
+          </div>
+        </div>
+
+        {/* Phase 1: Einstieg */}
+        <div style={{...card,marginBottom:16}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:G+"20",border:"1px solid "+G+"50",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:G,fontWeight:700,flexShrink:0}}>1</div>
+            <div style={{fontSize:13,fontWeight:500,color:TX}}>Einstieg & Rapport (5 Min)</div>
+          </div>
+          {[
+            "Kurze Vorstellung — wer bist du, was macht ONLION",
+            "\"Wie sind Sie auf uns aufmerksam geworden?\"",
+            "\"Haben Sie den IQ-Bericht bekommen und kurz angeschaut?\""
+          ].map(function(t,i){return(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8,padding:"8px 10px",background:D3,borderRadius:6}}>
+              <span style={{color:T2,fontSize:12,flexShrink:0,marginTop:1}}>→</span>
+              <span style={{fontSize:12,color:T2,lineHeight:1.5}}>{t}</span>
+            </div>
+          );})}
+        </div>
+
+        {/* Phase 2: Individuelle Tiefenfragen */}
+        <div style={{...card,marginBottom:16}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:"#00aaff20",border:"1px solid #00aaff50",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#00aaff",fontWeight:700,flexShrink:0}}>2</div>
+            <div style={{fontSize:13,fontWeight:500,color:TX}}>Individuelle Tiefenfragen (10 Min)</div>
+          </div>
+          <p style={{fontSize:11,color:T2,marginBottom:12,fontStyle:"italic"}}>Basierend auf den schwächsten Bereichen von {firma||"diesem Kunden"}:</p>
+          {einstiegsFragen.map(function(ef,i){return(
+            <div key={i} style={{marginBottom:12,padding:"10px 12px",background:"#0a1520",border:"0.5px solid #00aaff30",borderRadius:8,borderLeft:"3px solid #00aaff"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                <span style={{fontSize:11,color:"#00aaff",fontWeight:500}}>{ef.bereich}</span>
+                <span style={{fontSize:10,color:"#e05a5a",background:"#e05a5a20",padding:"2px 8px",borderRadius:10}}>Score: {ef.score}%</span>
+              </div>
+              <div style={{fontSize:12,color:TX,lineHeight:1.6}}>💬 „{ef.frage}"</div>
+              <div style={{fontSize:11,color:T2,marginTop:6}}>→ Zuhören, notieren, nachfragen: „Was kostet Sie das pro Woche?"</div>
+            </div>
+          );})}
+          {schwachB.length===0&&(
+            <div style={{fontSize:12,color:T2,fontStyle:"italic"}}>Dieser Kunde ist bereits gut aufgestellt — fokussiere auf Optimierung und Skalierung.</div>
+          )}
+        </div>
+
+        {/* Phase 3: Stärken würdigen */}
+        {starkB.length>0&&(
+          <div style={{...card,marginBottom:16}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+              <div style={{width:24,height:24,borderRadius:"50%",background:G+"20",border:"1px solid "+G+"50",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:G,fontWeight:700,flexShrink:0}}>3</div>
+              <div style={{fontSize:13,fontWeight:500,color:TX}}>Stärken würdigen (3 Min)</div>
+            </div>
+            <p style={{fontSize:11,color:T2,marginBottom:10,fontStyle:"italic"}}>Bereits gut aufgestellt — positiv ansprechen:</p>
+            {starkB.map(function(b,i){return(
+              <div key={i} style={{display:"flex",gap:10,alignItems:"center",marginBottom:6,padding:"6px 10px",background:G+"08",borderRadius:6,border:"0.5px solid "+G+"20"}}>
+                <span style={{fontSize:13}}>{b.icon}</span>
+                <span style={{fontSize:12,color:T2,flex:1}}>{b.label}</span>
+                <span style={{fontSize:12,color:G,fontWeight:500}}>{gs(b.id)}% ✓</span>
+              </div>
+            );})}
+            <div style={{fontSize:11,color:T2,marginTop:8,fontStyle:"italic"}}>„Toll, dass Sie in {starkB[0]&&starkB[0].label} schon so weit sind — darauf können wir aufbauen."</div>
+          </div>
+        )}
+
+        {/* Phase 4: Lösungsvorschlag */}
+        <div style={{...card,marginBottom:16}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:"#ff770020",border:"1px solid #ff770050",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#ff7700",fontWeight:700,flexShrink:0}}>4</div>
+            <div style={{fontSize:13,fontWeight:500,color:TX}}>Lösungsvorschlag (5 Min)</div>
+          </div>
+          {[
+            {t:"Quick Wins zeigen",d:"Welche 1-2 Bereiche können sofort und einfach automatisiert werden?",c:"#ff7700"},
+            {t:"Roadmap skizzieren",d:"Phase 1 (sofort) → Phase 2 (3 Mon) → Phase 3 (12 Mon)",c:"#ff7700"},
+            {t:"Kosten & ROI nennen",d:"Investition vs. gesparte Stunden — konkret und ehrlich",c:"#ff7700"}
+          ].map(function(x,i){return(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:10,padding:"8px 10px",background:"#110800",borderRadius:6,border:"0.5px solid #ff770030"}}>
+              <span style={{color:"#ff7700",fontSize:12,flexShrink:0,fontWeight:700}}>✓</span>
+              <div>
+                <div style={{fontSize:12,color:TX,fontWeight:500,marginBottom:2}}>{x.t}</div>
+                <div style={{fontSize:11,color:T2}}>{x.d}</div>
+              </div>
+            </div>
+          );})}
+        </div>
+
+        {/* Phase 5: Förderung */}
+        <div style={{...card,marginBottom:16,borderLeft:"3px solid "+G}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:G+"20",border:"1px solid "+G+"50",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:G,fontWeight:700,flexShrink:0}}>5</div>
+            <div style={{fontSize:13,fontWeight:500,color:TX}}>Förderung ansprechen 🏛️ (3 Min)</div>
+          </div>
+          <div style={{padding:"10px 12px",background:"#0a1a00",borderRadius:8,marginBottom:10}}>
+            <div style={{fontSize:12,color:G,fontWeight:500,marginBottom:6}}>💬 Gesprächseinstieg:</div>
+            <div style={{fontSize:12,color:TX,lineHeight:1.7,fontStyle:"italic"}}>„Bevor wir zum nächsten Schritt kommen — wussten Sie, dass ein Großteil dieser Maßnahmen staatlich gefördert werden kann? In manchen Fällen bis zu 100% der Kosten."</div>
+          </div>
+          {[
+            "Kurz QCG erklären (Qualifizierungschancengesetz)",
+            "Fragen: \"Haben Sie sozialversicherungspflichtige Mitarbeiter?\"",
+            "Fragen: \"Würden Sie eine Förderprüfung in Anspruch nehmen?\""
+          ].map(function(t,i){return(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:6}}>
+              <span style={{color:G,flexShrink:0}}>→</span>
+              <span style={{fontSize:12,color:T2}}>{t}</span>
+            </div>
+          );})}
+        </div>
+
+        {/* Phase 6: Abschluss */}
+        <div style={{...card,marginBottom:16}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:"#aa44ff20",border:"1px solid #aa44ff50",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#aa44ff",fontWeight:700,flexShrink:0}}>6</div>
+            <div style={{fontSize:13,fontWeight:500,color:TX}}>Abschluss & Next Steps (4 Min)</div>
+          </div>
+          {[
+            {t:"Zusammenfassen",d:"„Also zusammengefasst: Ihre größten Hebel sind [Bereich 1] und [Bereich 2]...""},
+            {t:"Klare Handlungsempfehlung",d:"„Ich empfehle, mit [Quick Win] zu starten — das zeigt sofort Wirkung.""},
+            {t:"Konkrete Vereinbarung",d:"„Darf ich Ihnen ein konkretes Angebot zusenden?" → Ja/Nein klären"},
+            {t:"Förderantrag anstoßen",d:"„Soll ich parallel die Förderfähigkeit für Sie prüfen lassen?\""}
+          ].map(function(x,i){return(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:10,padding:"8px 10px",background:"#0d0a15",borderRadius:6,border:"0.5px solid #aa44ff30"}}>
+              <span style={{color:"#aa44ff",fontSize:12,flexShrink:0,fontWeight:700}}>✓</span>
+              <div>
+                <div style={{fontSize:12,color:TX,fontWeight:500,marginBottom:2}}>{x.t}</div>
+                <div style={{fontSize:11,color:T2,fontStyle:"italic"}}>{x.d}</div>
+              </div>
+            </div>
+          );})}
+        </div>
+
+        {/* Einwand-Handling */}
+        <div style={{...card,marginBottom:16}}>
+          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>⚡ Einwand-Handling</div>
+          {[
+            {e:"\"Wir haben keine Zeit dafür\"",a:"\"Genau deshalb lohnt sich Automatisierung — Sie sparen langfristig Zeit. Der Aufwand zur Einführung ist einmalig.\""},
+            {e:"\"Zu teuer\"",a:"\"Mit staatlicher Förderung trägt der Staat bis zu 100% der Kosten. Ihr Eigenanteil kann sehr gering sein.\""},
+            {e:"\"Wir sind zu klein\"",a:"\"Gerade kleine Unternehmen profitieren am meisten — jede gesparte Stunde wiegt schwerer als in großen Firmen.\""},
+            {e:"\"Wir machen das intern\"",a:"\"Super — dann helfen wir Ihnen, den richtigen Weg zu wählen und Fördermittel zu sichern.\""}
+          ].map(function(x,i){return(
+            <div key={i} style={{marginBottom:12,borderBottom:i<3?"0.5px solid "+BD:"none",paddingBottom:i<3?12:0}}>
+              <div style={{fontSize:12,color:"#e05a5a",marginBottom:4,fontWeight:500}}>❓ {x.e}</div>
+              <div style={{fontSize:12,color:T2,lineHeight:1.6}}>💬 {x.a}</div>
+            </div>
+          );})}
+        </div>
+
+        {/* Checkliste */}
+        <div style={{...cardG,marginBottom:16}}>
+          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>✅ Checkliste nach dem Gespräch</div>
+          {[
+            "Kontaktdaten vollständig aufgenommen",
+            "Hauptprobleme notiert",
+            "Interesse an Förderung abgefragt",
+            "Nächsten Schritt vereinbart (Angebot / Follow-up)",
+            "Termin für Förderprüfung angestoßen"
+          ].map(function(t,i){return(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"center",marginBottom:8,padding:"8px 10px",background:D3,borderRadius:6}}>
+              <div style={{width:16,height:16,borderRadius:4,border:"1px solid "+G+"50",flexShrink:0}}/>
+              <span style={{fontSize:12,color:T2}}>{t}</span>
+            </div>
+          );})}
+        </div>
+
+        <button onClick={function(){setStep("termin");}} style={{...btnO,marginTop:0}}>← Zurück</button>
+      </div>
+    );
+  }
+
+  if(step==="foerderung") return(
+    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
+      <Logo/>
+      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+
+      {/* Hero */}
+      <div style={{background:"linear-gradient(135deg,#0a1a00,#0f2200)",border:"1px solid "+G+"50",borderRadius:12,padding:"1.5rem",marginBottom:20,textAlign:"center"}}>
+        <div style={{fontSize:36,marginBottom:10}}>🏛️</div>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 8px",color:G}}>Staatliche Förderung für deine KI-Automatisierung</h1>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Wusstest du, dass du als Unternehmen Anspruch auf staatliche Förderung hast? Deine KI- und Automatisierungsprojekte können bis zu <strong style={{color:G}}>100% gefördert</strong> werden.</p>
+      </div>
+
+      {/* Förder-Highlights */}
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Was gefördert werden kann</div>
+        {[
+          ["💶","Bis zu 100% der Weiterbildungskosten","nach dem Qualifizierungschancengesetz (QCG)"],
+          ["💰","Bis zu 75% der Gehaltskosten","für sozialversicherungspflichtige Angestellte"],
+          ["📅","Förderung für bis zu 14 Monate","laufende Unterstützung während der Umsetzung"],
+          ["✅","Kein Risiko & keine Rückzahlung","auch nicht bei Abbruch der Maßnahme"]
+        ].map(function(x,i){return(
+          <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:14,paddingBottom:i<3?14:0,borderBottom:i<3?"0.5px solid "+BD:"none"}}>
+            <span style={{fontSize:22,flexShrink:0}}>{x[0]}</span>
+            <div>
+              <div style={{fontSize:13,color:TX,fontWeight:500,marginBottom:2}}>{x[1]}</div>
+              <div style={{fontSize:11,color:T2}}>{x[2]}</div>
+            </div>
+          </div>
+        );})}
+      </div>
+
+      {/* Wer hat Anspruch */}
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Wer hat Anspruch?</div>
+        {[
+          "Kleine und mittelständische Unternehmen (KMU)",
+          "Unternehmen mit sozialversicherungspflichtigen Angestellten",
+          "Unternehmen die KI, Digitalisierung oder Automatisierung einführen wollen",
+          "Kein Mindestumsatz oder Mindestgröße erforderlich"
+        ].map(function(t,i){return(
+          <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
+            <span style={{color:G,flexShrink:0,fontWeight:700}}>✓</span>
+            <span style={{fontSize:13,color:T2,lineHeight:1.5}}>{t}</span>
+          </div>
+        );})}
+      </div>
+
+      {/* Wie es funktioniert */}
+      <div style={{...card,marginBottom:20}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>So einfach funktioniert es</div>
+        {[
+          ["1","Beratungsgespräch","Wir prüfen gemeinsam deine Förderfähigkeit und berechnen die genaue Fördersumme."],
+          ["2","Antragstellung","Wir unterstützen dich beim Antrag — dein Aufwand: ca. 1 Stunde."],
+          ["3","Förderung erhalten","Nach Bewilligung startet die Maßnahme und du erhältst den Zuschuss."]
+        ].map(function(x,i){return(
+          <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:i<2?16:0}}>
+            <div style={{width:28,height:28,borderRadius:"50%",background:G+"20",border:"1px solid "+G+"50",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:G,fontWeight:700}}>{x[0]}</div>
+            <div>
+              <div style={{fontSize:13,color:TX,fontWeight:500,marginBottom:2}}>{x[1]}</div>
+              <div style={{fontSize:11,color:T2,lineHeight:1.5}}>{x[2]}</div>
+            </div>
+          </div>
+        );})}
+      </div>
+
+      {/* CTA */}
+      <div style={{...cardG,textAlign:"center",padding:"1.5rem",marginBottom:16}}>
+        <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>Jetzt Förderung prüfen</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Erfahre in einem kostenlosen Gespräch wie viel Förderung du für deine KI-Projekte bekommst — unverbindlich und ohne Risiko.</p>
+        <button onClick={function(){window.open("https://mittelstandsfoerderung-deutschland.de/ac/#survey-question-GwiJBsJn","_blank");}} style={{...btnG,marginTop:0}}>
+          🏛️ Jetzt Förderfähigkeit prüfen →
+        </button>
+        <p style={{fontSize:11,color:T2,marginTop:10}}>Du wirst zur Förderberatung weitergeleitet</p>
+      </div>
+
+      <button onClick={function(){setStep("bericht");}} style={{...btnO,marginTop:0}}>← Zurück zum Bericht</button>
+    </div>
+  );
 
   if(step==="impressum") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
