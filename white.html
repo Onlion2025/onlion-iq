@@ -239,6 +239,33 @@ function LoadBox({msg,sub,steps=[]}){
   );
 }
 
+/* ── KATCARD COMPONENT ── */
+function KatCard(props){
+  var k=props.k;
+  var rH=React.useState(false);
+  var hovered=rH[0],setHovered=rH[1];
+  var kc=KC[k.k];
+  return(
+    <div style={{
+      background:BG2,border:"1px solid "+(hovered?kc+"80":BD),borderRadius:12,
+      padding:"1rem",display:"flex",gap:12,alignItems:"flex-start",
+      cursor:"default",transition:"all 0.2s",
+      transform:hovered?"translateY(-1px)":"none",
+      boxShadow:hovered?"0 4px 12px rgba(0,0,0,0.06)":"none"
+    }}
+      onMouseEnter={function(){setHovered(true);}}
+      onMouseLeave={function(){setHovered(false);}}
+    >
+      <span style={{fontSize:22,flexShrink:0}}>{k.i}</span>
+      <div style={{flex:1}}>
+        <div style={{fontSize:12,fontWeight:600,color:kc,marginBottom:2}}>{k.l}</div>
+        <div style={{fontSize:11,color:T3}}>{k.d}</div>
+        {hovered&&<div style={{fontSize:11,color:T2,marginTop:8,lineHeight:1.6,borderTop:"1px solid "+kc+"20",paddingTop:8}}>{KT[k.k]}</div>}
+      </div>
+    </div>
+  );
+}
+
 /* ── MAIN APP ── */
 function App(){
   const [step,setStep]=React.useState("intro");
