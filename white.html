@@ -780,9 +780,9 @@ function App(){
     const phase=lg<30?"Einsteiger":lg<60?"Fortgeschritten":"Optimierer";
     const fragenMap={"Geschäftsprozesse":"Wie viel Zeit verbringt Ihr Team täglich mit manuellen, wiederkehrenden Aufgaben?","Finanzen":"Wie lange dauert aktuell der Monatsabschluss und die Rechnungsstellung?","Kommunikation":"Wie viele Kundenanfragen bekommen Sie täglich und wie werden diese bearbeitet?","Personal & HR":"Wie hoch ist der Zeitaufwand für HR-Prozesse wie Zeiterfassung und Lohnabrechnung?","Datenverarbeitung":"Wie treffen Sie Entscheidungen  -  auf Basis welcher Daten und wie aktuell sind diese?","Betrieb & Logistik":"Wie wird der Lagerbestand überwacht und wie oft kommt es zu Engpässen?","Patientenverwaltung":"Wie viele Termine werden täglich telefonisch vereinbart und wie hoch ist die Ausfallquote?","Abrechnung":"Wie lange dauert die Abrechnung und gibt es dabei häufige Fehler?"};
     const phasen=[
-      {n:"1",t:"Einstieg & Rapport",d:"5 Min",c:"#0066cc",items:["Kurze Vorstellung  -  wer bist du, was macht ONLION",""Wie sind Sie auf uns aufmerksam geworden?"",""Haben Sie den IQ-Bericht bekommen und angeschaut?\""]},
-      {n:"4",t:"Lösungsvorschlag",d:"5 Min",c:"#cc4400",items:["Quick Wins zeigen  -  welche 1-2 Bereiche sofort automatisierbar sind","Roadmap skizzieren: Phase 1 → Phase 2 → Phase 3","Kosten & ROI nennen  -  konkret und ehrlich"]},
-      {n:"6",t:"Abschluss & Next Steps",d:"4 Min",c:"#6600cc",items:["Zusammenfassen: "Ihre größten Hebel sind [Bereich 1] und [Bereich 2]..."","Klare Handlungsempfehlung: "Ich empfehle, mit [Quick Win] zu starten."",""Darf ich Ihnen ein konkretes Angebot zusenden?" → Ja/Nein klären"]}
+      {n:"1",t:"Einstieg & Rapport",d:"5 Min",c:"#0066cc",items:["Kurze Vorstellung - wer bist du, was macht ONLION","Wie sind Sie auf uns aufmerksam geworden?","Haben Sie den IQ-Bericht bekommen und angeschaut?"]},
+      {n:"4",t:"Loesungsvorschlag",d:"5 Min",c:"#cc4400",items:["Quick Wins zeigen - welche 1-2 Bereiche sofort automatisierbar sind","Roadmap skizzieren: Phase 1 - Phase 2 - Phase 3","Kosten & ROI nennen - konkret und ehrlich"]},
+      {n:"6",t:"Abschluss & Next Steps",d:"4 Min",c:"#6600cc",items:["Zusammenfassen: Ihre groessten Hebel sind [Bereich 1] und [Bereich 2]...","Klare Handlungsempfehlung: Ich empfehle mit [Quick Win] zu starten.","Darf ich Ihnen ein konkretes Angebot zusenden? Ja/Nein klaeren"]}
     ];
 
     return(
@@ -825,8 +825,8 @@ function App(){
                 <span style={{fontSize:11,color:"#0066cc",fontWeight:500}}>{b.icon} {b.label}</span>
                 <span style={{fontSize:10,color:"#cc3333",background:"#cc333310",padding:"2px 8px",borderRadius:10,border:"1px solid #cc333330"}}>Score: {gs(b.id)}%</span>
               </div>
-              <div style={{fontSize:12,color:TX,lineHeight:1.6,marginBottom:4}}>💬 "{fragenMap[b.label]||"Wie läuft der Bereich "+b.label+" aktuell ab?"}"</div>
-              <div style={{fontSize:11,color:T3}}>→ Nachfragen: "Was kostet Sie das pro Woche?"</div>
+              <div style={{fontSize:12,color:TX,lineHeight:1.6,marginBottom:4}}>{fragenMap[b.label]||"Wie laeuft der Bereich "+b.label+" aktuell ab?"}</div>
+              <div style={{fontSize:11,color:T3}}>Nachfragen: Was kostet Sie das pro Woche?</div>
             </div>
           ))}
           {schwachB.length===0&&<p style={{fontSize:12,color:T2,fontStyle:"italic"}}>Dieser Kunde ist bereits gut aufgestellt  -  Fokus auf Optimierung.</p>}
