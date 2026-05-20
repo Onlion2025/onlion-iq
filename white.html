@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ONLION IQ</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#f5f3ee;color:#1a1a1a;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+input,select,textarea,button{font-family:'Inter',system-ui,sans-serif}
+
+input,select,textarea{
+  background:#fff;color:#1a1a1a;
+  border:1px solid #e0ddd5;
+  border-radius:10px;padding:12px 16px;
+  width:100%;font-size:14px;margin-bottom:10px;
+  transition:border-color 0.2s,box-shadow 0.2s;outline:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#7AC800;
+  box-shadow:0 0 0 3px rgba(122,200,0,0.1);
+}
+select option{background:#fff;color:#1a1a1a}
+::placeholder{color:#aaa;opacity:1}
+::-webkit-input-placeholder{color:#aaa}
+textarea::placeholder{color:#aaa;opacity:1}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const G="#7AC800",GL="#8FD400",GD="#5A9600",GLight="#f0f9e0";
+const BG="#f5f3ee",BG2="#fff",BG3="#f0ede6";
+const TX="#1a1a1a",T2="#666",T3="#aaa";
+const BD="#e0ddd5",BD2="#ccc";
+
+const KC={ki:G,rpa:"#0066cc",robotik:"#cc4400",daten:"#6600cc"};
+const KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"};
+const KT={
+  ki:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit — rund um die Uhr.",
+  rpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen — ohne Programmierung, sofort einsetzbar.",
+  robotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik — präzise und ermüdungsfrei.",
+  daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen — Entscheidungen auf Basis aktueller Daten."
+};
+const BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"];
+
+function safe(s){return(s||"").replace(/[^\w\s.,\-äöüÄÖÜß]/g," ").replace(/\s+/g," ").trim();}
+
+function parseBereicheText(text,branche){
+  var bereiche=[];
+  var blocks=text.split(/\n(?=BEREICH)/);
+  for(var i=0;i<blocks.length&&bereiche.length<6;i++){
+    var block=blocks[i].trim();
+    if(!block)continue;
+    var lines=block.split("\n").map(l=>l.trim()).filter(l=>l);
+    if(lines.length<4)continue;
+    var label=lines[0].replace(/^BEREICH\s*\d*[:.\s]*/i,"").trim();
+    var icon=lines[1]||"⚙️";
+    var hint=lines[2]||"";
+    var kat="rpa";
+    var ll=label.toLowerCase()+hint.toLowerCase();
+    if(ll.includes("ki ")||ll.includes("chatbot")||ll.includes("agent"))kat="ki";
+    else if(ll.includes("robot")||ll.includes("maschine"))kat="robotik";
+    else if(ll.includes("daten")||ll.includes("analytic")||ll.includes("dashboard"))kat="daten";
+    var fragen=[];
+    var fragenBlock=lines.slice(3).join("\n");
+    var fmatches=fragenBlock.split(/FRAGE\s*\d*[:.\s]*/i).filter(f=>f.trim());
+    for(var j=0;j<fmatches.length&&fragen.length<4;j++){
+      var flines=fmatches[j].split("\n").map(l=>l.trim()).filter(l=>l);
+      if(flines.length<5)continue;
+      var optionen=flines.slice(1,5);
+      if(optionen.length===4)fragen.push({f:flines[0],o:optionen});
+    }
+    if(fragen.length>0)bereiche.push({id:"b"+(i+1),label,icon,hint,kiKat:kat,fragen});
+  }
+  if(bereiche.length<3)return getDefault(branche);
+  return bereiche;
+}
+
+function getDefault(branche){
+  var p=branche==="Gesundheit / Pflege";
+  return[
+    {id:"b1",label:p?"Patientenverwaltung":"Geschäftsprozesse",icon:p?"🏥":"⚙️",kiKat:"rpa",hint:"Automatisierung spart täglich wertvolle Zeit.",fragen:[
+      {f:p?"Wie werden Patiententermine verwaltet?":"Wie werden Aufträge bearbeitet?",o:["Vollständig manuell","Teilweise digital","Größtenteils automatisiert","Vollständig automatisiert"]},
+      {f:"Wie werden Dokumente verarbeitet?",o:["Nur auf Papier","Eingescannt manuell","Digital teilweise automatisch","Vollautomatisch"]},
+      {f:"Wie lange dauert ein Vorgang durchschnittlich?",o:["Über 1 Stunde","30-60 Minuten","10-30 Minuten","Unter 10 Minuten"]},
+      {f:"Wie werden Status-Updates kommuniziert?",o:["Nur auf Nachfrage","Manuell per Telefon","Teilweise automatisch","Vollautomatisch"]}
+    ]},
+    {id:"b2",label:"Finanzen",icon:"💰",kiKat:"rpa",hint:"RPA kann Rechnungen automatisieren.",fragen:[
+      {f:"Wie werden Rechnungen erstellt?",o:["Manuell auf Papier","Software, viel manuell","Halbautomatisch","Vollautomatisch"]},
+      {f:"Wie werden Zahlungen verbucht?",o:["Manuell","Teilweise digital","Software mit Kontrolle","Vollautomatisch"]},
+      {f:"Wie wird das Mahnwesen gehandhabt?",o:["Manuell per Post","Excel-gestützt","Halbautomatisch","Vollautomatisch"]},
+      {f:"Wie lange dauert der Monatsabschluss?",o:["Über 3 Tage","1-3 Tage","Halber Tag","Vollautomatisch"]}
+    ]},
+    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Agenten beantworten Standardanfragen automatisch.",fragen:[
+      {f:"Wie werden Kundenanfragen bearbeitet?",o:["Nur Telefon manuell","E-Mail manuell","E-Mail mit Vorlagen","KI-gestützt automatisch"]},
+      {f:"Gibt es automatisierte Benachrichtigungen?",o:["Nein","Gelegentlich","Für bestimmte Ereignisse","Vollautomatisch"]},
+      {f:"Wie schnell werden Anfragen beantwortet?",o:["Über 24 Stunden","Innerhalb 24 Stunden","Innerhalb 4 Stunden","Unter 1 Stunde"]},
+      {f:"Wie wird interne Kommunikation organisiert?",o:["Nur mündlich","E-Mail","Chat-Tools","Integrierte Plattform"]}
+    ]},
+    {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitale HR-Prozesse sparen bis zu 10h pro Woche.",fragen:[
+      {f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr","Software automatisch","Mit Lohnabrechnung verknüpft"]},
+      {f:"Wie läuft das Onboarding ab?",o:["Informell persönlich","Checkliste Papier","Digitale Checkliste","Automatisiertes System"]},
+      {f:"Wie werden Urlaubsanträge verwaltet?",o:["Manuell per Formular","Per E-Mail","Software mit Genehmigung","Vollautomatisch"]},
+      {f:"Wie werden Lohnzahlungen abgewickelt?",o:["Manuell berechnet","Externe Lohnbuchhaltung","Software mit Kontrolle","Vollautomatisch"]}
+    ]},
+    {id:"b5",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Echtzeit-Dashboards ersetzen manuelle Excel-Berichte.",fragen:[
+      {f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen manuell","Software manuell gestartet","Automatisch in Echtzeit"]},
+      {f:"Wie werden Daten übertragen?",o:["Per E-Mail","Manuell kopiert","Teilweise automatisch","Vollautomatisch per API"]},
+      {f:"Wie aktuell sind Geschäftszahlen?",o:["Monatsweise","Wöchentlich","Täglich","Echtzeit"]},
+      {f:"Wie werden Entscheidungen getroffen?",o:["Aus dem Bauch","Auf Basis alter Daten","Auf Basis aktueller Reports","Datengetrieben in Echtzeit"]}
+    ]},
+    {id:"b6",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung senken Betriebskosten.",fragen:[
+      {f:"Wie wird der Bestand verwaltet?",o:["Manuell mit Listen","Einfache Software","Lagersoftware teilweise","Automatisch mit RFID"]},
+      {f:"Wie läuft die Wartung ab?",o:["Nur bei Ausfall","Feste Intervalle","Digitale Wartungspläne","Automatische Überwachung"]},
+      {f:"Wie werden Lieferungen koordiniert?",o:["Telefonisch manuell","Per E-Mail","Software teilweise","Vollautomatisch"]},
+      {f:"Wie wird Qualitätskontrolle durchgeführt?",o:["Nur manuell","Stichproben manuell","Software-gestützt","Automatisiert mit Sensorik"]}
+    ]}
+  ];
+}
+
+/* ── UI COMPONENTS ── */
+function Logo({dark=false}){
+  const c=dark?"#1a1a1a":TX;
+  return(
+    <div style={{marginBottom:32}}>
+      <div style={{fontWeight:600,fontSize:20,letterSpacing:2,color:c,display:"flex",alignItems:"center",gap:1}}>
+        <span>ON</span><span style={{color:G}}>L</span><span>ION</span>
+        <span style={{color:G,marginLeft:6,fontSize:18}}>IQ</span>
+      </div>
+      <div style={{fontSize:10,color:T3,letterSpacing:3,marginTop:3,textTransform:"uppercase",fontWeight:500}}>Intelligence Quotient</div>
+    </div>
+  );
+}
+
+function Spinner(){
+  return <span style={{display:"inline-block",width:16,height:16,border:`1.5px solid ${G}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.7s linear infinite"}}/>;
+}
+
+function Tag({color,children}){
+  return(
+    <span style={{
+      display:"inline-block",padding:"2px 10px",borderRadius:20,
+      background:color+"15",border:`1px solid ${color}30`,
+      fontSize:10,color:color,fontWeight:500,letterSpacing:0.3
+    }}>{children}</span>
+  );
+}
+
+function Card({children,style={},accent=null}){
+  return(
+    <div style={{
+      background:BG2,border:`1px solid ${BD}`,borderRadius:12,
+      padding:"1.25rem",marginBottom:14,
+      borderLeft:accent?`3px solid ${accent}`:"1px solid "+BD,
+      ...style
+    }}>{children}</div>
+  );
+}
+
+function GreenBtn({onClick,children,disabled=false,style={}}){
+  return(
+    <button onClick={onClick} disabled={disabled} style={{
+      width:"100%",padding:"13px",borderRadius:10,
+      border:`1px solid ${disabled?"#ddd":G}`,
+      background:disabled?"#f5f5f5":G,
+      cursor:disabled?"not-allowed":"pointer",
+      fontSize:14,color:disabled?T3:"#fff",
+      fontWeight:500,letterSpacing:0.3,
+      transition:"all 0.2s",...style
+    }}
+    onMouseEnter={e=>{if(!disabled)e.target.style.background=GL}}
+    onMouseLeave={e=>{if(!disabled)e.target.style.background=G}}
+    >{children}</button>
+  );
+}
+
+function OutlineBtn({onClick,children,style={}}){
+  return(
+    <button onClick={onClick} style={{
+      width:"100%",padding:"11px",borderRadius:10,
+      border:`1px solid ${BD}`,background:"transparent",
+      cursor:"pointer",fontSize:14,color:T2,marginTop:8,
+      transition:"all 0.2s",...style
+    }}
+    onMouseEnter={e=>{e.target.style.borderColor=BD2;e.target.style.color=TX}}
+    onMouseLeave={e=>{e.target.style.borderColor=BD;e.target.style.color=T2}}
+    >{children}</button>
+  );
+}
+
+function IQMeter({score}){
+  const c=score>66?G:score>33?"#d4a000":"#cc3333";
+  const dash=(score/100*188);
+  const label=score>66?"Gut digitalisiert":score>33?"Ausbaufähig":"Hohes Potenzial";
+  return(
+    <div style={{textAlign:"center",padding:"1.5rem 0"}}>
+      <svg width="160" height="90" viewBox="0 0 160 90" style={{overflow:"visible"}}>
+        <path d="M 15 78 A 65 65 0 0 1 145 78" fill="none" stroke="#eee" strokeWidth="8" strokeLinecap="round"/>
+        <path d="M 15 78 A 65 65 0 0 1 145 78" fill="none" stroke={c} strokeWidth="8" strokeLinecap="round"
+          strokeDasharray={`${dash} 204`}
+          style={{transition:"stroke-dasharray 1s cubic-bezier(0.4,0,0.2,1)"}}
+        />
+        <text x="80" y="72" textAnchor="middle" fontSize="24" fontWeight="600" fill={TX} fontFamily="Inter,sans-serif">{score}%</text>
+      </svg>
+      <div style={{fontSize:12,color:c,marginTop:2,fontWeight:500,letterSpacing:1}}>{label}</div>
+    </div>
+  );
+}
+
+function LoadBox({msg,sub,steps=[]}){
+  return(
+    <div style={{background:BG2,border:`1px solid ${BD}`,borderRadius:12,padding:"2rem",textAlign:"center",marginBottom:14}}>
+      <div style={{display:"flex",justifyContent:"center",marginBottom:16}}><Spinner/></div>
+      <div style={{fontSize:15,color:TX,marginBottom:4,fontWeight:500}}>{msg}</div>
+      <div style={{fontSize:12,color:T2,marginBottom:20}}>{sub}</div>
+      <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}}>
+        {steps.map((t,i)=>(
+          <span key={i} style={{fontSize:11,color:T2,background:BG3,padding:"4px 12px",borderRadius:20,border:`1px solid ${BD}`,animation:`pulse ${1+i*0.4}s ease-in-out infinite`}}>{t}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── MAIN APP ── */
+function App(){
+  const [step,setStep]=React.useState("intro");
+  const [branche,setBranche]=React.useState("");
+  const [firma,setFirma]=React.useState("");
+  const [desc,setDesc]=React.useState("");
+  const [email,setEmail]=React.useState("");
+  const [bereiche,setBereiche]=React.useState([]);
+  const [aktiv,setAktiv]=React.useState([]);
+  const [loadB,setLoadB]=React.useState(false);
+  const [bIdx,setBIdx]=React.useState(0);
+  const [antw,setAntw]=React.useState({});
+  const [loadR,setLoadR]=React.useState(false);
+  const [bericht,setBericht]=React.useState("");
+  const [loes,setLoes]=React.useState([]);
+  const [loadL,setLoadL]=React.useState(false);
+  const [err,setErr]=React.useState("");
+  const [mailShare,setMailShare]=React.useState("");
+  const [mailSent,setMailSent]=React.useState(false);
+  const [emailSent,setEmailSent]=React.useState(false);
+  const [dsgvo,setDsgvo]=React.useState(false);
+
+  const gefB=bereiche.filter(b=>aktiv.includes(b.id));
+  const curB=gefB[bIdx];
+  const totalF=gefB.reduce((s,b)=>s+(b.fragen?b.fragen.length:0),0);
+  const prog=totalF>0?Math.round(Object.keys(antw).length/totalF*100):0;
+  const descValid=desc.trim().length>=10;
+  const canStart=email&&branche&&descValid&&dsgvo;
+
+  function setA(bid,fi,val){setAntw(p=>{const n={...p};n[bid+"_"+fi]=val;return n;});}
+  function gs(bid){
+    const b=bereiche.find(x=>x.id===bid);
+    if(!b)return 0;
+    const v=b.fragen.map((_,i)=>antw[bid+"_"+i]).filter(x=>x!=null);
+    return v.length?Math.round(v.reduce((s,x)=>s+x,0)/v.length):0;
+  }
+  function ges(){return gefB.length?Math.round(gefB.map(b=>gs(b.id)).reduce((s,v)=>s+v,0)/gefB.length):0;}
+  function komp(bid){const b=bereiche.find(x=>x.id===bid);return b?b.fragen.every((_,i)=>antw[bid+"_"+i]!==undefined):false;}
+  function ov(i){return[0,33,67,100][i];}
+
+  async function callApi(prompt,mt){
+    const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
+    const d=await r.json();
+    if(d.error)throw new Error(typeof d.error==="string"?d.error:JSON.stringify(d.error));
+    return d.content?d.content.map(c=>c.text||"").join(""):"";
+  }
+
+  async function sendeEmail(g){
+    try{
+      const schwach=gefB.filter(b=>gs(b.id)<60).map(b=>b.label).slice(0,3).join(", ");
+      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach})});
+      setEmailSent(true);
+    }catch(e){console.log("E-Mail Fehler:",e);}
+  }
+
+  async function ladeBereiche(){
+    if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
+    setLoadB(true);setErr("");
+    const prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirma: "+safe(firma)+"\nBeschreibung: "+safe(desc)+"\n\nWichtig: Die Fragen sollen DIREKT auf die Beschreibung eingehen.\n\nFormat:\n\nBEREICH 1: [Name]\n[Emoji]\n[KI-Potenzial 1 Satz]\nFRAGE 1: [Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 2: [Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: ...";
+    try{
+      const t=await callApi(prompt,3500);
+      const p=parseBereicheText(t,branche);
+      setBereiche(p);setAktiv(p.map(b=>b.id));setStep("bereiche");
+    }catch(e){
+      const df=getDefault(branche);
+      setBereiche(df);setAktiv(df.map(b=>b.id));setStep("bereiche");
+    }
+    setLoadB(false);
+  }
+
+  async function analysiereReport(){
+    setLoadR(true);setErr("");
+    try{
+      const g=ges();
+      const info=gefB.map(b=>b.label+" "+gs(b.id)+"%").join(", ");
+      const t=await callApi("Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. Bereiche: "+info+". Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. Max 350 Woerter.",800);
+      setBericht(t);setStep("bericht");sendeEmail(g);
+    }catch(e){setErr("Fehler: "+e.message);}
+    setLoadR(false);
+  }
+
+  async function ladeLoes(){
+    if(loes.length)return;
+    setLoadL(true);
+    try{
+      const schwach=gefB.filter(b=>gs(b.id)<60).map(b=>b.label).join(", ")||"alle";
+      const t=await callApi("Nenne 6 Tools fuer "+safe(branche)+" schwache Bereiche: "+safe(schwach)+". Trenne mit ---. Pro Tool: Name, Beschreibung, URL, Zeitersparnis.",600);
+      const parts=t.split("---");const result=[];const icons={ki:"🤖",rpa:"⚙️",robotik:"🦾",daten:"📊"};
+      for(let i=0;i<parts.length&&result.length<6;i++){
+        const lines=parts[i].trim().split("\n").map(l=>l.replace(/^\*+|\*+$/g,"").trim()).filter(l=>l);
+        if(lines.length<2)continue;
+        let kat="rpa";const pl=(lines[0]+(lines[1]||"")).toLowerCase();
+        if(pl.includes("ki ")||pl.includes("gpt")||pl.includes("copilot"))kat="ki";
+        else if(pl.includes("robot"))kat="robotik";
+        else if(pl.includes("analytic")||pl.includes("dashboard"))kat="daten";
+        const url=lines.find(l=>l.includes("http"))||"https://google.com/search?q="+encodeURIComponent(lines[0]);
+        const esp=lines.find(l=>l.includes("h/")||l.includes("tunden"))||"bis zu 5h/Woche";
+        result.push({name:lines[0],tag:KL[kat],icon:icons[kat],kategorie:kat,desc:lines[1]||"",url,einsparung:esp});
+      }
+      setLoes(result);
+    }catch(e){setLoes([]);}
+    setLoadL(false);
+  }
+
+  function renderMd(t){
+    return t
+      .replace(/\*\*(.+?)\*\*/g,`<strong style='color:${TX}'>$1</strong>`)
+      .replace(/^## (.+)$/gm,`<h2 style='font-size:14px;font-weight:600;margin:1.2rem 0 0.4rem;color:${TX};padding-bottom:6px;border-bottom:1px solid ${BD}'>$1</h2>`)
+      .replace(/^- (.+)$/gm,`<li style='margin:5px 0;color:${T2};line-height:1.6;margin-left:16px'>$1</li>`)
+      .replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
+  }
+
+  function btxt(){
+    const g=ges();
+    return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(b=>b.label+": "+gs(b.id)+"%").join("\n")+"\n\n"+bericht;
+  }
+
+  function generatePDF(){
+    const g=ges(),p=100-g;
+    const datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
+    const html=`<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ</title><link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap' rel='stylesheet'><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#fff;color:#1a1a1a;font-family:Inter,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body><div style='min-height:100vh;padding:60px;background:#f5f3ee;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'><div><span style='font-weight:600;font-size:18px;letter-spacing:2px'>ON<span style="color:#7AC800">L</span>ION <span style="color:#7AC800">IQ</span></span></div><div><p style='font-size:11px;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px'>Automatisierungs-Analyse</p><h1 style='font-size:48px;font-weight:300;color:#1a1a1a;margin-bottom:12px;line-height:1.1'>${safe(firma||branche)}</h1><p style='font-size:14px;color:#888;margin-bottom:48px'>${safe(branche)} · ${datum}</p><div style='display:flex;gap:60px'><div><p style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:8px'>IQ-SCORE</p><p style='font-size:56px;font-weight:300;color:#1a1a1a'>${g}%</p></div><div><p style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:8px'>KI-POTENZIAL</p><p style='font-size:56px;font-weight:300;color:#7AC800'>${p}%</p></div></div></div><p style='font-size:11px;color:#bbb'>ONLION IQ · onlion-iq.netlify.app</p></div></body></html>`;
+    const w=window.open("","_blank");
+    if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),800);}
+  }
+
+  const wrap={background:BG,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:580,margin:"0 auto"};
+  const divider={height:1,background:BD,margin:"20px 0"};
+
+  /* ── INTRO ── */
+  if(step==="intro") return(
+    <div style={wrap}>
+      <Logo/>
+
+      <h1 style={{fontSize:26,fontWeight:300,lineHeight:1.2,marginBottom:12,letterSpacing:-0.5}}>
+        Wie intelligent arbeitet<br/><span style={{fontWeight:600,color:G}}>dein Unternehmen?</span>
+      </h1>
+      <p style={{color:T2,lineHeight:1.8,fontSize:14,marginBottom:28}}>
+        KI-gestützte Analyse deines Automatisierungspotenzials — kostenlos in 5 Minuten.
+      </p>
+
+      {/* Kategorien */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:24}}>
+        {[
+          {k:"ki",l:"KI & Agenten",i:"🤖",d:"Chatbots, LLMs"},
+          {k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},
+          {k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},
+          {k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}
+        ].map(k=>{
+          const [hov,setHov]=React.useState(false);
+          const kc=KC[k.k];
+          return(
+            <div key={k.k} style={{
+              background:BG2,border:`1px solid ${hov?kc+"80":BD}`,borderRadius:12,
+              padding:"1rem",display:"flex",gap:12,alignItems:"flex-start",
+              cursor:"default",transition:"all 0.2s",
+              transform:hov?"translateY(-1px)":"none",
+              boxShadow:hov?"0 4px 12px rgba(0,0,0,0.06)":"none"
+            }}
+              onMouseEnter={()=>setHov(true)}
+              onMouseLeave={()=>setHov(false)}
+            >
+              <span style={{fontSize:22,flexShrink:0}}>{k.i}</span>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12,fontWeight:600,color:kc,marginBottom:2}}>{k.l}</div>
+                <div style={{fontSize:11,color:T3}}>{k.d}</div>
+                {hov&&<div style={{fontSize:11,color:T2,marginTop:8,lineHeight:1.6,borderTop:`1px solid ${kc}20`,paddingTop:8,animation:"fadeUp 0.2s ease"}}>{KT[k.k]}</div>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Features */}
+      <Card style={{marginBottom:20}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:2,textTransform:"uppercase",marginBottom:12,fontWeight:500}}>In 5 Minuten erhältst du</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
+          {[["🧠","IQ-Score"],["🤖","KI-Potenzial"],["💶","Einsparpotenzial"],["⚙️","Empfehlungen"],["🗺️","KI-Roadmap"],["📧","Bericht per Mail"]].map((x,i)=>(
+            <div key={i} style={{display:"flex",gap:8,alignItems:"center",marginTop:i>2?6:0}}>
+              <span style={{fontSize:14,flexShrink:0}}>{x[0]}</span>
+              <span style={{fontSize:12,color:T2}}>{x[1]}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Formular */}
+      <input placeholder="Deine E-Mail *" value={email} onChange={e=>setEmail(e.target.value)} type="email"/>
+      <input placeholder="Firmenname (optional)" value={firma} onChange={e=>setFirma(e.target.value)}/>
+      <select value={branche} onChange={e=>setBranche(e.target.value)} style={{marginBottom:10}}>
+        <option value="">Branche auswählen *</option>
+        {BRANCHEN.map(b=><option key={b} value={b}>{b}</option>)}
+      </select>
+
+      {/* Beschreibung */}
+      <div style={{marginBottom:12,background:BG2,border:`1px solid ${descValid?G:BD}`,borderRadius:10,padding:"12px 16px",transition:"border-color 0.2s, box-shadow 0.2s",boxShadow:descValid?`0 0 0 3px rgba(122,200,0,0.08)`:"none"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+          <span style={{fontSize:14,color:TX,fontWeight:500}}>Beschreib dein Unternehmen *</span>
+          <span style={{fontSize:10,color:"#cc3333",fontWeight:500}}>Pflichtfeld</span>
+        </div>
+        <textarea placeholder="Z.B. Mitarbeiteranzahl, welche Prozesse noch manuell laufen..." value={desc} onChange={e=>setDesc(e.target.value)} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:13,color:T2,width:"100%",outline:"none"}}/>
+      </div>
+
+      {/* DSGVO */}
+      <div style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:16,padding:"12px 14px",background:BG2,border:`1px solid ${BD}`,borderRadius:10}}>
+        <input type="checkbox" id="dsgvo" checked={dsgvo} onChange={e=>setDsgvo(e.target.checked)} style={{width:16,height:16,flexShrink:0,marginTop:2,marginBottom:0,accentColor:G,cursor:"pointer"}}/>
+        <label htmlFor="dsgvo" style={{fontSize:12,color:T2,lineHeight:1.6,cursor:"pointer"}}>
+          Ich habe die <button onClick={e=>{e.preventDefault();setStep("datenschutz");}} style={{background:"none",border:"none",color:G,cursor:"pointer",fontSize:12,textDecoration:"underline",padding:0}}>Datenschutzerklärung</button> gelesen und bin einverstanden.
+        </label>
+      </div>
+
+      {err&&<p style={{color:"#cc3333",fontSize:12,marginBottom:10}}>{err}</p>}
+      {loadB
+        ?<LoadBox msg="KI erstellt deine Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
+        :<GreenBtn disabled={!canStart} onClick={ladeBereiche}>IQ-Analyse starten →</GreenBtn>
+      }
+      <p style={{fontSize:11,color:T3,marginTop:10,textAlign:"center"}}>Deine E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
+
+      <div style={{...divider,marginTop:24}}/>
+      <div style={{display:"flex",justifyContent:"center",gap:16}}>
+        <button onClick={()=>setStep("impressum")} style={{background:"none",border:"none",color:T3,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Impressum</button>
+        <button onClick={()=>setStep("datenschutz")} style={{background:"none",border:"none",color:T3,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Datenschutz</button>
+      </div>
+    </div>
+  );
+
+  /* ── BEREICHE ── */
+  if(step==="bereiche"){
+    const alle=aktiv.length===bereiche.length;
+    return(
+      <div style={wrap}>
+        <Logo/>
+        <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"flex",alignItems:"center",gap:4}}>← Zurück</button>
+        <h1 style={{fontSize:20,fontWeight:500,marginBottom:4}}>KI-generierte Analysebereiche</h1>
+        <p style={{color:T2,fontSize:13,marginBottom:20}}>Individuell erstellt für: <span style={{color:G,fontWeight:500}}>{firma||branche}</span></p>
+        <Card>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <span style={{fontSize:13,color:T2}}>{aktiv.length} von {bereiche.length} ausgewählt</span>
+            <button onClick={()=>setAktiv(alle?[]:bereiche.map(b=>b.id))} style={{padding:"5px 14px",borderRadius:20,border:`1px solid ${alle?G:BD}`,background:alle?GLight:"transparent",cursor:"pointer",fontSize:12,color:alle?GD:T2,transition:"all 0.2s"}}>{alle?"Alle abwählen":"Alle auswählen"}</button>
+          </div>
+          {bereiche.map(b=>{
+            const a=aktiv.includes(b.id),kc=KC[b.kiKat]||G,kl=KL[b.kiKat]||"KI";
+            return(
+              <div key={b.id} onClick={()=>setAktiv(p=>a?p.filter(id=>id!==b.id):[...p,b.id])} style={{
+                display:"flex",alignItems:"flex-start",gap:12,padding:"12px 14px",
+                borderRadius:10,border:`1px solid ${a?G:BD}`,
+                background:a?GLight:"transparent",marginBottom:8,cursor:"pointer",transition:"all 0.15s"
+              }}>
+                <div style={{width:20,height:20,borderRadius:5,border:`1.5px solid ${a?G:BD}`,background:a?G:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:11,color:"#fff",fontWeight:700,marginTop:2}}>{a?"✓":""}</div>
+                <div style={{fontSize:20,flexShrink:0}}>{b.icon}</div>
+                <div style={{flex:1}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3}}>
+                    <span style={{fontSize:14,color:a?TX:T2,fontWeight:a?500:400}}>{b.label}</span>
+                    <Tag color={kc}>{kl}</Tag>
+                  </div>
+                  <div style={{fontSize:11,color:T3,fontStyle:"italic"}}>{b.hint}</div>
+                </div>
+              </div>
+            );
+          })}
+        </Card>
+        <GreenBtn disabled={aktiv.length===0} onClick={()=>{setBIdx(0);setAntw({});setStep("fragebogen");}}>
+          Analyse starten ({aktiv.length} Bereiche) →
+        </GreenBtn>
+      </div>
+    );
+  }
+
+  /* ── FRAGEBOGEN ── */
+  if(step==="fragebogen"&&curB){
+    const kc=KC[curB.kiKat]||G,kl=KL[curB.kiKat]||"KI";
+    return(
+      <div style={wrap}>
+        <Logo/>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+          <span style={{fontSize:12,color:T2}}>Fortschritt</span>
+          <span style={{fontSize:12,color:G,fontWeight:500}}>{prog}%</span>
+        </div>
+        <div style={{height:3,background:BD,borderRadius:4,marginBottom:20,overflow:"hidden"}}>
+          <div style={{height:"100%",width:prog+"%",background:G,borderRadius:4,transition:"width 0.4s ease"}}/>
+        </div>
+
+        <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
+          {gefB.map((b,i)=>{
+            const a=i===bIdx,dn=komp(b.id);
+            return <button key={b.id} onClick={()=>setBIdx(i)} style={{padding:"4px 12px",borderRadius:20,border:`1px solid ${a?G:dn?G+"50":BD}`,background:a?G:dn?GLight:"transparent",fontSize:12,cursor:"pointer",color:a?"#fff":dn?GD:T2,fontWeight:a?500:400,transition:"all 0.2s"}}>{dn&&!a?"✓ ":""}{b.icon} {b.label}</button>;
+          })}
+        </div>
+
+        <Card>
+          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:8}}>
+            <h2 style={{fontSize:16,fontWeight:500,margin:0,color:TX}}>{curB.icon} {curB.label}</h2>
+            <Tag color={kc}>{kl}</Tag>
+          </div>
+          <div style={{background:kc+"0d",border:`1px solid ${kc}25`,borderRadius:8,padding:"10px 12px",marginBottom:20,display:"flex",gap:8}}>
+            <span style={{fontSize:14,flexShrink:0}}>💡</span>
+            <span style={{fontSize:12,color:T2,lineHeight:1.6}}><strong style={{color:kc}}>KI-Potenzial:</strong> {curB.hint}</span>
+          </div>
+          {(curB.fragen||[]).map((item,i)=>(
+            <div key={i} style={{marginBottom:20,borderBottom:i<curB.fragen.length-1?`1px solid ${BD}`:"none",paddingBottom:i<curB.fragen.length-1?18:0}}>
+              <p style={{fontSize:14,marginBottom:12,lineHeight:1.6,color:TX,fontWeight:500}}>{i+1}. {item.f}</p>
+              {(item.o||[]).map((opt,oi)=>{
+                const val=ov(oi),key=curB.id+"_"+i,sel=antw[key]===val;
+                return(
+                  <button key={oi} onClick={()=>setA(curB.id,i,val)} style={{
+                    padding:"11px 14px",borderRadius:8,
+                    border:`1px solid ${sel?G:BD}`,
+                    background:sel?GLight:"transparent",
+                    fontSize:13,textAlign:"left",cursor:"pointer",
+                    color:sel?GD:T2,marginBottom:8,width:"100%",
+                    display:"flex",alignItems:"center",gap:10,lineHeight:1.5,
+                    transition:"all 0.15s"
+                  }}>
+                    <span style={{width:16,height:16,borderRadius:"50%",border:`1.5px solid ${sel?G:BD}`,background:sel?G:"transparent",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:"#fff",transition:"all 0.15s"}}>{sel?"●":""}</span>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </Card>
+
+        <div style={{display:"flex",gap:8}}>
+          {bIdx>0&&<OutlineBtn onClick={()=>setBIdx(i=>i-1)} style={{flex:1,marginTop:0}}>← Zurück</OutlineBtn>}
+          {bIdx<gefB.length-1
+            ?<OutlineBtn onClick={()=>setBIdx(i=>i+1)} style={{flex:2,marginTop:0}}>Weiter →</OutlineBtn>
+            :<GreenBtn onClick={()=>setStep("auswertung")} style={{flex:2}}>Zum IQ-Score →</GreenBtn>
+          }
+        </div>
+      </div>
+    );
+  }
+
+  /* ── AUSWERTUNG ── */
+  if(step==="auswertung"){
+    const g=ges(),p=100-g;
+    return(
+      <div style={wrap}>
+        <Logo/>
+        <h1 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Dein ONLION IQ-Score</h1>
+        <p style={{color:T2,fontSize:13,marginBottom:0}}>{firma||"Dein Unternehmen"} · {branche}</p>
+        <IQMeter score={g}/>
+
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+          <Card style={{textAlign:"center",marginBottom:0}}>
+            <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>IQ-Score</div>
+            <div style={{fontSize:30,fontWeight:300,color:TX}}>{g}%</div>
+          </Card>
+          <Card style={{textAlign:"center",marginBottom:0,borderColor:G+"40",background:GLight}}>
+            <div style={{fontSize:10,color:GD,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>KI-Potenzial</div>
+            <div style={{fontSize:30,fontWeight:300,color:GD}}>{p}%</div>
+          </Card>
+        </div>
+
+        {/* Potenzial Ausblick */}
+        <Card style={{background:GLight,borderColor:G+"40",marginBottom:16}}>
+          <div style={{fontSize:10,color:GD,letterSpacing:1,textTransform:"uppercase",marginBottom:8,fontWeight:500}}>💶 Dein Einsparpotenzial</div>
+          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>
+            Basierend auf deinem IQ-Score steckt in deinem Unternehmen <strong>erhebliches Automatisierungspotenzial</strong>.
+          </p>
+          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>
+            Wie viel das konkret in Euro bedeutet — das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an.
+          </p>
+          <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Jetzt Termin sichern →</GreenBtn>
+        </Card>
+
+        {gefB.map(b=>{
+          const sc=gs(b.id),kc=KC[b.kiKat]||G;
+          return(
+            <div key={b.id} style={{marginBottom:14}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                <div style={{display:"flex",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:13,color:T2}}>{b.icon} {b.label}</span>
+                  <Tag color={kc}>{KL[b.kiKat]||"KI"}</Tag>
+                </div>
+                <span style={{fontSize:12,color:TX,fontWeight:500}}>{sc}% <span style={{color:G}}>+{100-sc}%</span></span>
+              </div>
+              <div style={{height:4,background:BD,borderRadius:4,overflow:"hidden"}}>
+                <div style={{height:"100%",width:sc+"%",background:sc>66?G:sc>33?"#d4a000":"#cc3333",borderRadius:4,transition:"width 0.6s ease"}}/>
+              </div>
+            </div>
+          );
+        })}
+
+        {err&&<p style={{color:"#cc3333",fontSize:12,marginBottom:10}}>{err}</p>}
+        <div style={divider}/>
+        {loadR
+          ?<LoadBox msg="KI erstellt deinen Bericht..." sub="ca. 10 Sekunden" steps={["Auswerten","Empfehlungen","Roadmap"]}/>
+          :<GreenBtn onClick={analysiereReport}>KI-Bericht & Roadmap erstellen →</GreenBtn>
+        }
+        {!loadR&&<OutlineBtn onClick={()=>setStep("fragebogen")}>← Antworten bearbeiten</OutlineBtn>}
+      </div>
+    );
+  }
+
+  /* ── BERICHT ── */
+  if(step==="bericht"){
+    const pot=100-ges();
+    return(
+      <div style={wrap}>
+        <Logo/>
+        {emailSent&&(
+          <div style={{background:GLight,border:`1px solid ${G}40`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}>
+            <span style={{fontSize:16}}>📧</span>
+            <span style={{fontSize:12,color:GD}}>Bericht gesendet an <strong>{email}</strong></span>
+          </div>
+        )}
+
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
+          <div>
+            <h1 style={{fontSize:18,fontWeight:500,marginBottom:4}}>IQ-Bericht & KI-Roadmap</h1>
+            <p style={{color:T2,fontSize:12}}>{firma||"Dein Unternehmen"} · {branche}</p>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <div style={{fontSize:28,fontWeight:300,color:G}}>{pot}%</div>
+            <div style={{fontSize:9,color:T3,letterSpacing:2,fontWeight:500}}>KI-POTENZIAL</div>
+          </div>
+        </div>
+
+        <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(gefB.length,3)},1fr)`,gap:8,marginBottom:16}}>
+          {gefB.map(b=>{
+            const kc=KC[b.kiKat]||G,sc=gs(b.id);
+            return(
+              <div key={b.id} style={{background:BG2,border:`1px solid ${BD}`,borderRadius:10,padding:"10px",textAlign:"center"}}>
+                <div style={{fontSize:9,color:T3,marginBottom:3,fontWeight:500,textTransform:"uppercase",letterSpacing:0.5}}>{b.label}</div>
+                <div style={{fontSize:20,fontWeight:400,color:sc<50?kc:TX}}>{sc}%</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Potenzial Ausblick */}
+        <Card style={{background:GLight,borderColor:G+"40",marginBottom:16}}>
+          <div style={{fontSize:10,color:GD,letterSpacing:1,textTransform:"uppercase",marginBottom:8,fontWeight:500}}>💶 Dein Einsparpotenzial</div>
+          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>
+            Dein IQ-Score zeigt: In deinem Unternehmen steckt <strong>erhebliches ungenutztes Potenzial</strong>.
+          </p>
+          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>
+            Was das konkret in Euro bedeutet, besprechen wir im persönlichen Gespräch — kostenlos, individuell und ohne Verpflichtung.
+          </p>
+          <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>📅 Termin sichern & Potenzial erfahren →</GreenBtn>
+        </Card>
+
+        <Card style={{lineHeight:1.8,fontSize:13,color:T2,marginBottom:16}}>
+          <div dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
+        </Card>
+
+        <Card style={{marginBottom:16}}>
+          <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:12,fontWeight:500}}>Bericht teilen</div>
+          <div style={{display:"flex",gap:8,marginBottom:10}}>
+            <button onClick={generatePDF} style={{flex:1,padding:"10px",borderRadius:8,border:`1px solid ${G}`,background:GLight,cursor:"pointer",fontSize:13,color:GD,fontWeight:500}}>📄 PDF</button>
+            <button onClick={()=>{const bl=new Blob([btxt()],{type:"text/plain"});const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ.txt";a.click();}} style={{flex:1,padding:"10px",borderRadius:8,border:`1px solid ${BD}`,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>⬇ Text</button>
+          </div>
+          <div style={{display:"flex",gap:8}}>
+            <input placeholder="Per E-Mail senden..." value={mailShare} onChange={e=>setMailShare(e.target.value)} style={{marginBottom:0,flex:1}}/>
+            <button onClick={()=>{if(!mailShare)return;window.open("mailto:"+mailShare+"?subject=ONLION IQ Bericht&body="+encodeURIComponent(btxt()));setMailSent(true);setTimeout(()=>setMailSent(false),3000);}} style={{padding:"10px 16px",borderRadius:8,border:`1px solid ${G}`,background:GLight,cursor:"pointer",fontSize:13,color:GD,whiteSpace:"nowrap"}}>{mailSent?"✓ Gesendet":"Senden"}</button>
+          </div>
+        </Card>
+
+        <div style={divider}/>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:12,fontWeight:500}}>Nächste Schritte</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+          <button onClick={()=>{setStep("loesungen");ladeLoes();}} style={{background:GLight,border:`1px solid ${G}40`,borderRadius:12,padding:"1rem",cursor:"pointer",textAlign:"left",transition:"all 0.2s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor=G}} onMouseLeave={e=>{e.currentTarget.style.borderColor=G+"40"}}>
+            <div style={{fontSize:20,marginBottom:8}}>🤖</div>
+            <div style={{fontSize:13,fontWeight:500,color:GD,marginBottom:3}}>KI-Lösungen</div>
+            <div style={{fontSize:11,color:T2}}>Tools entdecken</div>
+          </button>
+          <button onClick={()=>setStep("foerderung")} style={{background:BG2,border:`1px solid ${BD}`,borderRadius:12,padding:"1rem",cursor:"pointer",textAlign:"left",transition:"all 0.2s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor=BD2}} onMouseLeave={e=>{e.currentTarget.style.borderColor=BD}}>
+            <div style={{fontSize:20,marginBottom:8}}>🏛️</div>
+            <div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:3}}>Förderung sichern</div>
+            <div style={{fontSize:11,color:T2}}>Bis zu 100% gefördert</div>
+          </button>
+        </div>
+        <div style={{display:"flex",gap:8,marginTop:8}}>
+          <OutlineBtn onClick={()=>setStep("auswertung")} style={{flex:1,marginTop:0}}>← IQ-Score</OutlineBtn>
+          <OutlineBtn onClick={()=>{setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{flex:1,marginTop:0}}>Neue Analyse</OutlineBtn>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── LÖSUNGEN ── */
+  if(step==="loesungen") return(
+    <div style={wrap}>
+      <Logo/>
+      <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+      <h1 style={{fontSize:20,fontWeight:500,marginBottom:4}}>KI & Automatisierungs-Lösungen</h1>
+      <p style={{color:T2,fontSize:13,marginBottom:20}}>Individuell für <span style={{color:G,fontWeight:500}}>{firma||branche}</span></p>
+      {loadL
+        ?<LoadBox msg="KI sucht passende Lösungen..." sub="ca. 8 Sekunden" steps={["Bereiche prüfen","Tools suchen","Empfehlungen"]}/>
+        :<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
+          {loes.map((l,i)=>{
+            const kc=KC[l.kategorie]||G;
+            return(
+              <Card key={i} style={{marginBottom:0,borderTop:`2px solid ${kc}`,borderRadius:12}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+                  <span style={{fontSize:22}}>{l.icon}</span>
+                  <Tag color={kc}>{l.tag}</Tag>
+                </div>
+                <div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:4}}>{l.name}</div>
+                <div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>
+                {l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6,fontWeight:500}}>💰 {l.einsparung}</div>}
+                <a href={l.url} style={{fontSize:11,color:kc,textDecoration:"none",fontWeight:500}} target="_blank">Mehr →</a>
+              </Card>
+            );
+          })}
+        </div>
+      }
+      <Card style={{background:GLight,borderColor:G+"40",textAlign:"center",padding:"1.5rem"}}>
+        <div style={{fontSize:24,marginBottom:8}}>🎯</div>
+        <div style={{fontSize:15,fontWeight:500,color:GD,marginBottom:8}}>Individuelle KI-Beratung?</div>
+        <p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos, unverbindlich.</p>
+        <GreenBtn onClick={()=>setStep("termin")} style={{padding:"10px"}}>Kostenloses Gespräch buchen →</GreenBtn>
+      </Card>
+    </div>
+  );
+
+  /* ── TERMIN ── */
+  if(step==="termin"){
+    const tg=ges();
+    return(
+      <div style={wrap}>
+        <Logo/>
+        <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+        <h1 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Kostenloses KI-Beratungsgespräch</h1>
+        <p style={{color:T2,fontSize:13,marginBottom:20}}>30 Minuten · kostenlos · unverbindlich</p>
+
+        <Card style={{background:GLight,borderColor:G+"40",marginBottom:20}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+            <div>
+              <div style={{fontSize:11,color:GD,fontWeight:500,marginBottom:4,letterSpacing:0.5}}>DEIN KI-POTENZIAL</div>
+              <div style={{fontSize:26,fontWeight:300,color:GD}}>{100-tg}% ungenutzt</div>
+              <div style={{fontSize:13,color:G,marginTop:4,fontWeight:500}}>💶 Erfahre dein konkretes Einsparpotenzial</div>
+            </div>
+            <div style={{fontSize:36}}>🚀</div>
+          </div>
+          <p style={{fontSize:13,color:T2,lineHeight:1.6}}>Wir zeigen dir in 30 Minuten wie du dieses Potenzial konkret heben kannst.</p>
+        </Card>
+
+        <Card style={{marginBottom:16}}>
+          <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:12,fontWeight:500}}>Was dich erwartet</div>
+          {["Auswertung deines persönlichen IQ-Scores","Welche KI-Lösungen sofort einsetzbar sind","Dein konkretes Einsparpotenzial in Euro","Realistische Kosten und ROI-Berechnung","Konkrete nächste Schritte"].map((t,i)=>(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
+              <span style={{color:G,fontWeight:600,flexShrink:0}}>✓</span>
+              <span style={{fontSize:13,color:T2}}>{t}</span>
+            </div>
+          ))}
+        </Card>
+
+        <GreenBtn onClick={()=>{window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("leitfaden");}}>📅 Termin buchen →</GreenBtn>
+        <p style={{fontSize:11,color:T3,marginTop:10,textAlign:"center"}}>Du wirst zu Calendly weitergeleitet</p>
+        <OutlineBtn onClick={()=>setStep("leitfaden")} style={{marginTop:12,color:GD,borderColor:G+"40"}}>📋 Gesprächsleitfaden öffnen →</OutlineBtn>
+      </div>
+    );
+  }
+
+  /* ── LEITFADEN ── */
+  if(step==="leitfaden"){
+    const lg=ges(),lp=100-lg;
+    const schwachB=gefB.filter(b=>gs(b.id)<50).sort((a,b)=>gs(a.id)-gs(b.id));
+    const starkB=gefB.filter(b=>gs(b.id)>=50);
+    const phase=lg<30?"Einsteiger":lg<60?"Fortgeschritten":"Optimierer";
+    const fragenMap={"Geschäftsprozesse":"Wie viel Zeit verbringt Ihr Team täglich mit manuellen, wiederkehrenden Aufgaben?","Finanzen":"Wie lange dauert aktuell der Monatsabschluss und die Rechnungsstellung?","Kommunikation":"Wie viele Kundenanfragen bekommen Sie täglich und wie werden diese bearbeitet?","Personal & HR":"Wie hoch ist der Zeitaufwand für HR-Prozesse wie Zeiterfassung und Lohnabrechnung?","Datenverarbeitung":"Wie treffen Sie Entscheidungen — auf Basis welcher Daten und wie aktuell sind diese?","Betrieb & Logistik":"Wie wird der Lagerbestand überwacht und wie oft kommt es zu Engpässen?","Patientenverwaltung":"Wie viele Termine werden täglich telefonisch vereinbart und wie hoch ist die Ausfallquote?","Abrechnung":"Wie lange dauert die Abrechnung und gibt es dabei häufige Fehler?"};
+    const phasen=[
+      {n:"1",t:"Einstieg & Rapport",d:"5 Min",c:"#0066cc",items:["Kurze Vorstellung — wer bist du, was macht ONLION","„Wie sind Sie auf uns aufmerksam geworden?"","„Haben Sie den IQ-Bericht bekommen und angeschaut?\""]},
+      {n:"4",t:"Lösungsvorschlag",d:"5 Min",c:"#cc4400",items:["Quick Wins zeigen — welche 1-2 Bereiche sofort automatisierbar sind","Roadmap skizzieren: Phase 1 → Phase 2 → Phase 3","Kosten & ROI nennen — konkret und ehrlich"]},
+      {n:"6",t:"Abschluss & Next Steps",d:"4 Min",c:"#6600cc",items:["Zusammenfassen: „Ihre größten Hebel sind [Bereich 1] und [Bereich 2]..."","Klare Handlungsempfehlung: „Ich empfehle, mit [Quick Win] zu starten."","„Darf ich Ihnen ein konkretes Angebot zusenden?" → Ja/Nein klären"]}
+    ];
+
+    return(
+      <div style={wrap}>
+        <Logo/>
+        <button onClick={()=>setStep("termin")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+
+        {/* Header */}
+        <Card style={{background:GLight,borderColor:G+"40",marginBottom:20}}>
+          <div style={{fontSize:10,color:GD,letterSpacing:1,textTransform:"uppercase",marginBottom:8,fontWeight:500}}>📋 Gesprächsleitfaden</div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+            <div>
+              <div style={{fontSize:18,fontWeight:500,color:TX,marginBottom:2}}>{firma||"Kunde"}</div>
+              <div style={{fontSize:12,color:T2}}>{branche}</div>
+            </div>
+            <div style={{textAlign:"right"}}>
+              <div style={{fontSize:26,fontWeight:300,color:lg<30?"#cc3333":lg<60?"#d4a000":G}}>{lg}%</div>
+              <div style={{fontSize:9,color:T3,letterSpacing:1}}>IQ-SCORE</div>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            <Tag color={lg<30?"#cc3333":lg<60?"#d4a000":G}>Phase: {phase}</Tag>
+            <Tag color="#0066cc">{lp}% Potenzial</Tag>
+            <Tag color={G}>{schwachB.length} kritische Bereiche</Tag>
+          </div>
+        </Card>
+
+        {/* Individuelle Tiefenfragen */}
+        <Card style={{marginBottom:14,borderLeft:`3px solid #0066cc`}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:"#0066cc15",border:"1px solid #0066cc30",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#0066cc",fontWeight:600,flexShrink:0}}>2</div>
+            <div>
+              <div style={{fontSize:13,fontWeight:500,color:TX}}>Individuelle Tiefenfragen</div>
+              <div style={{fontSize:11,color:T3}}>10 Min · basierend auf schwächsten Bereichen</div>
+            </div>
+          </div>
+          {schwachB.slice(0,3).map((b,i)=>(
+            <div key={i} style={{marginBottom:10,padding:"10px 12px",background:BG3,borderRadius:8,borderLeft:`2px solid #0066cc`}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                <span style={{fontSize:11,color:"#0066cc",fontWeight:500}}>{b.icon} {b.label}</span>
+                <span style={{fontSize:10,color:"#cc3333",background:"#cc333310",padding:"2px 8px",borderRadius:10,border:"1px solid #cc333330"}}>Score: {gs(b.id)}%</span>
+              </div>
+              <div style={{fontSize:12,color:TX,lineHeight:1.6,marginBottom:4}}>💬 „{fragenMap[b.label]||"Wie läuft der Bereich "+b.label+" aktuell ab?"}"</div>
+              <div style={{fontSize:11,color:T3}}>→ Nachfragen: „Was kostet Sie das pro Woche?"</div>
+            </div>
+          ))}
+          {schwachB.length===0&&<p style={{fontSize:12,color:T2,fontStyle:"italic"}}>Dieser Kunde ist bereits gut aufgestellt — Fokus auf Optimierung.</p>}
+        </Card>
+
+        {/* Stärken */}
+        {starkB.length>0&&(
+          <Card style={{marginBottom:14,borderLeft:`3px solid ${G}`}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+              <div style={{width:24,height:24,borderRadius:"50%",background:GLight,border:`1px solid ${G}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:GD,fontWeight:600,flexShrink:0}}>3</div>
+              <div>
+                <div style={{fontSize:13,fontWeight:500,color:TX}}>Stärken würdigen</div>
+                <div style={{fontSize:11,color:T3}}>3 Min · positiv ansprechen</div>
+              </div>
+            </div>
+            {starkB.map((b,i)=>(
+              <div key={i} style={{display:"flex",gap:10,alignItems:"center",marginBottom:6,padding:"6px 10px",background:GLight,borderRadius:8}}>
+                <span style={{fontSize:13}}>{b.icon}</span>
+                <span style={{fontSize:12,color:T2,flex:1}}>{b.label}</span>
+                <span style={{fontSize:12,color:GD,fontWeight:500}}>{gs(b.id)}% ✓</span>
+              </div>
+            ))}
+          </Card>
+        )}
+
+        {/* Andere Phasen */}
+        {phasen.map((ph,pi)=>(
+          <Card key={pi} style={{marginBottom:14,borderLeft:`3px solid ${ph.c}`}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+              <div style={{width:24,height:24,borderRadius:"50%",background:ph.c+"15",border:`1px solid ${ph.c}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:ph.c,fontWeight:600,flexShrink:0}}>{ph.n}</div>
+              <div>
+                <div style={{fontSize:13,fontWeight:500,color:TX}}>{ph.t}</div>
+                <div style={{fontSize:11,color:T3}}>{ph.d}</div>
+              </div>
+            </div>
+            {ph.items.map((t,i)=>(
+              <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8,padding:"8px 10px",background:BG3,borderRadius:8}}>
+                <span style={{color:ph.c,fontSize:12,flexShrink:0,fontWeight:600}}>→</span>
+                <span style={{fontSize:12,color:T2,lineHeight:1.5}}>{t}</span>
+              </div>
+            ))}
+          </Card>
+        ))}
+
+        {/* Förderung */}
+        <Card style={{marginBottom:14,borderLeft:`3px solid ${G}`,background:GLight}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:BG2,border:`1px solid ${G}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:GD,fontWeight:600,flexShrink:0}}>5</div>
+            <div>
+              <div style={{fontSize:13,fontWeight:500,color:TX}}>Förderung ansprechen 🏛️</div>
+              <div style={{fontSize:11,color:T3}}>3 Min · wichtiger Mehrwert</div>
+            </div>
+          </div>
+          <div style={{padding:"10px 12px",background:BG2,borderRadius:8,marginBottom:10,border:`1px solid ${G}30`}}>
+            <div style={{fontSize:12,color:GD,fontWeight:500,marginBottom:6}}>💬 Einstieg:</div>
+            <div style={{fontSize:12,color:TX,lineHeight:1.7,fontStyle:"italic"}}>„Wussten Sie, dass ein Großteil dieser Maßnahmen staatlich gefördert werden kann — in manchen Fällen bis zu 100% der Kosten?"</div>
+          </div>
+          {["QCG erklären (Qualifizierungschancengesetz)","„Haben Sie sozialversicherungspflichtige Mitarbeiter?"","„Würden Sie eine Förderprüfung in Anspruch nehmen?\""].map((t,i)=>(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:6}}>
+              <span style={{color:G,flexShrink:0,fontWeight:600}}>→</span>
+              <span style={{fontSize:12,color:T2}}>{t}</span>
+            </div>
+          ))}
+        </Card>
+
+        {/* Einwände */}
+        <Card style={{marginBottom:14}}>
+          <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>⚡ Einwand-Handling</div>
+          {[
+            {e:"„Wir haben keine Zeit"",a:"„Genau deshalb lohnt Automatisierung — der Aufwand ist einmalig, die Zeitersparnis dauerhaft.""},
+            {e:"„Zu teuer"",a:"„Mit staatlicher Förderung trägt der Staat bis zu 100% der Kosten.""},
+            {e:"„Wir sind zu klein"",a:"„Gerade kleine Unternehmen profitieren am meisten — jede gesparte Stunde wiegt schwerer.""},
+            {e:"„Wir machen das intern"",a:"„Super — dann helfen wir, den richtigen Weg zu wählen und Fördermittel zu sichern.""}
+          ].map((x,i)=>(
+            <div key={i} style={{marginBottom:12,borderBottom:i<3?`1px solid ${BD}`:"none",paddingBottom:i<3?12:0}}>
+              <div style={{fontSize:12,color:"#cc3333",marginBottom:4,fontWeight:500}}>❓ {x.e}</div>
+              <div style={{fontSize:12,color:T2,lineHeight:1.6}}>💬 {x.a}</div>
+            </div>
+          ))}
+        </Card>
+
+        {/* Checkliste */}
+        <Card style={{background:GLight,borderColor:G+"40",marginBottom:16}}>
+          <div style={{fontSize:10,color:GD,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>✅ Nach dem Gespräch</div>
+          {["Kontaktdaten vollständig aufgenommen","Hauptprobleme notiert","Interesse an Förderung abgefragt","Nächsten Schritt vereinbart","Termin für Förderprüfung angestoßen"].map((t,i)=>(
+            <div key={i} style={{display:"flex",gap:10,alignItems:"center",marginBottom:8,padding:"8px 10px",background:BG2,borderRadius:8,border:`1px solid ${BD}`}}>
+              <div style={{width:16,height:16,borderRadius:4,border:`1px solid ${G}50`,flexShrink:0}}/>
+              <span style={{fontSize:12,color:T2}}>{t}</span>
+            </div>
+          ))}
+        </Card>
+
+        <OutlineBtn onClick={()=>setStep("termin")} style={{marginTop:0}}>← Zurück</OutlineBtn>
+      </div>
+    );
+  }
+
+  /* ── FÖRDERUNG ── */
+  if(step==="foerderung") return(
+    <div style={wrap}>
+      <Logo/>
+      <button onClick={()=>setStep("bericht")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+
+      <div style={{background:GLight,border:`1px solid ${G}40`,borderRadius:12,padding:"1.5rem",marginBottom:20,textAlign:"center"}}>
+        <div style={{fontSize:36,marginBottom:10}}>🏛️</div>
+        <h1 style={{fontSize:20,fontWeight:500,marginBottom:8,color:GD}}>Staatliche Förderung für deine KI-Automatisierung</h1>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Als Unternehmen hast du Anspruch auf staatliche Förderung. Deine KI- und Automatisierungsprojekte können bis zu <strong style={{color:GD}}>100% gefördert</strong> werden.</p>
+      </div>
+
+      <Card style={{marginBottom:14}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>Was gefördert werden kann</div>
+        {[
+          ["💶","Bis zu 100% der Weiterbildungskosten","nach dem Qualifizierungschancengesetz (QCG)"],
+          ["💰","Bis zu 75% der Gehaltskosten","für sozialversicherungspflichtige Angestellte"],
+          ["📅","Förderung für bis zu 14 Monate","laufende Unterstützung während der Umsetzung"],
+          ["✅","Kein Risiko & keine Rückzahlung","auch nicht bei Abbruch der Maßnahme"]
+        ].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:12,paddingBottom:i<3?12:0,borderBottom:i<3?`1px solid ${BD}`:"none"}}>
+            <span style={{fontSize:22,flexShrink:0}}>{x[0]}</span>
+            <div>
+              <div style={{fontSize:13,color:TX,fontWeight:500,marginBottom:2}}>{x[1]}</div>
+              <div style={{fontSize:11,color:T2}}>{x[2]}</div>
+            </div>
+          </div>
+        ))}
+      </Card>
+
+      <Card style={{marginBottom:14}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>So einfach funktioniert es</div>
+        {[["1","Beratungsgespräch","Wir prüfen gemeinsam deine Förderfähigkeit."],["2","Antragstellung","Wir unterstützen dich — Aufwand: ca. 1 Stunde."],["3","Förderung erhalten","Nach Bewilligung startet die Maßnahme."]].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:i<2?14:0}}>
+            <div style={{width:28,height:28,borderRadius:"50%",background:GLight,border:`1px solid ${G}40`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:GD,fontWeight:600}}>{x[0]}</div>
+            <div>
+              <div style={{fontSize:13,color:TX,fontWeight:500,marginBottom:2}}>{x[1]}</div>
+              <div style={{fontSize:11,color:T2,lineHeight:1.5}}>{x[2]}</div>
+            </div>
+          </div>
+        ))}
+      </Card>
+
+      <Card style={{background:GLight,borderColor:G+"40",textAlign:"center",padding:"1.5rem",marginBottom:14}}>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Erfahre in einem kostenlosen Gespräch wie viel Förderung du für deine KI-Projekte bekommst.</p>
+        <GreenBtn onClick={()=>window.open("https://mittelstandsfoerderung-deutschland.de/ac/#survey-question-GwiJBsJn","_blank")} style={{padding:"10px"}}>
+          🏛️ Jetzt Förderfähigkeit prüfen →
+        </GreenBtn>
+        <p style={{fontSize:11,color:T3,marginTop:10}}>Du wirst zur Förderberatung weitergeleitet</p>
+      </Card>
+
+      <OutlineBtn onClick={()=>setStep("bericht")} style={{marginTop:0}}>← Zurück zum Bericht</OutlineBtn>
+    </div>
+  );
+
+  /* ── IMPRESSUM ── */
+  if(step==="impressum") return(
+    <div style={wrap}>
+      <Logo/>
+      <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+      <h1 style={{fontSize:20,fontWeight:500,marginBottom:20}}>Impressum</h1>
+      <Card style={{marginBottom:12}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Angaben gemäß § 5 TMG</div>
+        <p style={{fontSize:14,color:TX,marginBottom:4,fontWeight:500}}>Adam Cebulla</p>
+        <p style={{fontSize:13,color:T2,marginBottom:2}}>ONLION (Einzelunternehmen)</p>
+        <p style={{fontSize:13,color:T2,marginBottom:2}}>Loher Hauptstrasse 81a</p>
+        <p style={{fontSize:13,color:T2,marginBottom:16}}>90427 Nürnberg</p>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:8,fontWeight:500}}>Kontakt</div>
+        <p style={{fontSize:13,color:T2}}>E-Mail: onlion-@outlook.de</p>
+      </Card>
+      <Card style={{marginBottom:12}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Haftungsausschluss</div>
+        <p style={{fontSize:12,color:T2,lineHeight:1.7}}>Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.</p>
+      </Card>
+    </div>
+  );
+
+  /* ── DATENSCHUTZ ── */
+  if(step==="datenschutz") return(
+    <div style={wrap}>
+      <Logo/>
+      <button onClick={()=>setStep("intro")} style={{background:"none",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+      <h1 style={{fontSize:20,fontWeight:500,marginBottom:20}}>Datenschutzerklärung</h1>
+      <Card style={{marginBottom:12}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Verantwortlicher</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Adam Cebulla · ONLION · Loher Hauptstrasse 81a · 90427 Nürnberg · onlion-@outlook.de</p>
+      </Card>
+      <Card style={{marginBottom:12}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Erhobene Daten</div>
+        {["E-Mail-Adresse (für den Bericht)","Firmenname und Branche","Antworten des Fragebogens","Technische Daten durch Netlify-Hosting"].map((t,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
+            <span style={{color:G,flexShrink:0}}>→</span><span style={{fontSize:13,color:T2}}>{t}</span>
+          </div>
+        ))}
+      </Card>
+      <Card style={{marginBottom:12}}>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Drittanbieter</div>
+        {[["Anthropic API","anthropic.com/privacy"],["Netlify","netlify.com/privacy"],["Calendly","calendly.com/privacy"],["Brevo","brevo.com/legal/privacypolicy"]].map((t,i)=>(
+          <div key={i} style={{marginBottom:10}}>
+            <p style={{fontSize:13,color:TX,marginBottom:2,fontWeight:500}}>{t[0]}</p>
+            <p style={{fontSize:11,color:T2}}>{t[1]}</p>
+          </div>
+        ))}
+      </Card>
+      <Card>
+        <div style={{fontSize:10,color:T3,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Deine Rechte (DSGVO)</div>
+        {["Auskunft (Art. 15)","Berichtigung (Art. 16)","Löschung (Art. 17)","Widerspruch (Art. 21)"].map((t,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
+            <span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span>
+          </div>
+        ))}
+        <p style={{fontSize:12,color:T2,marginTop:10}}>Anfragen: onlion-@outlook.de</p>
+      </Card>
+    </div>
+  );
+
+  return null;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
