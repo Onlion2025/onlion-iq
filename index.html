@@ -648,8 +648,8 @@ function App(){
                 <span style={{fontSize:11,color:"#00aaff",fontWeight:500}}>{ef.bereich}</span>
                 <span style={{fontSize:10,color:"#e05a5a",background:"#e05a5a20",padding:"2px 8px",borderRadius:10}}>Score: {ef.score}%</span>
               </div>
-              <div style={{fontSize:12,color:TX,lineHeight:1.6}}>💬 &bdquo;{ef.frage}"</div>
-              <div style={{fontSize:11,color:T2,marginTop:6}}>→ Zuhören, notieren, nachfragen: &bdquo;Was kostet Sie das pro Woche?"</div>
+              <div style={{fontSize:12,color:TX,lineHeight:1.6}}>💬 "{ef.frage}"</div>
+              <div style={{fontSize:11,color:T2,marginTop:6}}>→ Zuhören, notieren, nachfragen: "Was kostet Sie das pro Woche?"</div>
             </div>
           );})}
           {schwachB.length===0&&(
@@ -672,7 +672,7 @@ function App(){
                 <span style={{fontSize:12,color:G,fontWeight:500}}>{gs(b.id)}% ✓</span>
               </div>
             );})}
-            <div style={{fontSize:11,color:T2,marginTop:8,fontStyle:"italic"}}>&bdquo;Toll, dass Sie in {starkB[0]&&starkB[0].label} schon so weit sind  -  darauf können wir aufbauen."</div>
+            <div style={{fontSize:11,color:T2,marginTop:8,fontStyle:"italic"}}>"Toll, dass Sie in {starkB[0]&&starkB[0].label} schon so weit sind  -  darauf können wir aufbauen."</div>
           </div>
         )}
 
@@ -705,7 +705,7 @@ function App(){
           </div>
           <div style={{padding:"10px 12px",background:"#0a1a00",borderRadius:8,marginBottom:10}}>
             <div style={{fontSize:12,color:G,fontWeight:500,marginBottom:6}}>💬 Gesprächseinstieg:</div>
-            <div style={{fontSize:12,color:TX,lineHeight:1.7,fontStyle:"italic"}}>&bdquo;Bevor wir zum nächsten Schritt kommen  -  wussten Sie, dass ein Großteil dieser Maßnahmen staatlich gefördert werden kann? In manchen Fällen bis zu 100% der Kosten."</div>
+            <div style={{fontSize:12,color:TX,lineHeight:1.7,fontStyle:"italic"}}>"Bevor wir zum nächsten Schritt kommen  -  wussten Sie, dass ein Großteil dieser Maßnahmen staatlich gefördert werden kann? In manchen Fällen bis zu 100% der Kosten."</div>
           </div>
           {[
             "Kurz QCG erklären (Qualifizierungschancengesetz)",
@@ -726,10 +726,10 @@ function App(){
             <div style={{fontSize:13,fontWeight:500,color:TX}}>Abschluss & Next Steps (4 Min)</div>
           </div>
           {[
-            {t:"Zusammenfassen",d:"&bdquo;Also zusammengefasst: Ihre größten Hebel sind [Bereich 1] und [Bereich 2]...""},
-            {t:"Klare Handlungsempfehlung",d:"&bdquo;Ich empfehle, mit [Quick Win] zu starten  -  das zeigt sofort Wirkung.""},
-            {t:"Konkrete Vereinbarung",d:"&bdquo;Darf ich Ihnen ein konkretes Angebot zusenden?" → Ja/Nein klären"},
-            {t:"Förderantrag anstoßen",d:"&bdquo;Soll ich parallel die Förderfähigkeit für Sie prüfen lassen?\""}
+            {t:"Zusammenfassen",d:"Also zusammengefasst: Ihre groessten Hebel sind [Bereich 1] und [Bereich 2]..."},
+            {t:"Klare Handlungsempfehlung",d:"Ich empfehle, mit [Quick Win] zu starten - das zeigt sofort Wirkung."},
+            {t:"Konkrete Vereinbarung",d:"Darf ich Ihnen ein konkretes Angebot zusenden? Ja/Nein klaeren"},
+            {t:"Foerderantrag anstossen",d:"Soll ich parallel die Foerderfaehigkeit fuer Sie pruefen lassen?"}
           ].map(function(x,i){return(
             <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:10,padding:"8px 10px",background:"#0d0a15",borderRadius:6,border:"0.5px solid #aa44ff30"}}>
               <span style={{color:"#aa44ff",fontSize:12,flexShrink:0,fontWeight:700}}>✓</span>
