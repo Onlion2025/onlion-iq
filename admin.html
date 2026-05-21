@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONLION IQ — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --card: #1c1c1c;
+    --border: #2a2a2a;
+    --accent: #7AC800;
+    --accent2: #4fc4a0;
+    --text: #f0f0f0;
+    --muted: #888;
+    --danger: #e05c5c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* PIN SCREEN */
+  #pin-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .pin-logo {
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+  .pin-logo span { color: var(--accent); }
+  .pin-sub {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .pin-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+  }
+
+  .pin-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .pin-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .pin-dots {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .pin-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .pin-dot.filled {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(122,200,0,0.4);
+  }
+  .pin-dot.error {
+    background: var(--danger);
+    border-color: var(--danger);
+  }
+
+  .pin-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .pin-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pin-btn:hover {
+    background: #222;
+    border-color: #3a3a3a;
+  }
+  .pin-btn:active {
+    background: rgba(122,200,0,0.1);
+    border-color: var(--accent);
+    transform: scale(0.96);
+  }
+  .pin-btn.del {
+    font-size: 16px;
+    color: var(--muted);
+  }
+  .pin-error {
+    font-size: 12px;
+    color: var(--danger);
+    height: 20px;
+    transition: opacity 0.2s;
+  }
+
+  /* ADMIN CONTENT */
+  #admin-content { display: none; }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-left {}
+  .admin-logo {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+  .admin-logo span { color: var(--accent); }
+  .admin-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .logout-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 18px 24px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .content {
+    padding: 48px;
+    max-width: 900px;
+  }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .section-desc {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+
+  /* CHECKLIST */
+  .checklist-group { margin-bottom: 36px; }
+  .group-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .group-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--card);
+    user-select: none;
+  }
+  .check-item:hover { border-color: #3a3a3a; background: #1f1f1f; }
+  .check-item.checked {
+    border-color: rgba(79,196,160,0.3);
+    background: rgba(79,196,160,0.05);
+  }
+  .check-box {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    font-size: 12px;
+  }
+  .check-item.checked .check-box {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: #0d0d0d;
+  }
+  .check-text { font-size: 14px; line-height: 1.6; }
+  .check-sub { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-bar-bg {
+    flex: 1; height: 6px;
+    background: var(--border);
+    border-radius: 3px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* QUESTIONS */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .q-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+  .q-card:hover::before { background: var(--accent); }
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .q-text { font-size: 15px; line-height: 1.6; margin-bottom: 8px; }
+  .q-why { font-size: 12px; color: var(--muted); line-height: 1.5; font-style: italic; }
+  .q-category {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .cat-discovery { background: rgba(122,200,0,0.1); color: var(--accent); border: 1px solid rgba(122,200,0,0.2); }
+  .cat-tech { background: rgba(79,196,160,0.1); color: var(--accent2); border: 1px solid rgba(79,196,160,0.2); }
+  .cat-pain { background: rgba(224,92,92,0.1); color: var(--danger); border: 1px solid rgba(224,92,92,0.2); }
+  .cat-vision { background: rgba(180,120,255,0.1); color: #c49aff; border: 1px solid rgba(180,120,255,0.2); }
+  .q-group { margin-bottom: 40px; }
+
+  /* NOTES */
+  .notes-area {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .notes-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    min-height: 100px;
+  }
+  textarea::placeholder { color: #444; }
+
+  /* LEITFADEN */
+  .lf-phase {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    border-left: 3px solid var(--accent);
+  }
+  .lf-phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .lf-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(122,200,0,0.1);
+    border: 1px solid rgba(122,200,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .lf-title { font-size: 14px; font-weight: 500; }
+  .lf-time { font-size: 11px; color: var(--muted); margin-left: auto; font-family: 'DM Mono', monospace; }
+  .lf-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+  }
+  .lf-arrow { color: var(--accent); flex-shrink: 0; font-size: 12px; margin-top: 2px; }
+  .lf-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lf-quote {
+    background: rgba(122,200,0,0.05);
+    border: 1px solid rgba(122,200,0,0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: var(--text);
+    font-style: italic;
+    line-height: 1.7;
+  }
+  .einwand-item {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .einwand-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .einwand-q { font-size: 13px; color: var(--danger); font-weight: 500; margin-bottom: 6px; }
+  .einwand-a { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* CHECKLIST AFTER */
+  .after-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .after-item.checked { border-color: rgba(122,200,0,0.4); background: rgba(122,200,0,0.05); }
+  .after-box {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    transition: all 0.15s;
+  }
+  .after-item.checked .after-box { background: var(--accent); border-color: var(--accent); color: #000; }
+  .after-text { font-size: 13px; color: var(--muted); }
+  .after-item.checked .after-text { color: var(--text); }
+
+  @media (max-width: 600px) {
+    header, .tabs, .content { padding-left: 20px; padding-right: 20px; }
+    header { padding-top: 24px; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .agent-grid { grid-template-columns: 1fr; }
+  }
+
+  /* AGENT GENERATOR */
+  .agent-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .agent-input, .agent-select, .agent-textarea {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 0;
+  }
+  .agent-input:focus, .agent-textarea:focus { border-color: var(--accent); }
+  .agent-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .agent-field { margin-bottom: 16px; }
+  .generate-btn {
+    width: 100%; padding: 14px;
+    background: var(--accent); border: none; border-radius: 10px;
+    color: #000; font-family: 'Outfit', sans-serif;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; margin-top: 8px;
+  }
+  .generate-btn:hover { background: #8FD400; }
+  .generate-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+  .prompt-result {
+    background: var(--surface); border: 1px solid rgba(122,200,0,0.3);
+    border-radius: 10px; padding: 20px; margin-top: 24px; display: none;
+  }
+  .prompt-result.visible { display: block; }
+  .prompt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .prompt-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); }
+  .copy-btn {
+    background: rgba(122,200,0,0.1); border: 1px solid rgba(122,200,0,0.3);
+    border-radius: 6px; color: var(--accent); font-family: 'Outfit', sans-serif;
+    font-size: 12px; padding: 6px 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(122,200,0,0.2); }
+  .prompt-text {
+    font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.8;
+    color: #ccc; white-space: pre-wrap; word-break: break-word;
+  }
+  .platform-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .platform-chip {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card); color: var(--muted); font-size: 12px; cursor: pointer; transition: all 0.2s;
+  }
+  .platform-chip.active { border-color: var(--accent); background: rgba(122,200,0,0.1); color: var(--accent); }
+  .loading-box { text-align: center; padding: 2rem; display: none; }
+  .loading-box.visible { display: block; }
+  .spinner {
+    display: inline-block; width: 20px; height: 20px;
+    border: 2px solid var(--accent); border-top-color: transparent;
+    border-radius: 50%; animation: spin2 0.8s linear infinite; margin-bottom: 12px;
+  }
+  @keyframes spin2 { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- PIN SCREEN -->
+<div id="pin-screen">
+  <div class="pin-logo">ON<span>L</span>ION <span>IQ</span></div>
+  <div class="pin-sub">Admin-Bereich</div>
+
+  <div class="pin-card">
+    <div class="pin-title">Zugang gesichert</div>
+    <div class="pin-desc">Bitte PIN eingeben um fortzufahren</div>
+
+    <div class="pin-dots">
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+      <div class="pin-dot" id="d4"></div>
+    </div>
+
+    <div class="pin-grid">
+      <button class="pin-btn" onclick="addPin('1')">1</button>
+      <button class="pin-btn" onclick="addPin('2')">2</button>
+      <button class="pin-btn" onclick="addPin('3')">3</button>
+      <button class="pin-btn" onclick="addPin('4')">4</button>
+      <button class="pin-btn" onclick="addPin('5')">5</button>
+      <button class="pin-btn" onclick="addPin('6')">6</button>
+      <button class="pin-btn" onclick="addPin('7')">7</button>
+      <button class="pin-btn" onclick="addPin('8')">8</button>
+      <button class="pin-btn" onclick="addPin('9')">9</button>
+      <button class="pin-btn" onclick="addPin('')" style="visibility:hidden"></button>
+      <button class="pin-btn" onclick="addPin('0')">0</button>
+      <button class="pin-btn del" onclick="delPin()">&#9003;</button>
+    </div>
+
+    <div class="pin-error" id="pinError"></div>
+  </div>
+</div>
+
+<!-- ADMIN CONTENT -->
+<div id="admin-content">
+
+  <header>
+    <div class="header-left">
+      <div class="admin-logo">ON<span>L</span>ION <span>IQ</span></div>
+      <div class="admin-badge">Admin · Intern</div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Abmelden</button>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="showTab('onboarding', this)">Onboarding-Checkliste</button>
+    <button class="tab-btn" onclick="showTab('leitfaden', this)">Gesprächsleitfaden</button>
+    <button class="tab-btn" onclick="showTab('fragen', this)">Fragenliste</button>
+    <button class="tab-btn" onclick="showTab('notizen', this)">Notizen</button>
+    <button class="tab-btn" onclick="showTab('agent', this)">🤖 Agenten-Skript</button>
+  </nav>
+
+  <div class="content">
+
+    <!-- ONBOARDING -->
+    <div class="section active" id="onboarding">
+      <div class="section-title">Onboarding-Checkliste</div>
+      <p class="section-desc">Alles was vor, während und nach dem Erstgespräch erledigt werden sollte.</p>
+
+      <div class="progress-wrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">0 / 0 erledigt</div>
+      </div>
+
+      <div class="checklist-group">
+        <div class="group-label">Vor dem Gespräch</div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Kunde recherchiert: Website, LinkedIn, aktuelle Projekte</div><div class="check-sub">Branche, Unternehmensgröße, digitale Reife einschätzen</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Gesprächsziel definiert</div><div class="check-sub">Discovery, Pitch oder Bedarfsanalyse?</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">IQ-Score des Kunden aus der App notiert</div><div class="check-sub">Score, schwächste Bereiche, Branche</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Relevante Use-Cases vorbereitet</div><div class="check-sub">2-3 Beispiele aus der Branche des Kunden</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Technisches Level des Kunden eingeschätzt</div><div class="check-sub">Non-Tech, Semi-Tech oder Tech-affin?</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Fragenliste geöffnet</div><div class="check-sub">Diese Liste als Gesprächsleitfaden nutzen</div></div>
+        </div>
+      </div>
+
+      <div class="checklist-group">
+        <div class="group-label">Während des Gesprächs</div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Kurze Vorstellung (max. 2 Min.)</div><div class="check-sub">Wer bin ich, was macht ONLION, warum relevant</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">IQ-Score besprochen</div><div class="check-sub">Score erklären, schwache Bereiche hervorheben</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Pain Points identifiziert und notiert</div><div class="check-sub">Mindestens 2-3 konkrete Probleme herausarbeiten</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Konkreten Automatisierungsansatz skizziert</div><div class="check-sub">Grob zeigen wie KI/Automation helfen könnte</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Förderung angesprochen</div><div class="check-sub">QCG, bis zu 100% Förderung, unverbindliche Prüfung</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Budget und Zeitrahmen angesprochen</div><div class="check-sub">Ohne Druck, aber klare Vorstellung schaffen</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Nächster Schritt vereinbart</div><div class="check-sub">Datum für Follow-up, Demo oder Angebot festgelegt</div></div>
+        </div>
+      </div>
+
+      <div class="checklist-group">
+        <div class="group-label">Nach dem Gespräch</div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Gesprächsnotizen zusammengefasst (max. 24h)</div><div class="check-sub">Pain Points, Ziele, technischer Stand, offene Fragen</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Dankes-Mail gesendet</div><div class="check-sub">Wichtige Punkte wiederholen, nächsten Schritt bestätigen</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Förderprüfung angestoßen</div><div class="check-sub">Link zur Förderberatung geschickt falls Interesse</div></div>
+        </div>
+        <div class="check-item" onclick="toggle(this)">
+          <div class="check-box">&#10003;</div>
+          <div><div class="check-text">Erstes Konzept / Angebot vorbereitet</div><div class="check-sub">Auf Basis der Pain Points und des Budgets</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEITFADEN -->
+    <div class="section" id="leitfaden">
+      <div class="section-title">Gesprächsleitfaden</div>
+      <p class="section-desc">Strukturierter Ablauf für das Kundengespräch nach der ONLION IQ Analyse.</p>
+
+      <div class="lf-phase">
+        <div class="lf-phase-header">
+          <div class="lf-num">1</div>
+          <div class="lf-title">Einstieg & Rapport</div>
+          <div class="lf-time">5 Min</div>
+        </div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">Kurze Vorstellung: Wer bin ich, was macht ONLION</div></div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">Wie sind Sie auf uns aufmerksam geworden?</div></div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">Haben Sie den IQ-Bericht bekommen und angeschaut?</div></div>
+      </div>
+
+      <div class="lf-phase" style="border-left-color:#00aaff">
+        <div class="lf-phase-header">
+          <div class="lf-num" style="background:rgba(0,170,255,0.1);border-color:rgba(0,170,255,0.3);color:#00aaff">2</div>
+          <div class="lf-title">Individuelle Tiefenfragen</div>
+          <div class="lf-time">10 Min</div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">Basierend auf den schwächsten Bereichen des Kunden:</p>
+        <div class="lf-item"><div class="lf-arrow" style="color:#00aaff">&#8594;</div><div class="lf-text">Wie viel Zeit verbringt Ihr Team täglich mit manuellen, wiederkehrenden Aufgaben?</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#00aaff">&#8594;</div><div class="lf-text">Was kostet Sie das konkret pro Woche? (Stunden x Stundenlohn)</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#00aaff">&#8594;</div><div class="lf-text">Welche Tools nutzen Sie täglich - und welche reden nicht miteinander?</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#00aaff">&#8594;</div><div class="lf-text">Gibt es Prozesse bei denen Sie denken: Das müsste eigentlich eine Maschine machen?</div></div>
+      </div>
+
+      <div class="lf-phase" style="border-left-color:#7AC800">
+        <div class="lf-phase-header">
+          <div class="lf-num">3</div>
+          <div class="lf-title">Stärken würdigen</div>
+          <div class="lf-time">3 Min</div>
+        </div>
+        <div class="lf-quote">Toll, dass Sie in [Bereich] schon so weit sind - darauf können wir aufbauen.</div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">Positiv erwähnen was bereits gut funktioniert</div></div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">Als Basis für die nächsten Schritte nutzen</div></div>
+      </div>
+
+      <div class="lf-phase" style="border-left-color:#ff7700">
+        <div class="lf-phase-header">
+          <div class="lf-num" style="background:rgba(255,119,0,0.1);border-color:rgba(255,119,0,0.3);color:#ff7700">4</div>
+          <div class="lf-title">Lösungsvorschlag</div>
+          <div class="lf-time">5 Min</div>
+        </div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#ff7700">&#8594;</div><div class="lf-text">Quick Wins zeigen: welche 1-2 Bereiche sofort automatisierbar sind</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#ff7700">&#8594;</div><div class="lf-text">Roadmap skizzieren: Phase 1 - Phase 2 - Phase 3</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#ff7700">&#8594;</div><div class="lf-text">Kosten & ROI nennen - konkret und ehrlich</div></div>
+      </div>
+
+      <div class="lf-phase" style="border-left-color:#7AC800">
+        <div class="lf-phase-header">
+          <div class="lf-num">5</div>
+          <div class="lf-title">Förderung ansprechen</div>
+          <div class="lf-time">3 Min</div>
+        </div>
+        <div class="lf-quote">Wussten Sie, dass ein Großteil dieser Maßnahmen staatlich gefördert werden kann - in manchen Fällen bis zu 100% der Kosten?</div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">QCG erklären (Qualifizierungschancengesetz)</div></div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">Haben Sie sozialversicherungspflichtige Mitarbeiter?</div></div>
+        <div class="lf-item"><div class="lf-arrow">&#8594;</div><div class="lf-text">Würden Sie eine Förderprüfung in Anspruch nehmen?</div></div>
+      </div>
+
+      <div class="lf-phase" style="border-left-color:#aa44ff">
+        <div class="lf-phase-header">
+          <div class="lf-num" style="background:rgba(170,68,255,0.1);border-color:rgba(170,68,255,0.3);color:#aa44ff">6</div>
+          <div class="lf-title">Abschluss & Next Steps</div>
+          <div class="lf-time">4 Min</div>
+        </div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#aa44ff">&#8594;</div><div class="lf-text">Zusammenfassen: Ihre größten Hebel sind [Bereich 1] und [Bereich 2]</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#aa44ff">&#8594;</div><div class="lf-text">Klare Handlungsempfehlung: Ich empfehle, mit [Quick Win] zu starten</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#aa44ff">&#8594;</div><div class="lf-text">Darf ich Ihnen ein konkretes Angebot zusenden?</div></div>
+        <div class="lf-item"><div class="lf-arrow" style="color:#aa44ff">&#8594;</div><div class="lf-text">Soll ich parallel die Förderfähigkeit prüfen lassen?</div></div>
+      </div>
+
+      <!-- Einwand-Handling -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-top:20px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Einwand-Handling</div>
+        <div class="einwand-item">
+          <div class="einwand-q">? Wir haben keine Zeit</div>
+          <div class="einwand-a">Genau deshalb lohnt Automatisierung - der Aufwand ist einmalig, die Zeitersparnis dauerhaft.</div>
+        </div>
+        <div class="einwand-item">
+          <div class="einwand-q">? Zu teuer</div>
+          <div class="einwand-a">Mit staatlicher Förderung trägt der Staat bis zu 100% der Kosten.</div>
+        </div>
+        <div class="einwand-item">
+          <div class="einwand-q">? Wir sind zu klein</div>
+          <div class="einwand-a">Gerade kleine Unternehmen profitieren am meisten - jede gesparte Stunde wiegt schwerer.</div>
+        </div>
+        <div class="einwand-item">
+          <div class="einwand-q">? Wir machen das intern</div>
+          <div class="einwand-a">Super - dann helfen wir, den richtigen Weg zu wählen und Fördermittel zu sichern.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAGENLISTE -->
+    <div class="section" id="fragen">
+      <div class="section-title">Fragenliste Erstgespräch</div>
+      <p class="section-desc">Leitfragen für das Kundengespräch - geordnet nach Phase. Nicht alle stellen, sondern gezielt auswählen.</p>
+
+      <div class="q-group">
+        <span class="q-category cat-discovery">Phase 1 - Discovery</span>
+        <div class="q-card">
+          <div class="q-num">F-01</div>
+          <div class="q-text">Was beschäftigt Sie in Ihrem Business gerade am meisten - wo verlieren Sie täglich die meiste Zeit?</div>
+          <div class="q-why">Öffnet das Gespräch und zeigt den größten Pain Point</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-02</div>
+          <div class="q-text">Welche Aufgaben in Ihrem Team sind repetitiv und könnten theoretisch automatisiert werden?</div>
+          <div class="q-why">Hilft, konkrete Automatisierungs-Use-Cases zu identifizieren</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-03</div>
+          <div class="q-text">Wie sieht Ihr aktueller Workflow aus - von der Leadgenerierung bis zur Lieferung?</div>
+          <div class="q-why">Zeigt, wo Agenten eingreifen können</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-04</div>
+          <div class="q-text">Haben Sie bereits Erfahrung mit Tools wie Zapier, Make oder n8n?</div>
+          <div class="q-why">Technisches Level einschätzen, Startpunkt für die Beratung</div>
+        </div>
+      </div>
+
+      <div class="q-group">
+        <span class="q-category cat-pain">Phase 2 - Schmerzpunkte</span>
+        <div class="q-card">
+          <div class="q-num">F-05</div>
+          <div class="q-text">Was passiert, wenn diese Aufgaben zu lange dauern oder Fehler passieren - was kostet das konkret?</div>
+          <div class="q-why">ROI-Argument vorbereiten, Dringlichkeit zeigen</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-06</div>
+          <div class="q-text">Gibt es Prozesse bei denen Sie denken: Das müsste eigentlich eine Maschine machen?</div>
+          <div class="q-why">Lässt Kunden selbst auf Automatisierung kommen</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-07</div>
+          <div class="q-text">Welche Tools nutzen Sie täglich - und welche reden nicht miteinander?</div>
+          <div class="q-why">Integration-Gaps aufdecken (ideal für Agentic Workflows)</div>
+        </div>
+      </div>
+
+      <div class="q-group">
+        <span class="q-category cat-tech">Phase 3 - Technologie & Setup</span>
+        <div class="q-card">
+          <div class="q-num">F-08</div>
+          <div class="q-text">Nutzen Sie bereits KI-Tools (ChatGPT, Claude, Copilot) im Arbeitsalltag?</div>
+          <div class="q-why">Zeigt AI-Affinität und Bereitschaft für Agentic Lösungen</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-09</div>
+          <div class="q-text">Haben Sie jemanden im Team der technisch fit ist - oder soll die Lösung wartungsfrei laufen?</div>
+          <div class="q-why">Beeinflusst die Architektur (Low-Code vs. Custom Agent)</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-10</div>
+          <div class="q-text">Welche Daten dürfen in der Cloud verarbeitet werden - gibt es Datenschutz-Einschränkungen?</div>
+          <div class="q-why">DSGVO/On-Premise Anforderungen frühzeitig klären</div>
+        </div>
+      </div>
+
+      <div class="q-group">
+        <span class="q-category cat-vision">Phase 4 - Vision & Abschluss</span>
+        <div class="q-card">
+          <div class="q-num">F-11</div>
+          <div class="q-text">Wenn alles perfekt läuft: Wie sieht Ihr Business in 12 Monaten aus - was hat sich automatisiert?</div>
+          <div class="q-why">Vision des Kunden verstehen und darauf aufbauen</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-12</div>
+          <div class="q-text">Was wäre für Sie ein klarer Beweis, dass die Zusammenarbeit erfolgreich war?</div>
+          <div class="q-why">KPIs und Erfolgsmessung definieren</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-13</div>
+          <div class="q-text">Gibt es einen Budget-Rahmen in dem wir denken sollen - oder ist das noch offen?</div>
+          <div class="q-why">Budgetgespräch neutral und professionell einleiten</div>
+        </div>
+        <div class="q-card">
+          <div class="q-num">F-14</div>
+          <div class="q-text">Was wäre der nächste sinnvolle Schritt - eine Demo, ein Konzept oder direkt ein Angebot?</div>
+          <div class="q-why">Kunden selbst den nächsten Schritt wählen lassen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIZEN -->
+    <div class="section" id="notizen">
+      <div class="section-title">Gesprächsnotizen</div>
+      <p class="section-desc">Notizen zum Kunden und Gespräch - nur für die aktuelle Sitzung.</p>
+      <div class="notes-area">
+        <div class="notes-label">Kunde / Unternehmen</div>
+        <textarea placeholder="Name, Branche, Unternehmensgröße, IQ-Score..."></textarea>
+      </div>
+      <div class="notes-area">
+        <div class="notes-label">Pain Points</div>
+        <textarea placeholder="Welche Probleme hat der Kunde genannt?"></textarea>
+      </div>
+      <div class="notes-area">
+        <div class="notes-label">Technisches Setup</div>
+        <textarea placeholder="Welche Tools? AI-Erfahrung? Team-Größe?"></textarea>
+      </div>
+      <div class="notes-area">
+        <div class="notes-label">Förderung</div>
+        <textarea placeholder="Interesse an Förderung? Mitarbeiteranzahl? Nächster Schritt?"></textarea>
+      </div>
+      <div class="notes-area">
+        <div class="notes-label">Nächster Schritt</div>
+        <textarea placeholder="Was wurde vereinbart? Datum? Ansprechpartner?"></textarea>
+      </div>
+    </div>
+
+    <!-- AGENT GENERATOR -->
+    <div class="section" id="agent">
+      <div class="section-title">KI-Agenten-Skript Generator</div>
+      <p class="section-desc">Trage die Antworten des Kunden ein — die KI generiert automatisch ein fertiges Agenten-Prompt das du direkt einsetzen kannst.</p>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px">
+        <div class="agent-label">Ziel-Plattform</div>
+        <div class="platform-chips">
+          <div class="platform-chip active" onclick="selectPlatform(this,'Make.com')">Make.com</div>
+          <div class="platform-chip" onclick="selectPlatform(this,'n8n')">n8n</div>
+          <div class="platform-chip" onclick="selectPlatform(this,'ChatGPT')">ChatGPT</div>
+          <div class="platform-chip" onclick="selectPlatform(this,'Claude API')">Claude API</div>
+          <div class="platform-chip" onclick="selectPlatform(this,'Zapier')">Zapier</div>
+          <div class="platform-chip" onclick="selectPlatform(this,'Allgemein')">Allgemein</div>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Kundendaten aus dem Gespräch</div>
+
+        <div class="agent-grid">
+          <div class="agent-field">
+            <label class="agent-label">Firmenname</label>
+            <input class="agent-input" id="ag-firma" placeholder="z.B. Zahnarztpraxis Mueller"/>
+          </div>
+          <div class="agent-field">
+            <label class="agent-label">Branche</label>
+            <input class="agent-input" id="ag-branche" placeholder="z.B. Gesundheit / Zahnarzt"/>
+          </div>
+        </div>
+
+        <div class="agent-field">
+          <label class="agent-label">Hauptproblem / Pain Point</label>
+          <input class="agent-input" id="ag-problem" placeholder="z.B. 50 Anrufe täglich für Terminvergabe, kostet 3h pro Tag"/>
+        </div>
+
+        <div class="agent-field">
+          <label class="agent-label">Was soll der Agent tun?</label>
+          <select class="agent-select" id="ag-aufgabe">
+            <option value="">Aufgabe auswählen...</option>
+            <option value="Terminvergabe automatisieren">Terminvergabe automatisieren</option>
+            <option value="Kundenanfragen per E-Mail und Chat beantworten">Kundenanfragen per E-Mail / Chat beantworten</option>
+            <option value="Angebote automatisch erstellen">Angebote automatisch erstellen</option>
+            <option value="Rechnungen verarbeiten und buchen">Rechnungen verarbeiten & buchen</option>
+            <option value="Leads qualifizieren und weiterleiten">Leads qualifizieren & weiterleiten</option>
+            <option value="Bestellungen und Lager verwalten">Bestellungen & Lager verwalten</option>
+            <option value="HR-Prozesse automatisieren">HR-Prozesse automatisieren</option>
+            <option value="Berichte und Dashboards automatisch erstellen">Berichte & Dashboards erstellen</option>
+            <option value="Kunden-Onboarding automatisieren">Kunden-Onboarding automatisieren</option>
+            <option value="Social Media Content erstellen und posten">Social Media Content erstellen</option>
+          </select>
+        </div>
+
+        <div class="agent-grid">
+          <div class="agent-field">
+            <label class="agent-label">Genutzte Tools</label>
+            <input class="agent-input" id="ag-tools" placeholder="z.B. Outlook, Excel, Lexware..."/>
+          </div>
+          <div class="agent-field">
+            <label class="agent-label">Technisches Level</label>
+            <select class="agent-select" id="ag-tech">
+              <option value="kein technisches Wissen, Lösung muss wartungsfrei sein">Kein technisches Wissen</option>
+              <option value="Grundkenntnisse vorhanden">Grundkenntnisse vorhanden</option>
+              <option value="tech-affin, kann Workflows selbst anpassen">Tech-affin</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="agent-field">
+          <label class="agent-label">Tonalität / Zielgruppe</label>
+          <input class="agent-input" id="ag-ton" placeholder="z.B. freundlich und professionell, Patienten 40-70 Jahre"/>
+        </div>
+
+        <div class="agent-field">
+          <label class="agent-label">Weitere Besonderheiten (optional)</label>
+          <textarea class="agent-textarea" id="ag-extra" placeholder="z.B. DSGVO wichtig, nur auf Deutsch, keine Preise nennen, Öffnungszeiten beachten..."></textarea>
+        </div>
+      </div>
+
+      <button class="generate-btn" id="generateBtn" onclick="generateAgent()">
+        🤖 Agenten-Skript generieren
+      </button>
+
+      <div class="loading-box" id="agentLoading">
+        <div class="spinner"></div>
+        <div style="font-size:14px;color:var(--muted)">KI erstellt dein Agenten-Skript...</div>
+        <div style="font-size:12px;color:var(--border);margin-top:6px">ca. 10-15 Sekunden</div>
+      </div>
+
+      <div class="prompt-result" id="promptResult">
+        <div class="prompt-header">
+          <div class="prompt-title">Generiertes Agenten-Skript</div>
+          <div style="display:flex;gap:8px">
+            <button class="copy-btn" onclick="copyPrompt()">Kopieren</button>
+            <button class="copy-btn" onclick="generateAgent()" style="background:rgba(79,196,160,0.1);border-color:rgba(79,196,160,0.3);color:var(--accent2)">Neu generieren</button>
+          </div>
+        </div>
+        <div class="prompt-text" id="promptText"></div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">So einsetzen in</div>
+          <div id="platformInstructions" style="font-size:13px;color:var(--muted);line-height:1.7"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── PIN LOGIC ──
+  var PIN = '2506'; // DEIN PIN - hier ändern!
+  var entered = '';
+
+  function addPin(num) {
+    if (entered.length >= 4) return;
+    entered += num;
+    updateDots();
+    if (entered.length === 4) {
+      setTimeout(checkPin, 200);
+    }
+  }
+
+  function delPin() {
+    entered = entered.slice(0, -1);
+    updateDots();
+    document.getElementById('pinError').textContent = '';
+  }
+
+  function updateDots() {
+    for (var i = 1; i <= 4; i++) {
+      var dot = document.getElementById('d' + i);
+      dot.classList.remove('filled', 'error');
+      if (i <= entered.length) dot.classList.add('filled');
+    }
+  }
+
+  function checkPin() {
+    if (entered === PIN) {
+      document.getElementById('pin-screen').style.display = 'none';
+      document.getElementById('admin-content').style.display = 'block';
+      updateProgress();
+    } else {
+      for (var i = 1; i <= 4; i++) {
+        document.getElementById('d' + i).classList.remove('filled');
+        document.getElementById('d' + i).classList.add('error');
+      }
+      document.getElementById('pinError').textContent = 'Falscher PIN. Bitte erneut versuchen.';
+      setTimeout(function() {
+        entered = '';
+        updateDots();
+        document.getElementById('pinError').textContent = '';
+      }, 1200);
+    }
+  }
+
+  function logout() {
+    entered = '';
+    updateDots();
+    document.getElementById('admin-content').style.display = 'none';
+    document.getElementById('pin-screen').style.display = 'flex';
+  }
+
+  // Keyboard support
+  document.addEventListener('keydown', function(e) {
+    if (e.key >= '0' && e.key <= '9') addPin(e.key);
+    if (e.key === 'Backspace') delPin();
+    if (e.key === 'Enter' && entered.length === 4) checkPin();
+  });
+
+  // ── TAB LOGIC ──
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── CHECKLIST LOGIC ──
+  function toggle(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var all = document.querySelectorAll('#onboarding .check-item');
+    var done = document.querySelectorAll('#onboarding .check-item.checked');
+    var pct = all.length ? (done.length / all.length * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = done.length + ' / ' + all.length + ' erledigt';
+  }
+
+  // ── AGENT GENERATOR ──
+  var selectedPlatform = 'Make.com';
+
+  function selectPlatform(el, name) {
+    document.querySelectorAll('.platform-chip').forEach(function(c) { c.classList.remove('active'); });
+    el.classList.add('active');
+    selectedPlatform = name;
+  }
+
+  async function generateAgent() {
+    var firma = document.getElementById('ag-firma').value.trim();
+    var branche = document.getElementById('ag-branche').value.trim();
+    var problem = document.getElementById('ag-problem').value.trim();
+    var aufgabe = document.getElementById('ag-aufgabe').value;
+    var tools = document.getElementById('ag-tools').value.trim();
+    var tech = document.getElementById('ag-tech').value;
+    var ton = document.getElementById('ag-ton').value.trim();
+    var extra = document.getElementById('ag-extra').value.trim();
+
+    if (!aufgabe) { alert('Bitte eine Aufgabe auswählen.'); return; }
+
+    document.getElementById('generateBtn').disabled = true;
+    document.getElementById('agentLoading').classList.add('visible');
+    document.getElementById('promptResult').classList.remove('visible');
+
+    var prompt = 'Erstelle ein professionelles KI-Agenten System-Prompt auf Deutsch fuer folgendes Unternehmen:\n\n'
+      + 'Unternehmen: ' + (firma || 'Unbekannt') + '\n'
+      + 'Branche: ' + (branche || 'Allgemein') + '\n'
+      + 'Hauptproblem: ' + (problem || 'Prozesse automatisieren') + '\n'
+      + 'Aufgabe des Agenten: ' + aufgabe + '\n'
+      + 'Genutzte Tools: ' + (tools || 'Standard-Tools') + '\n'
+      + 'Technisches Level: ' + tech + '\n'
+      + 'Zielgruppe und Ton: ' + (ton || 'professionell und freundlich') + '\n'
+      + 'Plattform: ' + selectedPlatform + '\n'
+      + (extra ? 'Besonderheiten: ' + extra + '\n' : '')
+      + '\nDas Prompt soll enthalten:\n'
+      + '1. Rolle und Identitaet des Agenten\n'
+      + '2. Konkrete Aufgaben und Faehigkeiten\n'
+      + '3. Verhaltensregeln und Grenzen\n'
+      + '4. Tonalitaet und Kommunikationsstil\n'
+      + '5. Beispiel-Antworten oder Vorlagen\n'
+      + '6. Was der Agent NICHT tun soll\n\n'
+      + 'Schreibe das Prompt direkt und vollstaendig - sofort einsetzbar.';
+
+    try {
+      var response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5',
+          max_tokens: 1500,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      var data = await response.json();
+      var text = data.content ? data.content.map(function(c) { return c.text || ''; }).join('') : '';
+      document.getElementById('promptText').textContent = text;
+
+      var instructions = {
+        'Make.com': '1. Szenario in Make.com oeffnen\n2. Claude oder OpenAI Modul hinzufuegen\n3. Prompt in das Feld "System Prompt" einfuegen\n4. Mit Trigger verbinden (E-Mail, Webhook etc.)',
+        'n8n': '1. "AI Agent" Node hinzufuegen\n2. "System Message" setzen und Prompt einfuegen\n3. Mit LLM verbinden (Claude/GPT)\n4. Trigger setzen (Webhook, Schedule etc.)',
+        'ChatGPT': '1. ChatGPT oeffnen\n2. Neuen GPT erstellen unter Explore GPTs\n3. Prompt unter "Instructions" einfuegen\n4. Testen und intern veroeffentlichen',
+        'Claude API': '1. Anthropic API nutzen\n2. Prompt als "system" Parameter einfuegen\n3. Nutzer-Nachrichten als "user" Parameter\n4. In Anwendung via REST API integrieren',
+        'Zapier': '1. Neuen Zap erstellen\n2. ChatGPT oder Claude Step hinzufuegen\n3. Prompt in das "Instructions" Feld kopieren\n4. Mit Trigger verbinden',
+        'Allgemein': '1. Prompt kopieren\n2. Als System Prompt oder Instructions einfuegen\n3. Mit realen Anfragen testen\n4. Bei Bedarf anpassen'
+      };
+      document.getElementById('platformInstructions').textContent = instructions[selectedPlatform] || instructions['Allgemein'];
+      document.getElementById('promptResult').classList.add('visible');
+    } catch(e) {
+      alert('Fehler: ' + e.message);
+    }
+
+    document.getElementById('generateBtn').disabled = false;
+    document.getElementById('agentLoading').classList.remove('visible');
+  }
+
+  function copyPrompt() {
+    var text = document.getElementById('promptText').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.querySelector('#promptResult .copy-btn');
+      var orig = btn.textContent;
+      btn.textContent = 'Kopiert!';
+      setTimeout(function() { btn.textContent = orig; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
