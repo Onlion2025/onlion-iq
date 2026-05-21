@@ -118,14 +118,30 @@ function getDefault(branche){
 }
 
 function Logo(){
-  return React.createElement("div",{style:{marginBottom:28}},
-    React.createElement("div",{style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}},
-      React.createElement("span",null,"ON"),
-      React.createElement("span",{style:{color:G}},"L"),
-      React.createElement("span",null,"ION"),
-      React.createElement("span",{style:{color:G,marginLeft:6}},"IQ")
+  return React.createElement("div",{style:{marginBottom:28,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
+    React.createElement("div",null,
+      React.createElement("div",{style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}},
+        React.createElement("span",null,"ON"),
+        React.createElement("span",{style:{color:G}},"L"),
+        React.createElement("span",null,"ION"),
+        React.createElement("span",{style:{color:G,marginLeft:6}},"IQ")
+      ),
+      React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
     ),
-    React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
+    React.createElement("button",{
+      onClick:function(){if(window.__adminLogin)window.__adminLogin();},
+      style:{
+        background:"transparent",
+        border:"none",
+        color:G,
+        fontSize:12,
+        padding:"5px 0",
+        cursor:"pointer",
+        letterSpacing:1,
+        fontFamily:"inherit",
+        fontWeight:500
+      }
+    },"LOGIN")
   );
 }
 
@@ -177,6 +193,7 @@ function KatCard(props){
 function App(){
   var useState=React.useState;
   var r1=useState("intro"),step=r1[0],setStep=r1[1];
+  window.__adminLogin=function(){setStep("adminpin");};
   var r2=useState(""),branche=r2[0],setBranche=r2[1];
   var r3=useState(""),firma=r3[0],setFirma=r3[1];
   var r4=useState(""),desc=r4[0],setDesc=r4[1];
@@ -358,7 +375,6 @@ function App(){
       <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,paddingTop:16,borderTop:"0.5px solid "+BD}}>
         <button onClick={function(){setStep("impressum");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Impressum</button>
         <button onClick={function(){setStep("datenschutz");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Datenschutz</button>
-        <button onClick={function(){setStep("adminpin");}} style={{background:"transparent",border:"none",color:"#333",cursor:"pointer",fontSize:11}}>·</button>
       </div>
     </div>
   );
