@@ -201,7 +201,24 @@ function App(){
   var descValid=desc.trim().length>=10;
   var canStart=email&&branche&&descValid;
 
-  function setA(bid,fi,val){setAntw(function(p){var n=Object.assign({},p);n[bid+"_"+fi]=val;return n;});}
+  function setA(bid,fi,val){
+    setAntw(function(p){
+      var n=Object.assign({},p);
+      n[bid+"_"+fi]=val;
+      // Check if this was the last question of the current area
+      var b=bereiche.filter(function(x){return x.id===bid;})[0];
+      if(b){
+        var allAnswered=b.fragen.every(function(_,i){
+          return i===fi?true:n[bid+"_"+i]!==undefined;
+        });
+        if(allAnswered){
+          // Auto-scroll to top after short delay
+          setTimeout(function(){window.scrollTo({top:0,behavior:"smooth"});},300);
+        }
+      }
+      return n;
+    });
+  }
   function gs(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];if(!b)return 0;var v=b.fragen.map(function(_,i){var x=antw[bid+"_"+i];return x!=null?x:null;}).filter(function(x){return x!==null;});return v.length?Math.round(v.reduce(function(s,x){return s+x;},0)/v.length):0;}
   function ges(){return gefB.length?Math.round(gefB.map(function(b){return gs(b.id);}).reduce(function(s,v){return s+v;},0)/gefB.length):0;}
   function komp(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];return b?b.fragen.every(function(_,i){return antw[bid+"_"+i]!==undefined;}):false;}
