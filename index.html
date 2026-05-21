@@ -33,6 +33,7 @@ var G="#7AC800",GL="#9AE020",D="#0a0a0a",D2="#141414",D3="#1e1e1e",BD="#2a2a2a",
 var adminPinInput="";
 var KC={ki:G,rpa:"#00aaff",robotik:"#ff7700",daten:"#aa44ff"};
 var KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"};
+var KTC={ki:T2,rpa:T2,robotik:T2,daten:T2};
 var KT={
   ki:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit  -  rund um die Uhr, ohne Pause.",
   rpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen  -  ohne Programmierung, sofort einsetzbar.",
@@ -166,7 +167,7 @@ function KatCard(props){
   },
     React.createElement("span",{style:{fontSize:20,flexShrink:0}},k.i),
     React.createElement("div",{style:{flex:1}},
-      React.createElement("div",{style:{fontSize:12,fontWeight:500,color:kc}},k.l),
+      React.createElement("div",{style:{fontSize:12,fontWeight:500,color:TX}},k.l),
       React.createElement("div",{style:{fontSize:11,color:T2,marginTop:2}},k.d),
       hovered&&React.createElement("div",{style:{fontSize:11,color:T2,marginTop:8,lineHeight:1.6,borderTop:"0.5px solid "+kc+"30",paddingTop:8,animation:"fadeUp 0.2s ease"}},KT[k.k])
     )
