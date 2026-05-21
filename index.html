@@ -117,7 +117,8 @@ function getDefault(branche){
   ];
 }
 
-function Logo(){
+function Logo(props){
+  var showLogin=props&&props.showLogin;
   return React.createElement("div",{style:{marginBottom:28,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
     React.createElement("div",null,
       React.createElement("div",{style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}},
@@ -128,20 +129,10 @@ function Logo(){
       ),
       React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
     ),
-    React.createElement("button",{
+    showLogin?React.createElement("button",{
       onClick:function(){if(window.__adminLogin)window.__adminLogin();},
-      style:{
-        background:"transparent",
-        border:"none",
-        color:G,
-        fontSize:12,
-        padding:"5px 0",
-        cursor:"pointer",
-        letterSpacing:1,
-        fontFamily:"inherit",
-        fontWeight:500
-      }
-    },"LOGIN")
+      style:{background:"transparent",border:"none",color:G,fontSize:12,padding:"5px 0",cursor:"pointer",letterSpacing:1,fontFamily:"inherit",fontWeight:500}
+    },"LOGIN"):null
   );
 }
 
@@ -319,7 +310,7 @@ function App(){
 
   if(step==="intro") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-      <Logo/>
+      <Logo showLogin={true}/>
       <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>Wie intelligent arbeitet dein Unternehmen?</h1>
       <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert mit KI dein Automatisierungspotenzial  -  kostenlos in 5 Minuten.</p>
 
