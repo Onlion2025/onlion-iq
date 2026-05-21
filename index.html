@@ -194,6 +194,10 @@ function App(){
   var useState=React.useState;
   var r1=useState("intro"),step=r1[0],setStep=r1[1];
   window.__adminLogin=function(){setStep("adminpin");};
+  var r_adminTab=useState("checkliste"),adminTab=r_adminTab[0],setAdminTab=r_adminTab[1];
+  var r_agPlatform=useState("Make.com"),agPlatform=r_agPlatform[0],setAgPlatform=r_agPlatform[1];
+  var r_agResult=useState(""),agResult=r_agResult[0],setAgResult=r_agResult[1];
+  var r_agLoading=useState(false),agLoading=r_agLoading[0],setAgLoading=r_agLoading[1];
   var r2=useState(""),branche=r2[0],setBranche=r2[1];
   var r3=useState(""),firma=r3[0],setFirma=r3[1];
   var r4=useState(""),desc=r4[0],setDesc=r4[1];
@@ -671,7 +675,6 @@ function App(){
 
   /* ── ADMIN PIN ── */
   if(step==="adminpin"){
-    var pinErr=React.useRef("");
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:400,margin:"0 auto",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
         <Logo/>
@@ -718,14 +721,7 @@ function App(){
     );
   }
 
-  /* ── ADMIN BEREICH ── */
-  if(step==="admin"){
-    var [adminTab,setAdminTab]=React.useState("checkliste");
-    var [agPlatform,setAgPlatform]=React.useState("Make.com");
-    var [agResult,setAgResult]=React.useState("");
-    var [agLoading,setAgLoading]=React.useState(false);
-
-    async function generateAgentPrompt(){
+  async function generateAgentPrompt(){
       var firma2=document.getElementById("ag-firma")?document.getElementById("ag-firma").value:"";
       var branche2=document.getElementById("ag-branche")?document.getElementById("ag-branche").value:"";
       var problem=document.getElementById("ag-problem")?document.getElementById("ag-problem").value:"";
@@ -740,7 +736,10 @@ function App(){
         setAgResult(t);
       }catch(e){setAgResult("Fehler: "+e.message);}
       setAgLoading(false);
-    }
+  }
+
+  /* ── ADMIN BEREICH ── */
+  if(step==="admin"){
 
     var adminTabs=[
       {id:"checkliste",label:"Checkliste"},
