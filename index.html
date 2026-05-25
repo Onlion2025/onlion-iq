@@ -309,7 +309,7 @@ function App(){
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
   function renderMd(t){
-    return t.replace(/^---+$/gm,"").replace(/^#{3,}\s*/gm,"").replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:13px;font-weight:600;margin:0.6rem 0 0.15rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:3px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:2px 0;color:"+TX+";line-height:1.4;font-size:12px'>$1</li>").replace(/\n\n/g," ").replace(/\n/g,"<br/>");
+    return t.replace(/^---+$/gm,"").replace(/^#{3,}\s*/gm,"").replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:13px;font-weight:600;margin:0.6rem 0 0.15rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:3px'>$1</h2>").replace(/^- (.+)$/gm,"<div style='margin:2px 0;color:"+TX+";line-height:1.4;font-size:12px'>$1</div>").replace(/\n\n/g," ").replace(/\n/g,"<br/>");
   }
   function btxt(){var g=ges();return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;}
   var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1rem",marginBottom:12};
@@ -433,7 +433,7 @@ function App(){
             return(
               <div key={i} style={{marginBottom:20,borderBottom:i<curB.fragen.length-1?"0.5px solid "+BD:"none",paddingBottom:i<curB.fragen.length-1?16:0}}>
                 <p style={{fontSize:14,marginBottom:10,lineHeight:1.6,color:TX,fontWeight:500}}>{i+1}. {item.f}</p>
-                {(item.o||[]).map(function(opt,oi){var val=ov(oi),key=curB.id+"_"+i,sel=antw[key]===val;return <button key={oi} onClick={function(){setA(curB.id,i,val);}} style={{padding:"10px 14px",borderRadius:8,border:"0.5px solid "+(sel?G:BD),background:sel?G+"18":"transparent",fontSize:13,textAlign:"left",cursor:"pointer",color:sel?G:TX,marginBottom:8,width:"100%",display:"block",lineHeight:1.5}}><span style={{color:sel?G:T2,marginRight:8}}>{sel?"◉":"○"}</span>{opt}</button>;})}
+                {(item.o||[]).map(function(opt,oi){var val=ov(oi),key=curB.id+"_"+i,sel=antw[key]===val,txt=opt.replace(/^[□☐✓○●\s]*[A-D][).]\s*/,"").replace(/^[□☐✓○●]\s*/,"").trim();return <button key={oi} onClick={function(){setA(curB.id,i,val);}} style={{padding:"10px 14px",borderRadius:8,border:"0.5px solid "+(sel?G:BD),background:sel?G+"18":"transparent",fontSize:13,textAlign:"left",cursor:"pointer",color:sel?G:TX,marginBottom:8,width:"100%",display:"block",lineHeight:1.5}}><span style={{color:sel?G:BD,marginRight:10,fontSize:15}}>{sel?"◉":"○"}</span>{txt}</button>;})}
               </div>
             );
           })}
