@@ -28,7 +28,6 @@ textarea::-moz-placeholder{color:#888;opacity:1}
 <body>
 <div id="root"></div>
 <script type="text/babel">
-
 var G="#7AC800",GL="#9AE020",D="#0a0a0a",D2="#141414",D3="#1e1e1e",BD="#2a2a2a",TX="#f0f0f0",T2="#888";
 var adminPinInput="";
 var KC={ki:G,rpa:"#00aaff",robotik:"#ff7700",daten:"#aa44ff"};
@@ -41,9 +40,7 @@ var KT={
   daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen  -  Entscheidungen basieren auf aktuellen Daten, nicht auf Bauchgefühl."
 };
 var BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"];
-
 function safe(s){return(s||"").replace(/[^\w\s.,\-äöüÄÖÜß]/g," ").replace(/\s+/g," ").trim();}
-
 function parseBereicheText(text,branche){
   var bereiche=[];
   var blocks=text.split(/\n(?=BEREICH)/);
@@ -74,7 +71,6 @@ function parseBereicheText(text,branche){
   if(bereiche.length<3)return getDefault(branche);
   return bereiche;
 }
-
 function getDefault(branche){
   var p=branche==="Gesundheit / Pflege";
   return[
@@ -116,7 +112,6 @@ function getDefault(branche){
     ]}
   ];
 }
-
 function Logo(props){
   var showLogin=props&&props.showLogin;
   return React.createElement("div",{style:{marginBottom:28,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
@@ -135,9 +130,7 @@ function Logo(props){
     },"LOGIN"):null
   );
 }
-
 function Spin(){return React.createElement("span",{style:{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}});}
-
 function LoadBox(props){
   return React.createElement("div",{style:{background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"2rem",textAlign:"center",marginBottom:16}},
     React.createElement("div",{style:{marginBottom:16,display:"flex",justifyContent:"center"}},React.createElement(Spin)),
@@ -148,7 +141,6 @@ function LoadBox(props){
     )
   );
 }
-
 function IQMeter(props){
   var score=props.score;
   var c=score>66?G:score>33?"#d4a000":"#c0392b";
@@ -161,7 +153,6 @@ function IQMeter(props){
     React.createElement("div",{style:{fontSize:12,color:c,marginTop:4}},score>66?"Gut automatisiert":score>33?"Ausbaufähig":"Hohes Potenzial")
   );
 }
-
 function KatCard(props){
   var k=props.k;
   var rH=React.useState(false);
@@ -180,7 +171,6 @@ function KatCard(props){
     )
   );
 }
-
 function App(){
   var useState=React.useState;
   var r1=useState("intro"),step=r1[0],setStep=r1[1];
@@ -207,27 +197,23 @@ function App(){
   var r17=useState(false),mailSent=r17[0],setMailSent=r17[1];
   var r18=useState(false),emailSent=r18[0],setEmailSent=r18[1];
   var r19=useState(false),dsgvo=r19[0],setDsgvo=r19[1];
-
   var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
   var curB=gefB[bIdx];
   var totalF=gefB.reduce(function(s,b){return s+(b.fragen?b.fragen.length:0);},0);
   var prog=totalF>0?Math.round(Object.keys(antw).length/totalF*100):0;
   var descValid=desc.trim().length>=10;
   var canStart=email&&branche&&descValid;
-
   function setA(bid,fi,val){setAntw(function(p){var n=Object.assign({},p);n[bid+"_"+fi]=val;return n;});}
   function gs(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];if(!b)return 0;var v=b.fragen.map(function(_,i){var x=antw[bid+"_"+i];return x!=null?x:null;}).filter(function(x){return x!==null;});return v.length?Math.round(v.reduce(function(s,x){return s+x;},0)/v.length):0;}
   function ges(){return gefB.length?Math.round(gefB.map(function(b){return gs(b.id);}).reduce(function(s,v){return s+v;},0)/gefB.length):0;}
   function komp(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];return b?b.fragen.every(function(_,i){return antw[bid+"_"+i]!==undefined;}):false;}
   function ov(i){return[0,33,67,100][i];}
-
   async function callApi(prompt,mt){
     var r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
     var d=await r.json();
     if(d.error)throw new Error(typeof d.error==="string"?d.error:JSON.stringify(d.error));
     return d.content?d.content.map(function(c){return c.text||"";}).join(""):"";
   }
-
   async function sendeEmail(g){
     try{
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,3).join(", ");
@@ -235,7 +221,6 @@ function App(){
       setEmailSent(true);
     }catch(e){console.log("E-Mail Fehler:",e);}
   }
-
   async function ladeBereiche(){
     if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
     setLoadB(true);setErr("");
@@ -250,7 +235,6 @@ function App(){
     }
     setLoadB(false);
   }
-
   async function analysiereReport(){
     setLoadR(true);setErr("");
     try{
@@ -261,7 +245,6 @@ function App(){
     }catch(e){setErr("Fehler: "+e.message);}
     setLoadR(false);
   }
-
   async function ladeLoes(){
     if(loes.length)return;
     setLoadL(true);
@@ -284,7 +267,6 @@ function App(){
     }catch(e){setLoes([]);}
     setLoadL(false);
   }
-
   function generatePDF(){
     var g=ges(),p=100-g;
     var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
@@ -294,31 +276,25 @@ function App(){
     var w=window.open("","_blank");
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
-
   function renderMd(t){
     return t.replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:15px;font-weight:500;margin:1.2rem 0 0.4rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:4px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:4px 0;color:"+T2+";line-height:1.5'>$1</li>").replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
   }
-
   function btxt(){var g=ges();return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;}
-
   var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1.25rem",marginBottom:16};
   var cardG={background:"#081200",border:"0.5px solid "+G+"40",borderRadius:10,padding:"1.25rem",marginBottom:16};
   var btnG={width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:14,color:G,fontWeight:500};
   var btn={width:"100%",padding:"11px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:14,color:TX,marginTop:8};
   var btnO={width:"100%",padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2,marginTop:8};
   function bdg(c){return{display:"inline-block",padding:"2px 8px",borderRadius:20,background:c+"22",border:"0.5px solid "+c+"66",fontSize:10,color:c};}
-
   if(step==="intro") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo showLogin={true}/>
       <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>Wie intelligent arbeitet dein Unternehmen?</h1>
       <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert mit KI dein Automatisierungspotenzial  -  kostenlos in 5 Minuten.</p>
-
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
         {[{k:"ki",l:"KI & Agenten",i:"🤖",d:"KI, Chatbots, LLMs"},{k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}].map(function(k){return <KatCard key={k.k} k={k}/>;})
         }
       </div>
-
       <div style={{...card,marginBottom:20}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>In 5 Minuten erhältst du</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
@@ -330,14 +306,12 @@ function App(){
           );})}
         </div>
       </div>
-
       <input placeholder="Deine E-Mail *" value={email} onChange={function(e){setEmail(e.target.value);}} type="email"/>
       <input placeholder="Firmenname (optional)" value={firma} onChange={function(e){setFirma(e.target.value);}}/>
       <select value={branche} onChange={function(e){setBranche(e.target.value);}} style={{marginBottom:10}}>
         <option value="">Branche auswählen *</option>
         {BRANCHEN.map(function(b){return <option key={b} value={b}>{b}</option>;})}
       </select>
-
       <div style={{marginBottom:10,background:D3,border:"0.5px solid "+(descValid?G:BD),borderRadius:8,padding:"9px 12px",transition:"border-color 0.2s"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
           <span style={{fontSize:14,color:TX}}>Beschreib dein Unternehmen *</span>
@@ -345,9 +319,7 @@ function App(){
         </div>
         <textarea placeholder="Z.B. Mitarbeiteranzahl, welche Prozesse noch manuell laufen..." value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:12,color:TX,width:"100%",outline:"none"}}/>
       </div>
-
       {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
-
       {/* DSGVO Checkbox */}
       <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:14,padding:"10px 12px",background:D2,border:"0.5px solid "+BD,borderRadius:8}}>
         <input
@@ -361,7 +333,6 @@ function App(){
           Ich habe die <button onClick={function(e){e.preventDefault();setStep("datenschutz");}} style={{background:"none",border:"none",color:G,cursor:"pointer",fontSize:12,textDecoration:"underline",padding:0}}>Datenschutzerklärung</button> gelesen und bin einverstanden, dass meine Daten zur Erstellung des Analyseberichts verarbeitet werden.
         </label>
       </div>
-
       {loadB
         ?<LoadBox msg="KI erstellt deine Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
         :<button disabled={!canStart||!dsgvo} onClick={ladeBereiche} style={{...btnG,opacity:(canStart&&dsgvo)?1:0.4}}>IQ-Analyse starten →</button>
@@ -373,7 +344,6 @@ function App(){
       </div>
     </div>
   );
-
   if(step==="bereiche"){
     var alle=aktiv.length===bereiche.length;
     return(
@@ -408,7 +378,6 @@ function App(){
       </div>
     );
   }
-
   if(step==="fragebogen"&&curB){
     var kc=KC[curB.kiKat]||G,kl=KL[curB.kiKat]||"KI";
     return(
@@ -444,7 +413,6 @@ function App(){
       </div>
     );
   }
-
   if(step==="auswertung"){
     var g=ges(),p=100-g;
     return(
@@ -479,7 +447,6 @@ function App(){
       </div>
     );
   }
-
   if(step==="bericht"){
     var pot=100-ges();
     return(
@@ -517,7 +484,6 @@ function App(){
           <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>🤖</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>KI-Lösungen</div><div style={{fontSize:12,color:T2}}>Tools entdecken</div></button>
           <button onClick={function(){setStep("termin");}} style={{background:"#0d0d0d",border:"1px solid "+BD,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>📅</div><div style={{fontSize:14,fontWeight:500,color:TX,marginBottom:4}}>Kostenloses Gespräch</div><div style={{fontSize:12,color:T2}}>Termin buchen</div></button>
         </div>
-
         {/* Förderung Banner */}
         <div onClick={function(){setStep("foerderung");}} style={{
           background:"#0a1a00",
@@ -543,7 +509,6 @@ function App(){
       </div>
     );
   }
-
   if(step==="loesungen") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
@@ -558,7 +523,6 @@ function App(){
       <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div><p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>Kostenloses Gespräch buchen →</button></div>
     </div>
   );
-
   if(step==="termin"){
     var tg=ges();
     return(
@@ -585,14 +549,11 @@ function App(){
             <div style={{fontSize:12,color:T2,lineHeight:1.5}}>Wir zeigen dir unser Angebot — individuell auf deinen IQ-Score von <strong style={{color:TX}}>{100-tg}%</strong> Potenzial angepasst.</div>
           </div>
         </div>
-        <GreenBtn onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("pakete");}} style={btnG}>📅 Termin buchen →</GreenBtn>
+        <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("pakete");}} style={btnG}>📅 Termin buchen →</button>
         <button onClick={function(){setStep("pakete");}} style={{...btn,marginTop:10,color:G,borderColor:G+"40"}}>📦 Unser Angebot ansehen →</button>
       </div>
     );
   }
-
-
-
   if(step==="pakete"){
     var pScore=ges();
     var pFirma=firma||branche||"Dein Unternehmen";
@@ -641,12 +602,10 @@ function App(){
       }
     ];
     var recommended=tiers.find(function(t){return pScore>=t.minScore&&pScore<=t.maxScore;})||tiers[0];
-
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:680,margin:"0 auto"}}>
         <Logo/>
         <button onClick={function(){setStep("termin");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-
         {/* Header */}
         <div style={{textAlign:"center",marginBottom:28}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"5px 14px",borderRadius:20,border:"1px solid "+G+"30",background:G+"08",fontSize:11,color:G,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>
@@ -660,7 +619,6 @@ function App(){
             Für <strong style={{color:TX}}>{pFirma}</strong> mit einem IQ-Score von <strong style={{color:G}}>{pScore}%</strong> empfehlen wir als nächsten Schritt die <strong style={{color:TX}}>{recommended.name}</strong>.
           </p>
         </div>
-
         {/* Tier Cards */}
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:20}}>
           {tiers.map(function(tier){
@@ -718,7 +676,6 @@ function App(){
             );
           })}
         </div>
-
         {/* CTA */}
         <div style={{...card,marginBottom:14}}>
           <h3 style={{fontSize:16,fontWeight:500,marginBottom:6}}>Bereit, dein Potenzial zu heben?</h3>
@@ -728,25 +685,21 @@ function App(){
             <button onClick={function(){setStep("foerderung");}} style={{flex:1,padding:"12px",borderRadius:10,background:D3,border:"0.5px solid "+BD,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>🏛️ Förderung</button>
           </div>
         </div>
-
         {/* Trust note */}
         <p style={{textAlign:"center",fontSize:11,color:"#444",marginBottom:20}}>Kein Druck. Keine Verkaufsshow. Nur eine ehrliche Einschätzung deines Potenzials.</p>
       </div>
     );
   }
-
   if(step==="foerderung") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
       <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-
       {/* Hero */}
       <div style={{background:"#0a1a00",border:"1px solid "+G+"50",borderRadius:12,padding:"1.5rem",marginBottom:20,textAlign:"center"}}>
         <div style={{fontSize:36,marginBottom:10}}>🏛️</div>
         <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 8px",color:G}}>Staatliche Förderung für deine KI-Automatisierung</h1>
         <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Wusstest du, dass du als Unternehmen Anspruch auf staatliche Förderung hast? Deine KI- und Automatisierungsprojekte können bis zu <strong style={{color:G}}>100% gefördert</strong> werden.</p>
       </div>
-
       {/* Förder-Highlights */}
       <div style={{...card,marginBottom:16}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Was gefördert werden kann</div>
@@ -765,7 +718,6 @@ function App(){
           </div>
         );})}
       </div>
-
       {/* Wer hat Anspruch */}
       <div style={{...card,marginBottom:16}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Wer hat Anspruch?</div>
@@ -781,7 +733,6 @@ function App(){
           </div>
         );})}
       </div>
-
       {/* Wie es funktioniert */}
       <div style={{...card,marginBottom:20}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>So einfach funktioniert es</div>
@@ -799,7 +750,6 @@ function App(){
           </div>
         );})}
       </div>
-
       {/* CTA */}
       <div style={{...cardG,textAlign:"center",padding:"1.5rem",marginBottom:16}}>
         <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>Jetzt Förderung prüfen</div>
@@ -809,11 +759,9 @@ function App(){
         </button>
         <p style={{fontSize:11,color:T2,marginTop:10}}>Du wirst zur Förderberatung weitergeleitet</p>
       </div>
-
       <button onClick={function(){setStep("bericht");}} style={{...btnO,marginTop:0}}>← Zurück zum Bericht</button>
     </div>
   );
-
   /* ── ADMIN PIN ── */
   if(step==="adminpin"){
     return(
@@ -861,7 +809,6 @@ function App(){
       </div>
     );
   }
-
   async function generateAgentPrompt(){
       var firma2=document.getElementById("ag-firma")?document.getElementById("ag-firma").value:"";
       var branche2=document.getElementById("ag-branche")?document.getElementById("ag-branche").value:"";
@@ -878,10 +825,8 @@ function App(){
       }catch(e){setAgResult("Fehler: "+e.message);}
       setAgLoading(false);
   }
-
   /* ── ADMIN BEREICH ── */
   if(step==="admin"){
-
     var adminTabs=[
       {id:"checkliste",label:"Checkliste"},
       {id:"leitfaden",label:"Leitfaden"},
@@ -889,7 +834,6 @@ function App(){
       {id:"notizen",label:"Notizen"},
       {id:"agent",label:"🤖 Agent"}
     ];
-
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,maxWidth:680,margin:"0 auto"}}>
         {/* Admin Header */}
@@ -900,7 +844,6 @@ function App(){
           </div>
           <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"0.5px solid "+BD,color:T2,cursor:"pointer",fontSize:12,padding:"8px 14px",borderRadius:8}}>App verlassen</button>
         </div>
-
         {/* Tabs */}
         <div style={{display:"flex",borderBottom:"0.5px solid "+BD,paddingLeft:"1.5rem",overflowX:"auto"}}>
           {adminTabs.map(function(t){return(
@@ -911,9 +854,7 @@ function App(){
             }}>{t.label}</button>
           );})}
         </div>
-
         <div style={{padding:"1.5rem"}}>
-
           {/* CHECKLISTE */}
           {adminTab==="checkliste"&&(
             <div>
@@ -950,7 +891,6 @@ function App(){
               );})}
             </div>
           )}
-
           {/* LEITFADEN */}
           {adminTab==="leitfaden"&&(
             <div>
@@ -978,7 +918,6 @@ function App(){
                   );})}
                 </div>
               );})}
-
               {/* Einwand-Handling */}
               <div style={{...card,marginBottom:14}}>
                 <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>Einwand-Handling</div>
@@ -996,7 +935,6 @@ function App(){
               </div>
             </div>
           )}
-
           {/* FRAGEN */}
           {adminTab==="fragen"&&(
             <div>
@@ -1038,7 +976,6 @@ function App(){
               );})}
             </div>
           )}
-
           {/* NOTIZEN */}
           {adminTab==="notizen"&&(
             <div>
@@ -1052,13 +989,11 @@ function App(){
               );})}
             </div>
           )}
-
           {/* AGENT GENERATOR */}
           {adminTab==="agent"&&(
             <div>
               <h2 style={{fontSize:20,fontWeight:500,marginBottom:4}}>KI-Agenten-Skript Generator</h2>
               <p style={{color:T2,fontSize:13,marginBottom:20}}>Kundendaten eingeben - fertiges Agenten-Prompt generieren.</p>
-
               {/* Platform */}
               <div style={{...card,marginBottom:14}}>
                 <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Ziel-Plattform</div>
@@ -1068,7 +1003,6 @@ function App(){
                   );})}
                 </div>
               </div>
-
               {/* Inputs */}
               <div style={{...card,marginBottom:14}}>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
@@ -1108,11 +1042,9 @@ function App(){
                   <textarea id="ag-extra" style={{width:"100%",background:D3,border:"0.5px solid "+BD,borderRadius:8,color:TX,fontFamily:"inherit",fontSize:13,padding:"10px 12px",outline:"none",resize:"vertical",minHeight:70,lineHeight:1.6}} placeholder="z.B. nur Deutsch, DSGVO wichtig, keine Preise nennen..."/>
                 </div>
               </div>
-
               <button onClick={generateAgentPrompt} disabled={agLoading} style={{...btnG,opacity:agLoading?0.6:1,marginBottom:16}}>
                 {agLoading?"KI generiert Prompt...":"🤖 Agenten-Skript generieren"}
               </button>
-
               {agResult&&(
                 <div style={{...card,borderColor:G+"40"}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
@@ -1124,12 +1056,10 @@ function App(){
               )}
             </div>
           )}
-
         </div>
       </div>
     );
   }
-
   if(step==="impressum") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
@@ -1140,7 +1070,6 @@ function App(){
       <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Haftungsausschluss</div><p style={{fontSize:12,color:T2,lineHeight:1.7}}>Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.</p></div>
     </div>
   );
-
   if(step==="datenschutz") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
@@ -1152,1171 +1081,8 @@ function App(){
       <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Deine Rechte (DSGVO)</div>{["Auskunft (Art. 15)","Berichtigung (Art. 16)","Löschung (Art. 17)","Widerspruch (Art. 21)"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}<p style={{fontSize:12,color:T2,marginTop:10}}>Anfragen: onlion-@outlook.de</p></div>
     </div>
   );
-
   return null;
 }
-
-ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
-</script>
-</body>
-</html><!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ONLION IQ</title>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,-apple-system,sans-serif}
-input,select,textarea,button{font-family:inherit}
-input,select,textarea{background:#1e1e1e;color:#f0f0f0;border:0.5px solid #2a2a2a;border-radius:8px;padding:9px 12px;width:100%;font-size:14px;margin-bottom:10px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#7AC800}
-select option{background:#1a1a1a;color:#f0f0f0}
-::placeholder{color:#f0f0f0;opacity:1}
-::-webkit-input-placeholder{color:#f0f0f0}
-::-moz-placeholder{color:#f0f0f0;opacity:1}
-textarea::placeholder{color:#888;opacity:1}
-textarea::-webkit-input-placeholder{color:#888}
-textarea::-moz-placeholder{color:#888;opacity:1}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-</style>
-</head>
-<body>
-<div id="root"></div>
-<script type="text/babel">
-
-var G="#7AC800",GL="#9AE020",D="#0a0a0a",D2="#141414",D3="#1e1e1e",BD="#2a2a2a",TX="#f0f0f0",T2="#888";
-var adminPinInput="";
-var KC={ki:G,rpa:"#00aaff",robotik:"#ff7700",daten:"#aa44ff"};
-var KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"};
-var KTC={ki:T2,rpa:T2,robotik:T2,daten:T2};
-var KT={
-  ki:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit  -  rund um die Uhr, ohne Pause.",
-  rpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen  -  ohne Programmierung, sofort einsetzbar.",
-  robotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik  -  präzise, schnell und ermüdungsfrei.",
-  daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen  -  Entscheidungen basieren auf aktuellen Daten, nicht auf Bauchgefühl."
-};
-var BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"];
-
-function safe(s){return(s||"").replace(/[^\w\s.,\-äöüÄÖÜß]/g," ").replace(/\s+/g," ").trim();}
-
-function parseBereicheText(text,branche){
-  var bereiche=[];
-  var blocks=text.split(/\n(?=BEREICH)/);
-  for(var i=0;i<blocks.length&&bereiche.length<6;i++){
-    var block=blocks[i].trim();
-    if(!block)continue;
-    var lines=block.split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
-    if(lines.length<4)continue;
-    var label=lines[0].replace(/^BEREICH\s*\d*[:.\s]*/i,"").trim();
-    var icon=lines[1]||"⚙️";
-    var hint=lines[2]||"";
-    var kat="rpa";
-    var ll=label.toLowerCase()+hint.toLowerCase();
-    if(ll.indexOf("ki ")>=0||ll.indexOf("chatbot")>=0||ll.indexOf("agent")>=0)kat="ki";
-    else if(ll.indexOf("robot")>=0||ll.indexOf("maschine")>=0)kat="robotik";
-    else if(ll.indexOf("daten")>=0||ll.indexOf("analytic")>=0||ll.indexOf("dashboard")>=0)kat="daten";
-    var fragen=[];
-    var fragenBlock=lines.slice(3).join("\n");
-    var fmatches=fragenBlock.split(/FRAGE\s*\d*[:.\s]*/i).filter(function(f){return f.trim();});
-    for(var j=0;j<fmatches.length&&fragen.length<4;j++){
-      var flines=fmatches[j].split("\n").map(function(l){return l.trim();}).filter(function(l){return l;});
-      if(flines.length<5)continue;
-      var optionen=flines.slice(1,5);
-      if(optionen.length===4)fragen.push({f:flines[0],o:optionen});
-    }
-    if(fragen.length>0)bereiche.push({id:"b"+(i+1),label:label,icon:icon,hint:hint,kiKat:kat,fragen:fragen});
-  }
-  if(bereiche.length<3)return getDefault(branche);
-  return bereiche;
-}
-
-function getDefault(branche){
-  var p=branche==="Gesundheit / Pflege";
-  return[
-    {id:"b1",label:p?"Patientenverwaltung":"Geschäftsprozesse",icon:p?"🏥":"⚙️",kiKat:"rpa",hint:"Automatisierung spart täglich wertvolle Zeit.",fragen:[
-      {f:p?"Wie werden Patiententermine verwaltet?":"Wie werden Aufträge bearbeitet?",o:["Vollständig manuell","Teilweise digital","Größtenteils automatisiert","Vollständig automatisiert"]},
-      {f:"Wie werden Dokumente verarbeitet?",o:["Nur auf Papier","Eingescannt manuell","Digital teilweise automatisch","Vollautomatisch"]},
-      {f:"Wie lange dauert die Bearbeitung eines Vorgangs durchschnittlich?",o:["Über 1 Stunde","30-60 Minuten","10-30 Minuten","Unter 10 Minuten"]},
-      {f:"Wie werden Status-Updates an Kunden/Patienten kommuniziert?",o:["Nur auf Nachfrage","Manuell per Telefon/Mail","Teilweise automatisch","Vollautomatisch"]}
-    ]},
-    {id:"b2",label:p?"Abrechnung":"Finanzen",icon:"💰",kiKat:"rpa",hint:"RPA kann Rechnungen automatisieren.",fragen:[
-      {f:"Wie werden Rechnungen erstellt?",o:["Manuell auf Papier","Software, viel manuell","Halbautomatisch","Vollautomatisch"]},
-      {f:"Wie werden Zahlungen verbucht?",o:["Manuell","Teilweise digital","Software mit Kontrolle","Vollautomatisch"]},
-      {f:"Wie wird das Mahnwesen gehandhabt?",o:["Manuell per Post/Mail","Excel-gestützt","Halbautomatisch","Vollautomatisch"]},
-      {f:"Wie lange dauert der Monatsabschluss?",o:["Über 3 Tage","1-3 Tage","Halber Tag","Vollautomatisch in Echtzeit"]}
-    ]},
-    {id:"b3",label:"Kommunikation",icon:"💬",kiKat:"ki",hint:"KI-Agenten beantworten Standardanfragen automatisch.",fragen:[
-      {f:"Wie werden Kundenanfragen bearbeitet?",o:["Nur Telefon manuell","E-Mail manuell","E-Mail mit Vorlagen","KI-gestützt automatisch"]},
-      {f:"Gibt es automatisierte Benachrichtigungen?",o:["Nein","Gelegentlich","Für bestimmte Ereignisse","Vollautomatisch"]},
-      {f:"Wie schnell werden Anfragen durchschnittlich beantwortet?",o:["Über 24 Stunden","Innerhalb 24 Stunden","Innerhalb 4 Stunden","Unter 1 Stunde"]},
-      {f:"Wie wird interne Kommunikation organisiert?",o:["Nur mündlich/Telefon","E-Mail","Chat-Tools","Integrierte Plattform"]}
-    ]},
-    {id:"b4",label:"Personal & HR",icon:"👥",kiKat:"rpa",hint:"Digitale HR-Prozesse sparen bis zu 10h pro Woche.",fragen:[
-      {f:"Wie wird die Arbeitszeit erfasst?",o:["Papier oder Excel","Digitale Stempeluhr","Software automatisch","Mit Lohnabrechnung verknüpft"]},
-      {f:"Wie läuft das Onboarding ab?",o:["Informell persönlich","Checkliste auf Papier","Digitale Checkliste","Automatisiertes System"]},
-      {f:"Wie werden Urlaubsanträge verwaltet?",o:["Manuell per Formular","Per E-Mail","Software mit Genehmigung","Vollautomatisch"]},
-      {f:"Wie werden Lohnzahlungen abgewickelt?",o:["Manuell berechnet","Externe Lohnbuchhaltung","Software mit Kontrolle","Vollautomatisch"]}
-    ]},
-    {id:"b5",label:"Datenverarbeitung",icon:"📊",kiKat:"daten",hint:"Echtzeit-Dashboards ersetzen manuelle Excel-Berichte.",fragen:[
-      {f:"Wie entstehen interne Berichte?",o:["Manuell in Excel","Vorlagen manuell befüllt","Software manuell gestartet","Automatisch in Echtzeit"]},
-      {f:"Wie werden Daten zwischen Systemen übertragen?",o:["Per E-Mail","Manuell kopiert","Teilweise automatisch","Vollautomatisch per API"]},
-      {f:"Wie aktuell sind die Geschäftszahlen?",o:["Monatsweise","Wöchentlich","Täglich","Echtzeit"]},
-      {f:"Wie werden Entscheidungen getroffen?",o:["Aus dem Bauch heraus","Auf Basis alter Daten","Auf Basis aktueller Reports","Datengetrieben in Echtzeit"]}
-    ]},
-    {id:"b6",label:"Betrieb & Logistik",icon:"🏭",kiKat:"robotik",hint:"Robotik und Automatisierung senken Betriebskosten.",fragen:[
-      {f:"Wie wird der Bestand verwaltet?",o:["Manuell mit Listen","Einfache Software","Lagersoftware teilweise","Automatisch mit RFID"]},
-      {f:"Wie läuft die Wartung ab?",o:["Nur bei Ausfall","Feste Intervalle","Digitale Wartungspläne","Automatische Überwachung"]},
-      {f:"Wie werden Lieferungen koordiniert?",o:["Telefonisch manuell","Per E-Mail","Software teilweise","Vollautomatisch"]},
-      {f:"Wie wird die Qualitätskontrolle durchgeführt?",o:["Nur manuell","Stichproben manuell","Software-gestützt","Automatisiert mit Sensorik"]}
-    ]}
-  ];
-}
-
-function Logo(props){
-  var showLogin=props&&props.showLogin;
-  return React.createElement("div",{style:{marginBottom:28,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
-    React.createElement("div",null,
-      React.createElement("div",{style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}},
-        React.createElement("span",null,"ON"),
-        React.createElement("span",{style:{color:G}},"L"),
-        React.createElement("span",null,"ION"),
-        React.createElement("span",{style:{color:G,marginLeft:6}},"IQ")
-      ),
-      React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
-    ),
-    showLogin?React.createElement("button",{
-      onClick:function(){if(window.__adminLogin)window.__adminLogin();},
-      style:{background:"transparent",border:"none",color:G,fontSize:12,padding:"5px 0",cursor:"pointer",letterSpacing:1,fontFamily:"inherit",fontWeight:500}
-    },"LOGIN"):null
-  );
-}
-
-function Spin(){return React.createElement("span",{style:{display:"inline-block",width:16,height:16,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}});}
-
-function LoadBox(props){
-  return React.createElement("div",{style:{background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"2rem",textAlign:"center",marginBottom:16}},
-    React.createElement("div",{style:{marginBottom:16,display:"flex",justifyContent:"center"}},React.createElement(Spin)),
-    React.createElement("div",{style:{fontSize:15,color:TX,marginBottom:6,fontWeight:500}},props.msg),
-    React.createElement("div",{style:{fontSize:12,color:T2,marginBottom:20}},props.sub),
-    React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}},
-      (props.steps||[]).map(function(t,i){return React.createElement("span",{key:i,style:{fontSize:11,color:T2,background:D3,padding:"4px 12px",borderRadius:20,animation:"pulse "+(1+i*0.4)+"s ease-in-out infinite"}},t);})
-    )
-  );
-}
-
-function IQMeter(props){
-  var score=props.score;
-  var c=score>66?G:score>33?"#d4a000":"#c0392b";
-  return React.createElement("div",{style:{textAlign:"center",padding:"1.5rem 0"}},
-    React.createElement("svg",{width:"140",height:"80",viewBox:"0 0 140 80"},
-      React.createElement("path",{d:"M 10 70 A 60 60 0 0 1 130 70",fill:"none",stroke:D3,strokeWidth:"10",strokeLinecap:"round"}),
-      React.createElement("path",{d:"M 10 70 A 60 60 0 0 1 130 70",fill:"none",stroke:c,strokeWidth:"10",strokeLinecap:"round",strokeDasharray:(score/100*188)+" 188"}),
-      React.createElement("text",{x:"70",y:"68",textAnchor:"middle",fontSize:"22",fontWeight:"500",fill:TX},score+"%")
-    ),
-    React.createElement("div",{style:{fontSize:12,color:c,marginTop:4}},score>66?"Gut automatisiert":score>33?"Ausbaufähig":"Hohes Potenzial")
-  );
-}
-
-function KatCard(props){
-  var k=props.k;
-  var rH=React.useState(false);
-  var hovered=rH[0],setHovered=rH[1];
-  var kc=KC[k.k];
-  return React.createElement("div",{
-    style:{background:D2,border:"0.5px solid "+(hovered?kc+"60":BD),borderRadius:10,padding:"0.75rem",display:"flex",gap:10,alignItems:"flex-start",transition:"border-color 0.2s,transform 0.2s",cursor:"default",transform:hovered?"translateY(-1px)":"none"},
-    onMouseEnter:function(){setHovered(true);},
-    onMouseLeave:function(){setHovered(false);}
-  },
-    React.createElement("span",{style:{fontSize:20,flexShrink:0}},k.i),
-    React.createElement("div",{style:{flex:1}},
-      React.createElement("div",{style:{fontSize:12,fontWeight:500,color:TX}},k.l),
-      React.createElement("div",{style:{fontSize:11,color:T2,marginTop:2}},k.d),
-      hovered&&React.createElement("div",{style:{fontSize:11,color:T2,marginTop:8,lineHeight:1.6,borderTop:"0.5px solid "+kc+"30",paddingTop:8,animation:"fadeUp 0.2s ease"}},KT[k.k])
-    )
-  );
-}
-
-function App(){
-  var useState=React.useState;
-  var r1=useState("intro"),step=r1[0],setStep=r1[1];
-  window.__adminLogin=function(){setStep("adminpin");};
-  var r_adminTab=useState("checkliste"),adminTab=r_adminTab[0],setAdminTab=r_adminTab[1];
-  var r_agPlatform=useState("Make.com"),agPlatform=r_agPlatform[0],setAgPlatform=r_agPlatform[1];
-  var r_agResult=useState(""),agResult=r_agResult[0],setAgResult=r_agResult[1];
-  var r_agLoading=useState(false),agLoading=r_agLoading[0],setAgLoading=r_agLoading[1];
-  var r2=useState(""),branche=r2[0],setBranche=r2[1];
-  var r3=useState(""),firma=r3[0],setFirma=r3[1];
-  var r4=useState(""),desc=r4[0],setDesc=r4[1];
-  var r5=useState(""),email=r5[0],setEmail=r5[1];
-  var r6=useState([]),bereiche=r6[0],setBereiche=r6[1];
-  var r7=useState([]),aktiv=r7[0],setAktiv=r7[1];
-  var r8=useState(false),loadB=r8[0],setLoadB=r8[1];
-  var r9=useState(0),bIdx=r9[0],setBIdx=r9[1];
-  var r10=useState({}),antw=r10[0],setAntw=r10[1];
-  var r11=useState(false),loadR=r11[0],setLoadR=r11[1];
-  var r12=useState(""),bericht=r12[0],setBericht=r12[1];
-  var r13=useState([]),loes=r13[0],setLoes=r13[1];
-  var r14=useState(false),loadL=r14[0],setLoadL=r14[1];
-  var r15=useState(""),err=r15[0],setErr=r15[1];
-  var r16=useState(""),mailShare=r16[0],setMailShare=r16[1];
-  var r17=useState(false),mailSent=r17[0],setMailSent=r17[1];
-  var r18=useState(false),emailSent=r18[0],setEmailSent=r18[1];
-  var r19=useState(false),dsgvo=r19[0],setDsgvo=r19[1];
-
-  var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
-  var curB=gefB[bIdx];
-  var totalF=gefB.reduce(function(s,b){return s+(b.fragen?b.fragen.length:0);},0);
-  var prog=totalF>0?Math.round(Object.keys(antw).length/totalF*100):0;
-  var descValid=desc.trim().length>=10;
-  var canStart=email&&branche&&descValid;
-
-  function setA(bid,fi,val){setAntw(function(p){var n=Object.assign({},p);n[bid+"_"+fi]=val;return n;});}
-  function gs(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];if(!b)return 0;var v=b.fragen.map(function(_,i){var x=antw[bid+"_"+i];return x!=null?x:null;}).filter(function(x){return x!==null;});return v.length?Math.round(v.reduce(function(s,x){return s+x;},0)/v.length):0;}
-  function ges(){return gefB.length?Math.round(gefB.map(function(b){return gs(b.id);}).reduce(function(s,v){return s+v;},0)/gefB.length):0;}
-  function komp(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];return b?b.fragen.every(function(_,i){return antw[bid+"_"+i]!==undefined;}):false;}
-  function ov(i){return[0,33,67,100][i];}
-
-  async function callApi(prompt,mt){
-    var r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
-    var d=await r.json();
-    if(d.error)throw new Error(typeof d.error==="string"?d.error:JSON.stringify(d.error));
-    return d.content?d.content.map(function(c){return c.text||"";}).join(""):"";
-  }
-
-  async function sendeEmail(g){
-    try{
-      var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,3).join(", ");
-      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach})});
-      setEmailSent(true);
-    }catch(e){console.log("E-Mail Fehler:",e);}
-  }
-
-  async function ladeBereiche(){
-    if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
-    setLoadB(true);setErr("");
-    var prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirma: "+safe(firma)+"\nBeschreibung: "+safe(desc)+"\n\nWichtig: Die Fragen sollen DIREKT auf die Beschreibung eingehen und konkrete Situationen aus dem Unternehmen ansprechen.\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[KI-Potenzial in 1 Satz]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
-    try{
-      var t=await callApi(prompt,3500);
-      var p=parseBereicheText(t,branche);
-      setBereiche(p);setAktiv(p.map(function(b){return b.id;}));setStep("bereiche");
-    }catch(e){
-      var df=getDefault(branche);
-      setBereiche(df);setAktiv(df.map(function(b){return b.id;}));setStep("bereiche");
-    }
-    setLoadB(false);
-  }
-
-  async function analysiereReport(){
-    setLoadR(true);setErr("");
-    try{
-      var g=ges();
-      var info=gefB.map(function(b){return b.label+" "+gs(b.id)+"%";}).join(", ");
-      var t=await callApi("Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. Bereiche: "+info+". Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. Max 350 Woerter.",800);
-      setBericht(t);setStep("bericht");sendeEmail(g);
-    }catch(e){setErr("Fehler: "+e.message);}
-    setLoadR(false);
-  }
-
-  async function ladeLoes(){
-    if(loes.length)return;
-    setLoadL(true);
-    try{
-      var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).join(", ")||"alle";
-      var t=await callApi("Nenne 6 Tools fuer "+safe(branche)+" schwache Bereiche: "+safe(schwach)+". Trenne mit ---. Pro Tool: Name, Beschreibung, URL, Zeitersparnis.",600);
-      var parts=t.split("---");var result=[];var icons={ki:"🤖",rpa:"⚙️",robotik:"🦾",daten:"📊"};
-      for(var i=0;i<parts.length&&result.length<6;i++){
-        var lines=parts[i].trim().split("\n").map(function(l){return l.replace(/^\*+|\*+$/g,"").trim();}).filter(function(l){return l;});
-        if(lines.length<2)continue;
-        var kat="rpa";var pl=(lines[0]+(lines[1]||"")).toLowerCase();
-        if(pl.indexOf("ki ")>=0||pl.indexOf("gpt")>=0||pl.indexOf("copilot")>=0)kat="ki";
-        else if(pl.indexOf("robot")>=0)kat="robotik";
-        else if(pl.indexOf("analytic")>=0||pl.indexOf("dashboard")>=0)kat="daten";
-        var url=lines.filter(function(l){return l.indexOf("http")>=0;})[0]||"https://google.com/search?q="+encodeURIComponent(lines[0]);
-        var esp=lines.filter(function(l){return l.indexOf("h/")>=0||l.indexOf("tunden")>=0;})[0]||"bis zu 5h/Woche";
-        result.push({name:lines[0],tag:KL[kat],icon:icons[kat],kategorie:kat,desc:lines[1]||"",url:url,einsparung:esp});
-      }
-      setLoes(result);
-    }catch(e){setLoes([]);}
-    setLoadL(false);
-  }
-
-  function generatePDF(){
-    var g=ges(),p=100-g;
-    var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
-    var bHTML=gefB.map(function(b){var sc=gs(b.id),bc=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";return "<div style='margin-bottom:14px'><div style='display:flex;justify-content:space-between;margin-bottom:5px'><span style='font-size:13px;color:#f0f0f0'>"+b.icon+" "+b.label+"</span><span style='font-size:12px;color:#7AC800'>"+sc+"%</span></div><div style='height:6px;background:#1e1e1e;border-radius:3px'><div style='height:100%;width:"+sc+"%;background:"+bc+";border-radius:3px'></div></div></div>";}).join("");
-    var rHTML=bericht.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/^## (.+)$/gm,"<h3 style='font-size:14px;color:#7AC800;margin:16px 0 6px;border-bottom:1px solid #2a2a2a;padding-bottom:4px'>$1</h3>").replace(/^- (.+)$/gm,"<li style='margin:3px 0;color:#888;font-size:12px'>$1</li>").replace(/\n/g,"<br/>");
-    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ</title><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body><div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'><div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>Automatisierungs-Analyse</div><h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+safe(firma||branche)+"</h1><p style='font-size:14px;color:#888;margin-bottom:40px'>"+safe(branche)+" - "+datum+"</p><div style='display:flex;gap:48px'><div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>IQ-SCORE</div><div style='font-size:52px;font-weight:700;color:#fff'>"+g+"%</div></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:6px'>KI-POTENZIAL</div><div style='font-size:52px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div></div><div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlion-iq.netlify.app</p></div></div><div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'><h2 style='font-size:20px;font-weight:600;color:#fff;margin-bottom:24px'>Ergebnisse je Bereich</h2>"+bHTML+"</div><div style='background:#0a0a0a;min-height:100vh;padding:48px'><div style='font-size:13px;color:#888;line-height:1.8'>"+rHTML+"</div><div style='margin-top:40px;padding:20px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:13px;font-weight:600;color:#7AC800;margin-bottom:6px'>Kostenloses KI-Beratungsgespraech buchen</div><div style='font-size:12px;color:#888'>calendly.com/ridge-linear5958-eagereverest/30min</div></div></div></body></html>";
-    var w=window.open("","_blank");
-    if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
-  }
-
-  function renderMd(t){
-    return t.replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:15px;font-weight:500;margin:1.2rem 0 0.4rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:4px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:4px 0;color:"+T2+";line-height:1.5'>$1</li>").replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
-  }
-
-  function btxt(){var g=ges();return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;}
-
-  var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1.25rem",marginBottom:16};
-  var cardG={background:"#081200",border:"0.5px solid "+G+"40",borderRadius:10,padding:"1.25rem",marginBottom:16};
-  var btnG={width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:14,color:G,fontWeight:500};
-  var btn={width:"100%",padding:"11px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:14,color:TX,marginTop:8};
-  var btnO={width:"100%",padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2,marginTop:8};
-  function bdg(c){return{display:"inline-block",padding:"2px 8px",borderRadius:20,background:c+"22",border:"0.5px solid "+c+"66",fontSize:10,color:c};}
-
-  if(step==="intro") return(
-    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-      <Logo showLogin={true}/>
-      <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>Wie intelligent arbeitet dein Unternehmen?</h1>
-      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert mit KI dein Automatisierungspotenzial  -  kostenlos in 5 Minuten.</p>
-
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
-        {[{k:"ki",l:"KI & Agenten",i:"🤖",d:"KI, Chatbots, LLMs"},{k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}].map(function(k){return <KatCard key={k.k} k={k}/>;})
-        }
-      </div>
-
-      <div style={{...card,marginBottom:20}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>In 5 Minuten erhältst du</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
-          {[["🧠","IQ-Score"],["🤖","KI-Potenzial"],["💶","Einsparpotenzial"],["⚙️","Empfehlungen"],["🗺️","KI-Roadmap"],["📧","Bericht per Mail"]].map(function(x,i){return(
-            <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginTop:i>2?8:0}}>
-              <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span>
-              <span style={{fontSize:13,color:T2}}>{x[1]}</span>
-            </div>
-          );})}
-        </div>
-      </div>
-
-      <input placeholder="Deine E-Mail *" value={email} onChange={function(e){setEmail(e.target.value);}} type="email"/>
-      <input placeholder="Firmenname (optional)" value={firma} onChange={function(e){setFirma(e.target.value);}}/>
-      <select value={branche} onChange={function(e){setBranche(e.target.value);}} style={{marginBottom:10}}>
-        <option value="">Branche auswählen *</option>
-        {BRANCHEN.map(function(b){return <option key={b} value={b}>{b}</option>;})}
-      </select>
-
-      <div style={{marginBottom:10,background:D3,border:"0.5px solid "+(descValid?G:BD),borderRadius:8,padding:"9px 12px",transition:"border-color 0.2s"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-          <span style={{fontSize:14,color:TX}}>Beschreib dein Unternehmen *</span>
-          <span style={{fontSize:10,color:"#e05a5a"}}>Pflichtfeld</span>
-        </div>
-        <textarea placeholder="Z.B. Mitarbeiteranzahl, welche Prozesse noch manuell laufen..." value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:12,color:TX,width:"100%",outline:"none"}}/>
-      </div>
-
-      {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
-
-      {/* DSGVO Checkbox */}
-      <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:14,padding:"10px 12px",background:D2,border:"0.5px solid "+BD,borderRadius:8}}>
-        <input
-          type="checkbox"
-          id="dsgvo"
-          checked={dsgvo}
-          onChange={function(e){setDsgvo(e.target.checked);}}
-          style={{width:16,height:16,flexShrink:0,marginTop:2,marginBottom:0,accentColor:G,cursor:"pointer"}}
-        />
-        <label htmlFor="dsgvo" style={{fontSize:12,color:T2,lineHeight:1.6,cursor:"pointer"}}>
-          Ich habe die <button onClick={function(e){e.preventDefault();setStep("datenschutz");}} style={{background:"none",border:"none",color:G,cursor:"pointer",fontSize:12,textDecoration:"underline",padding:0}}>Datenschutzerklärung</button> gelesen und bin einverstanden, dass meine Daten zur Erstellung des Analyseberichts verarbeitet werden.
-        </label>
-      </div>
-
-      {loadB
-        ?<LoadBox msg="KI erstellt deine Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
-        :<button disabled={!canStart||!dsgvo} onClick={ladeBereiche} style={{...btnG,opacity:(canStart&&dsgvo)?1:0.4}}>IQ-Analyse starten →</button>
-      }
-      <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Deine E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
-      <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,paddingTop:16,borderTop:"0.5px solid "+BD}}>
-        <button onClick={function(){setStep("impressum");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Impressum</button>
-        <button onClick={function(){setStep("datenschutz");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Datenschutz</button>
-      </div>
-    </div>
-  );
-
-  if(step==="bereiche"){
-    var alle=aktiv.length===bereiche.length;
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-        <Logo/>
-        <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>KI-generierte Analysebereiche</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:20}}>Für: <span style={{color:G}}>{firma||branche}</span></p>
-        <div style={{...card,marginBottom:16}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-            <span style={{fontSize:13,color:T2}}>{aktiv.length} von {bereiche.length}</span>
-            <button onClick={function(){setAktiv(alle?[]:bereiche.map(function(b){return b.id;}));}} style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid "+(alle?G:BD),background:alle?G+"18":"transparent",cursor:"pointer",fontSize:12,color:alle?G:T2}}>{alle?"Alle abwählen":"Alle auswählen"}</button>
-          </div>
-          {bereiche.map(function(b){
-            var a=aktiv.indexOf(b.id)>=0,kc=KC[b.kiKat]||G,kl=KL[b.kiKat]||"KI";
-            return(
-              <div key={b.id} onClick={function(){setAktiv(function(p){return a?p.filter(function(id){return id!==b.id;}):[...p,b.id];});}} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"12px 14px",borderRadius:8,border:"0.5px solid "+(a?G:BD),background:a?G+"0d":"transparent",marginBottom:8,cursor:"pointer"}}>
-                <div style={{width:20,height:20,borderRadius:5,border:"1.5px solid "+(a?G:BD),background:a?G:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:D,fontWeight:700,marginTop:3}}>{a?"✓":""}</div>
-                <div style={{fontSize:22,flexShrink:0,marginTop:1}}>{b.icon}</div>
-                <div style={{flex:1}}>
-                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3}}>
-                    <span style={{fontSize:14,color:a?TX:T2,fontWeight:a?500:400}}>{b.label}</span>
-                    <span style={bdg(kc)}>{kl}</span>
-                  </div>
-                  <div style={{fontSize:11,color:kc+"99",fontStyle:"italic"}}>{b.hint}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <button disabled={aktiv.length===0} onClick={function(){setBIdx(0);setAntw({});setStep("fragebogen");}} style={{...btnG,opacity:aktiv.length>0?1:0.4}}>Analyse starten ({aktiv.length} Bereiche) →</button>
-      </div>
-    );
-  }
-
-  if(step==="fragebogen"&&curB){
-    var kc=KC[curB.kiKat]||G,kl=KL[curB.kiKat]||"KI";
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-        <Logo/>
-        <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{fontSize:12,color:T2}}>Fortschritt</span><span style={{fontSize:12,color:G}}>{prog}%</span></div>
-        <div style={{height:3,background:D3,borderRadius:4,marginBottom:20,overflow:"hidden"}}><div style={{height:"100%",width:prog+"%",background:G,borderRadius:4,transition:"width 0.3s"}}/></div>
-        <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
-          {gefB.map(function(b,i){var a=i===bIdx,dn=komp(b.id);return <button key={b.id} onClick={function(){setBIdx(i);}} style={{padding:"4px 10px",borderRadius:20,border:"0.5px solid "+(a?G:dn?"#1a3a0a":BD),background:a?G+"18":dn?"#0f2005":"transparent",fontSize:12,cursor:"pointer",color:a?G:dn?GL:T2}}>{b.icon} {b.label}</button>;})}
-        </div>
-        <div style={card}>
-          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:4}}>
-            <h2 style={{fontSize:16,fontWeight:500,margin:0,color:TX}}>{curB.icon} {curB.label}</h2>
-            <span style={{...bdg(kc),whiteSpace:"nowrap",marginTop:2}}>{kl}</span>
-          </div>
-          <div style={{background:kc+"0d",border:"0.5px solid "+kc+"33",borderRadius:6,padding:"8px 10px",marginBottom:16,display:"flex",gap:8}}>
-            <span style={{fontSize:14,flexShrink:0}}>💡</span>
-            <span style={{fontSize:11,color:kc+"cc",lineHeight:1.5}}><strong style={{color:kc}}>KI-Potenzial:</strong> {curB.hint}</span>
-          </div>
-          {(curB.fragen||[]).map(function(item,i){
-            return(
-              <div key={i} style={{marginBottom:20,borderBottom:i<curB.fragen.length-1?"0.5px solid "+BD:"none",paddingBottom:i<curB.fragen.length-1?16:0}}>
-                <p style={{fontSize:14,marginBottom:10,lineHeight:1.6,color:TX,fontWeight:500}}>{i+1}. {item.f}</p>
-                {(item.o||[]).map(function(opt,oi){var val=ov(oi),key=curB.id+"_"+i,sel=antw[key]===val;return <button key={oi} onClick={function(){setA(curB.id,i,val);}} style={{padding:"10px 14px",borderRadius:8,border:"0.5px solid "+(sel?G:BD),background:sel?G+"18":"transparent",fontSize:13,textAlign:"left",cursor:"pointer",color:sel?G:TX,marginBottom:8,width:"100%",display:"block",lineHeight:1.5}}><span style={{color:sel?G:T2,marginRight:8}}>{sel?"◉":"○"}</span>{opt}</button>;})}
-              </div>
-            );
-          })}
-        </div>
-        <div style={{display:"flex",gap:8}}>
-          {bIdx>0&&<button onClick={function(){setBIdx(function(i){return i-1;});}} style={{...btn,flex:1}}>← Zurück</button>}
-          {bIdx<gefB.length-1?<button onClick={function(){setBIdx(function(i){return i+1;});window.scrollTo({top:0,behavior:"smooth"});}} style={{...btn,flex:2}}>Weiter →</button>:<button onClick={function(){setStep("auswertung");window.scrollTo({top:0,behavior:"smooth"});}} style={{...btnG,flex:2,marginTop:0}}>Zum IQ-Score →</button>}
-        </div>
-      </div>
-    );
-  }
-
-  if(step==="auswertung"){
-    var g=ges(),p=100-g;
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-        <Logo/>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>Dein ONLION IQ-Score</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:0}}>{firma||"Dein Unternehmen"} - {branche}</p>
-        <IQMeter score={g}/>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-          <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>IQ-Score</div><div style={{fontSize:28,fontWeight:500}}>{g}%</div></div>
-          <div style={cardG}><div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>KI-Potenzial</div><div style={{fontSize:28,fontWeight:500,color:G}}>{p}%</div></div>
-        </div>
-        <div style={{...cardG,marginBottom:20}}>
-          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>💶 Dein Einsparpotenzial</div>
-          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:10}}>Basierend auf deinem IQ-Score steckt in deinem Unternehmen <strong style={{color:G}}>erhebliches Automatisierungspotenzial</strong>.</p>
-          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Wie viel das konkret in Euro bedeutet  -  das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an. Individuell. Unverbindlich.</p>
-          <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>📅 Jetzt Termin sichern →</button>
-        </div>
-        {gefB.map(function(b){var sc=gs(b.id),kc=KC[b.kiKat]||G;return(
-          <div key={b.id} style={{marginBottom:14}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
-              <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:13,color:T2}}>{b.icon} {b.label}</span></div>
-              <span style={{fontSize:12,color:TX}}>{sc}% <span style={{color:G}}>+{100-sc}%</span></span>
-            </div>
-            <div style={{height:5,background:D3,borderRadius:4,overflow:"hidden"}}><div style={{height:"100%",width:sc+"%",background:sc>66?G:sc>33?"#a0a000":"#7a2a2a",borderRadius:4,transition:"width 0.5s"}}/></div>
-          </div>
-        );})}
-        {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
-        <div style={{height:1,background:BD,margin:"20px 0"}}/>
-        {loadR?<LoadBox msg="KI erstellt deinen Bericht..." sub="ca. 10 Sekunden" steps={["Auswerten","Empfehlungen","Roadmap"]}/>:<button onClick={analysiereReport} style={btnG}>KI-Bericht & Roadmap erstellen →</button>}
-        {!loadR&&<button onClick={function(){setStep("fragebogen");}} style={btn}>← Antworten bearbeiten</button>}
-      </div>
-    );
-  }
-
-  if(step==="bericht"){
-    var pot=100-ges();
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-        <Logo/>
-        {emailSent&&<div style={{background:"#081200",border:"0.5px solid "+G+"40",borderRadius:8,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>📧</span><span style={{fontSize:12,color:G}}>Dein persönlicher Bericht wurde an <strong>{email}</strong> gesendet!</span></div>}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
-          <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>IQ-Bericht & KI-Roadmap</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||"Dein Unternehmen"} - {branche}</p></div>
-          <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>KI-POTENZIAL</div></div>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat("+Math.min(gefB.length,3)+",1fr)",gap:8,marginBottom:16}}>
-          {gefB.map(function(b){var kc=KC[b.kiKat]||G;return(<div key={b.id} style={{...card,padding:"0.75rem",textAlign:"center",marginBottom:0}}><div style={{fontSize:9,color:T2,marginBottom:2}}>{b.label}</div><div style={{fontSize:18,fontWeight:500,color:TX}}>{gs(b.id)}%</div></div>);})}
-        </div>
-        <div style={{...cardG,marginBottom:16}}>
-          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>💶 Dein Einsparpotenzial</div>
-          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>Dein IQ-Score zeigt: In deinem Unternehmen steckt <strong style={{color:G}}>erhebliches ungenutztes Potenzial</strong>.</p>
-          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Was das konkret für dich in Euro bedeutet, besprechen wir in einem persönlichen Gespräch  -  kostenlos, individuell und ohne Verpflichtung.</p>
-          <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>📅 Jetzt Termin sichern & Potenzial erfahren →</button>
-        </div>
-        <div style={{...card,lineHeight:1.7,fontSize:13,color:T2,marginBottom:16}} dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
-        <div style={{...card,marginBottom:16}}>
-          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht teilen</div>
-          <div style={{display:"flex",gap:8,marginBottom:12}}>
-            <button onClick={generatePDF} style={{flex:1,padding:"9px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>📄 PDF herunterladen</button>
-            <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ.txt";a.click();}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>⬇ Text</button>
-          </div>
-          <div style={{display:"flex",gap:8}}>
-            <input placeholder="Per E-Mail senden..." value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
-            <button onClick={function(){if(!mailShare)return;window.open("mailto:"+mailShare+"?subject=ONLION IQ Bericht&body="+encodeURIComponent(btxt()));setMailSent(true);setTimeout(function(){setMailSent(false);},3000);}} style={{padding:"9px 14px",borderRadius:8,border:"0.5px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,whiteSpace:"nowrap"}}>{mailSent?"Gesendet":"Senden"}</button>
-          </div>
-        </div>
-        <div style={{height:1,background:BD,margin:"20px 0"}}/>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Nächste Schritte</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
-          <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>🤖</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>KI-Lösungen</div><div style={{fontSize:12,color:T2}}>Tools entdecken</div></button>
-          <button onClick={function(){setStep("termin");}} style={{background:"#0d0d0d",border:"1px solid "+BD,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>📅</div><div style={{fontSize:14,fontWeight:500,color:TX,marginBottom:4}}>Kostenloses Gespräch</div><div style={{fontSize:12,color:T2}}>Termin buchen</div></button>
-        </div>
-
-        {/* Förderung Banner */}
-        <div onClick={function(){setStep("foerderung");}} style={{
-          background:"#0a1a00",
-          border:"1px solid "+G+"60",
-          borderRadius:10,padding:"1rem",cursor:"pointer",
-          marginBottom:10,display:"flex",alignItems:"center",gap:14,
-          transition:"border-color 0.2s"
-        }}
-          onMouseEnter={function(e){e.currentTarget.style.borderColor=G}}
-          onMouseLeave={function(e){e.currentTarget.style.borderColor=G+"60"}}
-        >
-          <span style={{fontSize:28,flexShrink:0}}>🏛️</span>
-          <div style={{flex:1}}>
-            <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:3}}>Staatliche Förderung sichern</div>
-            <div style={{fontSize:12,color:T2,lineHeight:1.5}}>Bis zu 100% der Kosten können staatlich gefördert werden → mehr erfahren</div>
-          </div>
-          <span style={{color:G,fontSize:18,flexShrink:0}}>→</span>
-        </div>
-        <div style={{display:"flex",gap:8,marginTop:8}}>
-          <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
-        </div>
-      </div>
-    );
-  }
-
-  if(step==="loesungen") return(
-    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-      <Logo/>
-      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>KI & Automatisierungs-Lösungen</h1>
-      <p style={{color:T2,fontSize:13,marginBottom:16}}>Für <span style={{color:G}}>{firma||branche}</span></p>
-      {loadL?<LoadBox msg="KI sucht passende Lösungen..." sub="ca. 8 Sekunden" steps={["Bereiche prüfen","Tools suchen","Empfehlungen"]}/>:
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-          {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">Mehr →</a></div>);})}
-        </div>
-      }
-      <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div><p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>Kostenloses Gespräch buchen →</button></div>
-    </div>
-  );
-
-  if(step==="termin"){
-    var tg=ges();
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-        <Logo/>
-        <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>Kostenloses KI-Beratungsgespräch</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:20}}>30 Minuten · kostenlos · unverbindlich</p>
-        <div style={{...cardG,marginBottom:24}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-            <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>Dein KI-Potenzial</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div><div style={{fontSize:13,color:G,marginTop:4}}>💶 Erfahre dein konkretes Einsparpotenzial</div></div>
-            <div style={{fontSize:36}}>🚀</div>
-          </div>
-          <p style={{fontSize:13,color:T2,lineHeight:1.6}}>Wir zeigen dir in 30 Minuten wie du dieses Potenzial konkret heben kannst.</p>
-        </div>
-        <div style={{...card,marginBottom:16}}>
-          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>Was dich erwartet</div>
-          {["Auswertung deines persönlichen IQ-Scores","Welche KI-Lösungen sofort einsetzbar sind","Dein konkretes Einsparpotenzial in Euro","Realistische Kosten und ROI-Berechnung","Konkrete nächste Schritte"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:8}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}
-        </div>
-        <div style={{background:G+"08",border:"1px solid "+G+"30",borderRadius:10,padding:"12px 14px",marginBottom:14,display:"flex",alignItems:"flex-start",gap:10}}>
-          <span style={{fontSize:16,flexShrink:0}}>🎁</span>
-          <div>
-            <div style={{fontSize:12,color:G,fontWeight:500,marginBottom:2}}>Nach der Terminbuchung</div>
-            <div style={{fontSize:12,color:T2,lineHeight:1.5}}>Wir zeigen dir unser Angebot — individuell auf deinen IQ-Score von <strong style={{color:TX}}>{100-tg}%</strong> Potenzial angepasst.</div>
-          </div>
-        </div>
-        <GreenBtn onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("pakete");}} style={btnG}>📅 Termin buchen →</GreenBtn>
-        <button onClick={function(){setStep("pakete");}} style={{...btn,marginTop:10,color:G,borderColor:G+"40"}}>📦 Unser Angebot ansehen →</button>
-      </div>
-    );
-  }
-
-
-
-  if(step==="pakete"){
-    var pScore=ges();
-    var pFirma=firma||branche||"Dein Unternehmen";
-    var tiers=[
-      {
-        id:"analyse",
-        icon:"🧭",
-        step:"Schritt 1",
-        name:"KI-Potenzialanalyse",
-        headline:"Verstehen, bevor du baust",
-        price:"ab 3.500 €",
-        priceNote:"Festpreis",
-        duration:"2-3 Wochen",
-        minScore:0,maxScore:35,
-        desc:"Wir analysieren deine Prozesse vor Ort und liefern eine schriftliche Roadmap mit den lukrativsten KI-Use-Cases.",
-        features:["2 Workshop-Tage bei dir vor Ort","Analyse deiner Prozesse & IT-Landschaft","5-8 priorisierte Use Cases","Schriftliche Roadmap (20-30 Seiten)","Präsentation für die Geschäftsführung"],
-        why:"Bei deinem aktuellen Reifegrad ist eine fundierte Bestandsaufnahme der wichtigste erste Schritt. Erst verstehen, dann gezielt investieren."
-      },
-      {
-        id:"pilot",
-        icon:"⚡",
-        step:"Schritt 2",
-        name:"Pilot-Agent",
-        headline:"Vom Konzept zum produktiven System",
-        price:"9.500 - 22.000 €",
-        priceNote:"Festpreis je nach Komplexität",
-        duration:"4-8 Wochen",
-        minScore:36,maxScore:65,
-        desc:"Wir bauen deinen ersten produktiven KI-Agenten - end-to-end von der Konzeption über die Integration bis zur Schulung.",
-        features:["Detailkonzeption inkl. Datenschutz","Entwicklung des KI-Agenten","Integration in deine Bestandssysteme","Testing mit echten Daten","30 Tage Hypercare nach Go-Live"],
-        why:"Deine Strukturen sind bereit für die Umsetzung. Ein produktiver Pilot-Agent liefert messbaren ROI und bildet die Basis für weitere."
-      },
-      {
-        id:"scale",
-        icon:"🚀",
-        step:"Schritt 3",
-        name:"Skalierung & Betrieb",
-        headline:"KI als strategischer Hebel",
-        price:"ab 2.500 € / Monat",
-        priceNote:"Retainer · 6 Mon. Mindestlaufzeit",
-        duration:"Laufend",
-        minScore:66,maxScore:100,
-        desc:"Kontinuierliche Weiterentwicklung deiner Agenten-Landschaft. Neue Agenten, Optimierung, Support.",
-        features:["Monatliche Roadmap-Sessions","Entwicklung neuer Agenten","Monitoring & Optimierung","Slack/Teams-Support mit SLA","Quartalsweise Team-Schulung"],
-        why:"Mit deiner KI-Reife bist du bereit für ein Multi-Agent-Ökosystem das ganze Geschäftsbereiche transformiert."
-      }
-    ];
-    var recommended=tiers.find(function(t){return pScore>=t.minScore&&pScore<=t.maxScore;})||tiers[0];
-
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:680,margin:"0 auto"}}>
-        <Logo/>
-        <button onClick={function(){setStep("termin");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-
-        {/* Header */}
-        <div style={{textAlign:"center",marginBottom:28}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"5px 14px",borderRadius:20,border:"1px solid "+G+"30",background:G+"08",fontSize:11,color:G,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>
-            ✦ Lösung aus dem ONLION-Portfolio
-          </div>
-          <h1 style={{fontSize:24,fontWeight:500,lineHeight:1.3,marginBottom:10}}>
-            Dein Score zeigt das Potenzial.<br/>
-            <span style={{color:G}}>Ein KI-Agent hebt es.</span>
-          </h1>
-          <p style={{fontSize:13,color:T2,lineHeight:1.7,maxWidth:500,margin:"0 auto"}}>
-            Für <strong style={{color:TX}}>{pFirma}</strong> mit einem IQ-Score von <strong style={{color:G}}>{pScore}%</strong> empfehlen wir als nächsten Schritt die <strong style={{color:TX}}>{recommended.name}</strong>.
-          </p>
-        </div>
-
-        {/* Tier Cards */}
-        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:20}}>
-          {tiers.map(function(tier){
-            var isRec=tier.id===recommended.id;
-            return(
-              <div key={tier.id} style={{
-                position:"relative",
-                background:D2,
-                border:"1px solid "+(isRec?G:BD),
-                borderRadius:14,
-                padding:"1.25rem",
-                opacity:isRec?1:0.7,
-                transition:"opacity 0.2s"
-              }}>
-                {isRec&&(
-                  <div style={{
-                    position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",
-                    background:G,color:"#000",fontSize:10,fontWeight:700,
-                    padding:"3px 14px",borderRadius:20,letterSpacing:1,textTransform:"uppercase"
-                  }}>Empfohlen für dich</div>
-                )}
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
-                  <div style={{display:"flex",alignItems:"center",gap:10}}>
-                    <div style={{fontSize:24,width:40,height:40,borderRadius:10,background:isRec?G+"20":D3,display:"flex",alignItems:"center",justifyContent:"center"}}>{tier.icon}</div>
-                    <div>
-                      <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase"}}>{tier.step} · IQ {tier.minScore}-{tier.maxScore}%</div>
-                      <div style={{fontSize:16,fontWeight:500,color:TX}}>{tier.name}</div>
-                      <div style={{fontSize:12,color:T2}}>{tier.headline}</div>
-                    </div>
-                  </div>
-                  <div style={{textAlign:"right",flexShrink:0,marginLeft:10}}>
-                    <div style={{fontSize:15,fontWeight:600,color:isRec?G:TX}}>{tier.price}</div>
-                    <div style={{fontSize:10,color:T2}}>{tier.priceNote}</div>
-                    <div style={{fontSize:10,color:T2,marginTop:2}}>⏱ {tier.duration}</div>
-                  </div>
-                </div>
-                <p style={{fontSize:12,color:T2,lineHeight:1.6,marginBottom:12}}>{tier.desc}</p>
-                <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:isRec?12:0}}>
-                  {tier.features.map(function(f,i){return(
-                    <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start"}}>
-                      <div style={{width:16,height:16,borderRadius:"50%",background:isRec?G+"20":D3,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>
-                        <span style={{fontSize:9,color:isRec?G:T2}}>✓</span>
-                      </div>
-                      <span style={{fontSize:12,color:T2,lineHeight:1.5}}>{f}</span>
-                    </div>
-                  );})}
-                </div>
-                {isRec&&(
-                  <div style={{background:G+"08",borderLeft:"2px solid "+G,padding:"10px 12px",borderRadius:"0 6px 6px 0",marginTop:4}}>
-                    <div style={{fontSize:9,color:G,letterSpacing:1,textTransform:"uppercase",marginBottom:4,fontWeight:600}}>Warum für dich</div>
-                    <p style={{fontSize:11,color:T2,lineHeight:1.6}}>{tier.why}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* CTA */}
-        <div style={{...card,marginBottom:14}}>
-          <h3 style={{fontSize:16,fontWeight:500,marginBottom:6}}>Bereit, dein Potenzial zu heben?</h3>
-          <p style={{fontSize:13,color:T2,lineHeight:1.6,marginBottom:16}}>Vereinbare ein unverbindliches Strategiegespräch. Wir besprechen deinen Score, deine Ziele und welcher Schritt für {pFirma} jetzt der richtige ist.</p>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");}} style={{flex:2,padding:"12px",borderRadius:10,background:G,border:"none",color:"#000",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontFamily:"inherit"}}>📅 Termin sichern →</button>
-            <button onClick={function(){setStep("foerderung");}} style={{flex:1,padding:"12px",borderRadius:10,background:D3,border:"0.5px solid "+BD,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>🏛️ Förderung</button>
-          </div>
-        </div>
-
-        {/* Trust note */}
-        <p style={{textAlign:"center",fontSize:11,color:"#444",marginBottom:20}}>Kein Druck. Keine Verkaufsshow. Nur eine ehrliche Einschätzung deines Potenzials.</p>
-      </div>
-    );
-  }
-
-  if(step==="foerderung") return(
-    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-      <Logo/>
-      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-
-      {/* Hero */}
-      <div style={{background:"#0a1a00",border:"1px solid "+G+"50",borderRadius:12,padding:"1.5rem",marginBottom:20,textAlign:"center"}}>
-        <div style={{fontSize:36,marginBottom:10}}>🏛️</div>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 8px",color:G}}>Staatliche Förderung für deine KI-Automatisierung</h1>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Wusstest du, dass du als Unternehmen Anspruch auf staatliche Förderung hast? Deine KI- und Automatisierungsprojekte können bis zu <strong style={{color:G}}>100% gefördert</strong> werden.</p>
-      </div>
-
-      {/* Förder-Highlights */}
-      <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Was gefördert werden kann</div>
-        {[
-          ["💶","Bis zu 100% der Weiterbildungskosten","nach dem Qualifizierungschancengesetz (QCG)"],
-          ["💰","Bis zu 75% der Gehaltskosten","für sozialversicherungspflichtige Angestellte"],
-          ["📅","Förderung für bis zu 14 Monate","laufende Unterstützung während der Umsetzung"],
-          ["✅","Kein Risiko & keine Rückzahlung","auch nicht bei Abbruch der Maßnahme"]
-        ].map(function(x,i){return(
-          <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:14,paddingBottom:i<3?14:0,borderBottom:i<3?"0.5px solid "+BD:"none"}}>
-            <span style={{fontSize:22,flexShrink:0}}>{x[0]}</span>
-            <div>
-              <div style={{fontSize:13,color:TX,fontWeight:500,marginBottom:2}}>{x[1]}</div>
-              <div style={{fontSize:11,color:T2}}>{x[2]}</div>
-            </div>
-          </div>
-        );})}
-      </div>
-
-      {/* Wer hat Anspruch */}
-      <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Wer hat Anspruch?</div>
-        {[
-          "Kleine und mittelständische Unternehmen (KMU)",
-          "Unternehmen mit sozialversicherungspflichtigen Angestellten",
-          "Unternehmen die KI, Digitalisierung oder Automatisierung einführen wollen",
-          "Kein Mindestumsatz oder Mindestgröße erforderlich"
-        ].map(function(t,i){return(
-          <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
-            <span style={{color:G,flexShrink:0,fontWeight:700}}>✓</span>
-            <span style={{fontSize:13,color:T2,lineHeight:1.5}}>{t}</span>
-          </div>
-        );})}
-      </div>
-
-      {/* Wie es funktioniert */}
-      <div style={{...card,marginBottom:20}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>So einfach funktioniert es</div>
-        {[
-          ["1","Beratungsgespräch","Wir prüfen gemeinsam deine Förderfähigkeit und berechnen die genaue Fördersumme."],
-          ["2","Antragstellung","Wir unterstützen dich beim Antrag  -  dein Aufwand: ca. 1 Stunde."],
-          ["3","Förderung erhalten","Nach Bewilligung startet die Maßnahme und du erhältst den Zuschuss."]
-        ].map(function(x,i){return(
-          <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:i<2?16:0}}>
-            <div style={{width:28,height:28,borderRadius:"50%",background:G+"20",border:"1px solid "+G+"50",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:G,fontWeight:700}}>{x[0]}</div>
-            <div>
-              <div style={{fontSize:13,color:TX,fontWeight:500,marginBottom:2}}>{x[1]}</div>
-              <div style={{fontSize:11,color:T2,lineHeight:1.5}}>{x[2]}</div>
-            </div>
-          </div>
-        );})}
-      </div>
-
-      {/* CTA */}
-      <div style={{...cardG,textAlign:"center",padding:"1.5rem",marginBottom:16}}>
-        <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>Jetzt Förderung prüfen</div>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Erfahre in einem kostenlosen Gespräch wie viel Förderung du für deine KI-Projekte bekommst  -  unverbindlich und ohne Risiko.</p>
-        <button onClick={function(){window.open("https://mittelstandsfoerderung-deutschland.de/ac/#survey-question-GwiJBsJn","_blank");}} style={{...btnG,marginTop:0}}>
-          🏛️ Jetzt Förderfähigkeit prüfen →
-        </button>
-        <p style={{fontSize:11,color:T2,marginTop:10}}>Du wirst zur Förderberatung weitergeleitet</p>
-      </div>
-
-      <button onClick={function(){setStep("bericht");}} style={{...btnO,marginTop:0}}>← Zurück zum Bericht</button>
-    </div>
-  );
-
-  /* ── ADMIN PIN ── */
-  if(step==="adminpin"){
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:400,margin:"0 auto",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-        <Logo/>
-        <div style={{...card,width:"100%",textAlign:"center",padding:"2rem"}}>
-          <div style={{fontSize:14,fontWeight:500,marginBottom:6}}>Admin-Bereich</div>
-          <div style={{fontSize:12,color:T2,marginBottom:24}}>PIN eingeben</div>
-          <div id="admin-pin-display" style={{display:"flex",justifyContent:"center",gap:16,marginBottom:24}}>
-            {[0,1,2,3].map(function(i){return(<div key={i} id={"pd"+i} style={{width:14,height:14,borderRadius:"50%",border:"2px solid "+BD,background:"transparent",transition:"all 0.2s"}}/>);})}
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:12}}>
-            {["1","2","3","4","5","6","7","8","9","","0","⌫"].map(function(k,i){
-              return(<button key={i} onClick={function(){
-                if(k==="")return;
-                if(k==="⌫"){
-                  adminPinInput=adminPinInput.slice(0,-1);
-                }else{
-                  if(adminPinInput.length>=4)return;
-                  adminPinInput+=k;
-                }
-                for(var j=0;j<4;j++){
-                  var dot=document.getElementById("pd"+j);
-                  if(dot){dot.style.background=j<adminPinInput.length?G:"transparent";dot.style.borderColor=j<adminPinInput.length?G:BD;}
-                }
-                if(adminPinInput.length===4){
-                  setTimeout(function(){
-                    if(adminPinInput==="2506"){
-                      setStep("admin");
-                    }else{
-                      for(var j=0;j<4;j++){var dot=document.getElementById("pd"+j);if(dot){dot.style.background="#e05a5a";dot.style.borderColor="#e05a5a";}}
-                      setTimeout(function(){adminPinInput="";for(var j=0;j<4;j++){var dot=document.getElementById("pd"+j);if(dot){dot.style.background="transparent";dot.style.borderColor=BD;}}},800);
-                    }
-                  },200);
-                }
-              }} style={{
-                background:k===""?"transparent":D2,border:"0.5px solid "+(k===""?"transparent":BD),
-                borderRadius:10,color:TX,fontSize:18,padding:"14px",cursor:k===""?"default":"pointer",
-                fontFamily:"inherit",transition:"all 0.15s"
-              }}>{k}</button>);
-            })}
-          </div>
-          <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:12,marginTop:8}}>Abbrechen</button>
-        </div>
-      </div>
-    );
-  }
-
-  async function generateAgentPrompt(){
-      var firma2=document.getElementById("ag-firma")?document.getElementById("ag-firma").value:"";
-      var branche2=document.getElementById("ag-branche")?document.getElementById("ag-branche").value:"";
-      var problem=document.getElementById("ag-problem")?document.getElementById("ag-problem").value:"";
-      var aufgabe=document.getElementById("ag-aufgabe")?document.getElementById("ag-aufgabe").value:"";
-      var tools=document.getElementById("ag-tools")?document.getElementById("ag-tools").value:"";
-      var extra=document.getElementById("ag-extra")?document.getElementById("ag-extra").value:"";
-      if(!aufgabe){alert("Bitte Aufgabe auswählen.");return;}
-      setAgLoading(true);setAgResult("");
-      try{
-        var p="Erstelle ein professionelles KI-Agenten System-Prompt auf Deutsch.\nUnternehmen: "+firma2+"\nBranche: "+branche2+"\nProblem: "+problem+"\nAufgabe: "+aufgabe+"\nTools: "+tools+"\nPlattform: "+agPlatform+(extra?"\nExtra: "+extra:"")+"\n\nDas Prompt soll enthalten: 1.Rolle 2.Aufgaben 3.Regeln 4.Ton 5.Beispiele 6.Was der Agent NICHT tun soll. Schreibe es direkt und vollstaendig.";
-        var t=await callApi(p,1500);
-        setAgResult(t);
-      }catch(e){setAgResult("Fehler: "+e.message);}
-      setAgLoading(false);
-  }
-
-  /* ── ADMIN BEREICH ── */
-  if(step==="admin"){
-
-    var adminTabs=[
-      {id:"checkliste",label:"Checkliste"},
-      {id:"leitfaden",label:"Leitfaden"},
-      {id:"fragen",label:"Fragen"},
-      {id:"notizen",label:"Notizen"},
-      {id:"agent",label:"🤖 Agent"}
-    ];
-
-    return(
-      <div style={{background:D,minHeight:"100vh",color:TX,maxWidth:680,margin:"0 auto"}}>
-        {/* Admin Header */}
-        <div style={{padding:"1.5rem 1.5rem 0",display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-          <div>
-            <Logo/>
-            <span style={{...bdg(G),fontSize:10}}>Admin · Intern</span>
-          </div>
-          <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"0.5px solid "+BD,color:T2,cursor:"pointer",fontSize:12,padding:"8px 14px",borderRadius:8}}>App verlassen</button>
-        </div>
-
-        {/* Tabs */}
-        <div style={{display:"flex",borderBottom:"0.5px solid "+BD,paddingLeft:"1.5rem",overflowX:"auto"}}>
-          {adminTabs.map(function(t){return(
-            <button key={t.id} onClick={function(){setAdminTab(t.id);}} style={{
-              background:"none",border:"none",borderBottom:"2px solid "+(adminTab===t.id?G:"transparent"),
-              color:adminTab===t.id?G:T2,fontSize:12,fontWeight:500,padding:"14px 16px",
-              cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit",letterSpacing:"0.05em",textTransform:"uppercase"
-            }}>{t.label}</button>
-          );})}
-        </div>
-
-        <div style={{padding:"1.5rem"}}>
-
-          {/* CHECKLISTE */}
-          {adminTab==="checkliste"&&(
-            <div>
-              <h2 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Onboarding-Checkliste</h2>
-              <p style={{color:T2,fontSize:13,marginBottom:20}}>Vor, während und nach dem Kundengespräch.</p>
-              {[
-                {group:"Vor dem Gespräch",items:["Kunde recherchiert: Website, LinkedIn, aktuelle Projekte","Gesprächsziel definiert (Discovery, Pitch oder Bedarfsanalyse?)","IQ-Score des Kunden aus der App notiert","Relevante Use-Cases vorbereitet (2-3 Beispiele aus der Branche)","Technisches Level des Kunden eingeschätzt"]},
-                {group:"Während des Gesprächs",items:["Kurze Vorstellung (max. 2 Min.)","IQ-Score besprochen und schwache Bereiche hervorgehoben","Pain Points identifiziert und notiert (min. 2-3)","Konkreten Automatisierungsansatz skizziert","Förderung angesprochen (QCG, bis zu 100%)","Budget und Zeitrahmen angesprochen","Nächster Schritt vereinbart"]},
-                {group:"Nach dem Gespräch",items:["Gesprächsnotizen zusammengefasst (max. 24h)","Dankes-Mail gesendet","Förderprüfung angestoßen","Erstes Konzept / Angebot vorbereitet"]}
-              ].map(function(g){return(
-                <div key={g.group} style={{marginBottom:24}}>
-                  <div style={{fontSize:10,color:"#4fc4a0",letterSpacing:2,textTransform:"uppercase",marginBottom:12,display:"flex",alignItems:"center",gap:10}}>
-                    {g.group}<div style={{flex:1,height:1,background:BD}}/>
-                  </div>
-                  {g.items.map(function(item,i){return(
-                    <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 14px",border:"0.5px solid "+BD,borderRadius:6,marginBottom:8,background:D2,cursor:"pointer"}}
-                      onClick={function(e){
-                        var el=e.currentTarget;
-                        var checked=el.getAttribute("data-checked")==="1";
-                        el.setAttribute("data-checked",checked?"0":"1");
-                        el.style.borderColor=checked?BD:G+"50";
-                        el.style.background=checked?D2:G+"0d";
-                        el.querySelector(".chk").style.background=checked?"transparent":G;
-                        el.querySelector(".chk").style.borderColor=checked?BD:G;
-                        el.querySelector(".chk").textContent=checked?"":"✓";
-                        el.querySelector(".chk").style.color=checked?"transparent":"#000";
-                      }}
-                    >
-                      <div className="chk" style={{width:20,height:20,borderRadius:4,border:"1.5px solid "+BD,background:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:"transparent",transition:"all 0.15s"}}>✓</div>
-                      <span style={{fontSize:13,color:T2,lineHeight:1.6}}>{item}</span>
-                    </div>
-                  );})}
-                </div>
-              );})}
-            </div>
-          )}
-
-          {/* LEITFADEN */}
-          {adminTab==="leitfaden"&&(
-            <div>
-              <h2 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Gesprächsleitfaden</h2>
-              <p style={{color:T2,fontSize:13,marginBottom:20}}>Strukturierter Ablauf nach der ONLION IQ Analyse.</p>
-              {[
-                {n:"1",t:"Einstieg & Rapport",d:"5 Min",c:G,items:["Kurze Vorstellung: Wer bin ich, was macht ONLION","Wie sind Sie auf uns aufmerksam geworden?","Haben Sie den IQ-Bericht bekommen und angeschaut?"]},
-                {n:"2",t:"Individuelle Tiefenfragen",d:"10 Min",c:"#00aaff",items:["Wie viel Zeit verbringt Ihr Team täglich mit manuellen Aufgaben?","Was kostet Sie das konkret pro Woche? (Stunden x Stundenlohn)","Welche Tools nutzen Sie und welche reden nicht miteinander?","Gibt es Prozesse die eigentlich eine Maschine machen sollte?"]},
-                {n:"3",t:"Stärken würdigen",d:"3 Min",c:G,items:["Positiv erwähnen was bereits gut funktioniert","Als Basis für die nächsten Schritte nutzen","Toll, dass Sie in [Bereich] schon so weit sind - darauf bauen wir auf."]},
-                {n:"4",t:"Lösungsvorschlag",d:"5 Min",c:"#ff7700",items:["Quick Wins zeigen: 1-2 Bereiche die sofort automatisierbar sind","Roadmap skizzieren: Phase 1 - Phase 2 - Phase 3","Kosten & ROI nennen - konkret und ehrlich"]},
-                {n:"5",t:"Förderung ansprechen",d:"3 Min",c:G,items:["Wussten Sie, dass bis zu 100% der Kosten staatlich gefördert werden können?","QCG erklären (Qualifizierungschancengesetz)","Haben Sie sozialversicherungspflichtige Mitarbeiter?"]},
-                {n:"6",t:"Abschluss & Next Steps",d:"4 Min",c:"#aa44ff",items:["Zusammenfassen: Ihre größten Hebel sind [Bereich 1] und [Bereich 2]","Klare Handlungsempfehlung: Ich empfehle mit [Quick Win] zu starten","Darf ich Ihnen ein konkretes Angebot zusenden?"]}
-              ].map(function(ph){return(
-                <div key={ph.n} style={{...card,marginBottom:14,borderLeft:"3px solid "+ph.c}}>
-                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-                    <div style={{width:24,height:24,borderRadius:"50%",background:ph.c+"20",border:"1px solid "+ph.c+"50",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:ph.c,fontWeight:700,flexShrink:0}}>{ph.n}</div>
-                    <div style={{fontSize:13,fontWeight:500,color:TX,flex:1}}>{ph.t}</div>
-                    <div style={{fontSize:11,color:T2}}>{ph.d}</div>
-                  </div>
-                  {ph.items.map(function(item,i){return(
-                    <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:6,padding:"6px 10px",background:D3,borderRadius:6}}>
-                      <span style={{color:ph.c,flexShrink:0,fontSize:12}}>→</span>
-                      <span style={{fontSize:12,color:T2,lineHeight:1.5}}>{item}</span>
-                    </div>
-                  );})}
-                </div>
-              );})}
-
-              {/* Einwand-Handling */}
-              <div style={{...card,marginBottom:14}}>
-                <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14,fontWeight:500}}>Einwand-Handling</div>
-                {[
-                  {e:"Wir haben keine Zeit",a:"Genau deshalb lohnt Automatisierung - der Aufwand ist einmalig, die Zeitersparnis dauerhaft."},
-                  {e:"Zu teuer",a:"Mit staatlicher Förderung trägt der Staat bis zu 100% der Kosten."},
-                  {e:"Wir sind zu klein",a:"Gerade kleine Unternehmen profitieren am meisten - jede gesparte Stunde wiegt schwerer."},
-                  {e:"Wir machen das intern",a:"Super - dann helfen wir, den richtigen Weg zu wählen und Fördermittel zu sichern."}
-                ].map(function(x,i){return(
-                  <div key={i} style={{marginBottom:12,borderBottom:i<3?"0.5px solid "+BD:"none",paddingBottom:i<3?12:0}}>
-                    <div style={{fontSize:12,color:"#e05a5a",marginBottom:4,fontWeight:500}}>? {x.e}</div>
-                    <div style={{fontSize:12,color:T2,lineHeight:1.6}}>{x.a}</div>
-                  </div>
-                );})}
-              </div>
-            </div>
-          )}
-
-          {/* FRAGEN */}
-          {adminTab==="fragen"&&(
-            <div>
-              <h2 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Fragenliste Erstgespräch</h2>
-              <p style={{color:T2,fontSize:13,marginBottom:20}}>Gezielt auswählen - nicht alle stellen.</p>
-              {[
-                {phase:"Discovery",color:G,fragen:[
-                  {n:"F-01",f:"Was beschäftigt Sie gerade am meisten - wo verlieren Sie täglich die meiste Zeit?"},
-                  {n:"F-02",f:"Welche Aufgaben in Ihrem Team sind repetitiv und könnten automatisiert werden?"},
-                  {n:"F-03",f:"Wie sieht Ihr aktueller Workflow aus - von der Leadgenerierung bis zur Lieferung?"},
-                  {n:"F-04",f:"Haben Sie bereits Erfahrung mit Automatisierungstools wie Zapier, Make oder n8n?"}
-                ]},
-                {phase:"Schmerzpunkte",color:"#e05a5a",fragen:[
-                  {n:"F-05",f:"Was passiert wenn diese Aufgaben zu lange dauern - was kostet das konkret?"},
-                  {n:"F-06",f:"Gibt es Prozesse bei denen Sie denken: Das müsste eigentlich eine Maschine machen?"},
-                  {n:"F-07",f:"Welche Tools nutzen Sie täglich - und welche reden nicht miteinander?"}
-                ]},
-                {phase:"Technologie",color:"#4fc4a0",fragen:[
-                  {n:"F-08",f:"Nutzen Sie bereits KI-Tools (ChatGPT, Claude, Copilot) im Arbeitsalltag?"},
-                  {n:"F-09",f:"Haben Sie jemanden im Team der technisch fit ist - oder soll die Lösung wartungsfrei laufen?"},
-                  {n:"F-10",f:"Welche Daten dürfen in der Cloud verarbeitet werden - gibt es Datenschutz-Einschränkungen?"}
-                ]},
-                {phase:"Vision & Abschluss",color:"#aa44ff",fragen:[
-                  {n:"F-11",f:"Wie sieht Ihr Business in 12 Monaten aus - was hat sich automatisiert?"},
-                  {n:"F-12",f:"Was wäre für Sie ein klarer Beweis dass die Zusammenarbeit erfolgreich war?"},
-                  {n:"F-13",f:"Gibt es einen Budget-Rahmen in dem wir denken sollen?"},
-                  {n:"F-14",f:"Was wäre der nächste Schritt - eine Demo, ein Konzept oder direkt ein Angebot?"}
-                ]}
-              ].map(function(g){return(
-                <div key={g.phase} style={{marginBottom:24}}>
-                  <span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,background:g.color+"18",border:"0.5px solid "+g.color+"40",fontSize:10,color:g.color,fontWeight:500,marginBottom:12,letterSpacing:0.5}}>{g.phase}</span>
-                  {g.fragen.map(function(q){return(
-                    <div key={q.n} style={{...card,marginBottom:10,position:"relative",overflow:"hidden",borderLeft:"3px solid "+BD}}>
-                      <div style={{fontSize:10,color:g.color,marginBottom:6,fontFamily:"monospace"}}>{q.n}</div>
-                      <div style={{fontSize:14,color:TX,lineHeight:1.6}}>{q.f}</div>
-                    </div>
-                  );})}
-                </div>
-              );})}
-            </div>
-          )}
-
-          {/* NOTIZEN */}
-          {adminTab==="notizen"&&(
-            <div>
-              <h2 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Gesprächsnotizen</h2>
-              <p style={{color:T2,fontSize:13,marginBottom:20}}>Nur für diese Sitzung — nicht gespeichert.</p>
-              {["Kunde / Unternehmen","Pain Points","Technisches Setup","Förderung","Nächster Schritt"].map(function(label){return(
-                <div key={label} style={{...card,marginBottom:14}}>
-                  <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>{label}</div>
-                  <textarea style={{width:"100%",background:"transparent",border:"none",color:TX,fontFamily:"inherit",fontSize:13,lineHeight:1.7,resize:"none",outline:"none",minHeight:80}} placeholder={"Notizen zu: "+label+"..."}/>
-                </div>
-              );})}
-            </div>
-          )}
-
-          {/* AGENT GENERATOR */}
-          {adminTab==="agent"&&(
-            <div>
-              <h2 style={{fontSize:20,fontWeight:500,marginBottom:4}}>KI-Agenten-Skript Generator</h2>
-              <p style={{color:T2,fontSize:13,marginBottom:20}}>Kundendaten eingeben - fertiges Agenten-Prompt generieren.</p>
-
-              {/* Platform */}
-              <div style={{...card,marginBottom:14}}>
-                <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>Ziel-Plattform</div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
-                  {["Make.com","n8n","ChatGPT","Claude API","Zapier","Allgemein"].map(function(p){return(
-                    <button key={p} onClick={function(){setAgPlatform(p);}} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid "+(agPlatform===p?G:BD),background:agPlatform===p?G+"18":"transparent",fontSize:12,color:agPlatform===p?G:T2,cursor:"pointer",transition:"all 0.2s",fontFamily:"inherit"}}>{p}</button>
-                  );})}
-                </div>
-              </div>
-
-              {/* Inputs */}
-              <div style={{...card,marginBottom:14}}>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
-                  <div>
-                    <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>Firmenname</div>
-                    <input id="ag-firma" style={{width:"100%",background:D3,border:"0.5px solid "+BD,borderRadius:8,color:TX,fontFamily:"inherit",fontSize:13,padding:"10px 12px",outline:"none"}} placeholder="z.B. Zahnarztpraxis Mueller"/>
-                  </div>
-                  <div>
-                    <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>Branche</div>
-                    <input id="ag-branche" style={{width:"100%",background:D3,border:"0.5px solid "+BD,borderRadius:8,color:TX,fontFamily:"inherit",fontSize:13,padding:"10px 12px",outline:"none"}} placeholder="z.B. Gesundheit"/>
-                  </div>
-                </div>
-                <div style={{marginBottom:12}}>
-                  <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>Hauptproblem</div>
-                  <input id="ag-problem" style={{width:"100%",background:D3,border:"0.5px solid "+BD,borderRadius:8,color:TX,fontFamily:"inherit",fontSize:13,padding:"10px 12px",outline:"none"}} placeholder="z.B. 50 Anrufe täglich für Terminvergabe"/>
-                </div>
-                <div style={{marginBottom:12}}>
-                  <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>Aufgabe des Agenten</div>
-                  <select id="ag-aufgabe" style={{width:"100%",background:D3,border:"0.5px solid "+BD,borderRadius:8,color:TX,fontFamily:"inherit",fontSize:13,padding:"10px 12px",outline:"none"}}>
-                    <option value="">Aufgabe auswählen...</option>
-                    <option value="Terminvergabe automatisieren">Terminvergabe automatisieren</option>
-                    <option value="Kundenanfragen per E-Mail und Chat beantworten">Kundenanfragen beantworten</option>
-                    <option value="Angebote automatisch erstellen">Angebote erstellen</option>
-                    <option value="Rechnungen verarbeiten und buchen">Rechnungen verarbeiten</option>
-                    <option value="Leads qualifizieren und weiterleiten">Leads qualifizieren</option>
-                    <option value="HR-Prozesse automatisieren">HR-Prozesse automatisieren</option>
-                    <option value="Berichte und Dashboards erstellen">Berichte erstellen</option>
-                    <option value="Kunden-Onboarding automatisieren">Onboarding automatisieren</option>
-                  </select>
-                </div>
-                <div style={{marginBottom:12}}>
-                  <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>Genutzte Tools</div>
-                  <input id="ag-tools" style={{width:"100%",background:D3,border:"0.5px solid "+BD,borderRadius:8,color:TX,fontFamily:"inherit",fontSize:13,padding:"10px 12px",outline:"none"}} placeholder="z.B. Outlook, Excel, keine weiteren"/>
-                </div>
-                <div>
-                  <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:6,fontWeight:500}}>Besonderheiten (optional)</div>
-                  <textarea id="ag-extra" style={{width:"100%",background:D3,border:"0.5px solid "+BD,borderRadius:8,color:TX,fontFamily:"inherit",fontSize:13,padding:"10px 12px",outline:"none",resize:"vertical",minHeight:70,lineHeight:1.6}} placeholder="z.B. nur Deutsch, DSGVO wichtig, keine Preise nennen..."/>
-                </div>
-              </div>
-
-              <button onClick={generateAgentPrompt} disabled={agLoading} style={{...btnG,opacity:agLoading?0.6:1,marginBottom:16}}>
-                {agLoading?"KI generiert Prompt...":"🤖 Agenten-Skript generieren"}
-              </button>
-
-              {agResult&&(
-                <div style={{...card,borderColor:G+"40"}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-                    <div style={{fontSize:10,color:G,letterSpacing:1,textTransform:"uppercase",fontWeight:500}}>Generiertes Agenten-Skript</div>
-                    <button onClick={function(){navigator.clipboard.writeText(agResult);}} style={{background:G+"18",border:"0.5px solid "+G+"40",borderRadius:6,color:G,fontSize:12,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>Kopieren</button>
-                  </div>
-                  <div style={{fontFamily:"monospace",fontSize:12,lineHeight:1.8,color:"#ccc",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{agResult}</div>
-                </div>
-              )}
-            </div>
-          )}
-
-        </div>
-      </div>
-    );
-  }
-
-  if(step==="impressum") return(
-    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-      <Logo/>
-      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>Impressum</h1>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Angaben gemäß § 5 TMG</div><p style={{fontSize:14,color:TX,marginBottom:4}}>Adam Cebulla</p><p style={{fontSize:13,color:T2,marginBottom:2}}>ONLION (Einzelunternehmen)</p><p style={{fontSize:13,color:T2,marginBottom:2}}>Loher Hauptstrasse 81a</p><p style={{fontSize:13,color:T2,marginBottom:16}}>90427 Nürnberg</p><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>Kontakt</div><p style={{fontSize:13,color:T2}}>E-Mail: onlion-@outlook.de</p></div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Verantwortlich für den Inhalt</div><p style={{fontSize:13,color:T2}}>Adam Cebulla, Loher Hauptstrasse 81a, 90427 Nürnberg</p></div>
-      <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Haftungsausschluss</div><p style={{fontSize:12,color:T2,lineHeight:1.7}}>Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.</p></div>
-    </div>
-  );
-
-  if(step==="datenschutz") return(
-    <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
-      <Logo/>
-      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>Datenschutzerklärung</h1>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Verantwortlicher</div><p style={{fontSize:13,color:T2,lineHeight:1.7}}>Adam Cebulla · ONLION · Loher Hauptstrasse 81a · 90427 Nürnberg · onlion-@outlook.de</p></div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Welche Daten wir erheben</div>{["E-Mail-Adresse (für den Bericht)","Firmenname und Branche","Antworten des Fragebogens","Technische Daten durch Netlify-Hosting"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G,flexShrink:0}}>→</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}</div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Drittanbieter</div>{[["Anthropic API","anthropic.com/privacy"],["Netlify","netlify.com/privacy"],["Calendly","calendly.com/privacy"],["Brevo","brevo.com/legal/privacypolicy"]].map(function(t,i){return(<div key={i} style={{marginBottom:10}}><p style={{fontSize:13,color:TX,marginBottom:3}}>{t[0]}</p><p style={{fontSize:11,color:T2}}>{t[1]}</p></div>);})}</div>
-      <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Deine Rechte (DSGVO)</div>{["Auskunft (Art. 15)","Berichtigung (Art. 16)","Löschung (Art. 17)","Widerspruch (Art. 21)"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}<p style={{fontSize:12,color:T2,marginTop:10}}>Anfragen: onlion-@outlook.de</p></div>
-    </div>
-  );
-
-  return null;
-}
-
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
 </script>
 </body>
