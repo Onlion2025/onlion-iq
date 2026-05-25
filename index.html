@@ -272,7 +272,7 @@ function App(){
     try{
       var g=ges();
       var info=gefB.map(function(b){return b.label+" "+gs(b.id)+"%";}).join(", ");
-      var t=await callApi("Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. Bereiche: "+info+". Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. Max 350 Woerter.",800);
+      var t=await callApi("Schreibe einen kompakten KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. Bereiche: "+info+". Verwende NUR diese 4 Abschnitte mit ## als Ueberschrift: ## Bewertung, ## Staerken, ## Potenzial, ## Roadmap. Schreibe pro Abschnitt maximal 3 kurze Stichpunkte mit - als Aufzaehlung. Keine ###, kein ---, keine Nummern, kein Fazit. Maximal 150 Woerter gesamt.",600);
       setBericht(t);setStep("bericht");sendeEmail(g);
     }catch(e){setErr("Fehler: "+e.message);}
     setLoadR(false);
@@ -309,7 +309,7 @@ function App(){
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
   function renderMd(t){
-    return t.replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:13px;font-weight:600;margin:0.6rem 0 0.15rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:3px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:2px 0;color:"+TX+";line-height:1.4;font-size:12px'>$1</li>").replace(/\n\n/g," ").replace(/\n/g,"<br/>");
+    return t.replace(/^---+$/gm,"").replace(/^#{3,}\s*/gm,"").replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:13px;font-weight:600;margin:0.6rem 0 0.15rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:3px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:2px 0;color:"+TX+";line-height:1.4;font-size:12px'>$1</li>").replace(/\n\n/g," ").replace(/\n/g,"<br/>");
   }
   function btxt(){var g=ges();return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;}
   var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1rem",marginBottom:12};
