@@ -196,7 +196,7 @@ function KatCard(props){
   },
     React.createElement("span",{style:{fontSize:20,flexShrink:0}},k.i),
     React.createElement("div",{style:{flex:1}},
-      React.createElement("div",{style:{fontSize:12,fontWeight:500,color:TX}},k.l),
+      React.createElement("div",{style:{fontSize:12,fontWeight:500,color:G}},k.l),
       React.createElement("div",{style:{fontSize:11,color:TX,marginTop:2}},k.d),
       hovered&&React.createElement("div",{style:{fontSize:11,color:TX,marginTop:8,lineHeight:1.6,borderTop:"0.5px solid "+kc+"30",paddingTop:8,animation:"fadeUp 0.2s ease"}},KT[k.k])
     )
@@ -321,7 +321,7 @@ function App(){
   if(step==="intro") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo showLogin={true}/>
-      <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>Wie intelligent arbeitet dein Unternehmen?</h1>
+      <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px",color:G}}>Wie intelligent arbeitet dein Unternehmen?</h1>
       <p style={{color:TX,lineHeight:1.7,fontSize:14,marginBottom:20}}>ONLION IQ analysiert mit KI dein Automatisierungspotenzial  -  kostenlos in 5 Minuten.</p>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
         {[{k:"ki",l:"KI & Agenten",i:"🤖",d:"KI, Chatbots, LLMs"},{k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}].map(function(k){return <KatCard key={k.k} k={k}/>;})
@@ -333,7 +333,7 @@ function App(){
           {[["🧠","IQ-Score"],["🤖","KI-Potenzial"],["💶","Einsparpotenzial"],["⚙️","Empfehlungen"],["🗺️","KI-Roadmap"],["📧","Bericht per Mail"]].map(function(x,i){return(
             <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginTop:i>2?8:0}}>
               <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span>
-              <span style={{fontSize:13,color:TX}}>{x[1]}</span>
+              <span style={{fontSize:13,color:G}}>{x[1]}</span>
             </div>
           );})}
         </div>
