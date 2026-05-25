@@ -508,43 +508,15 @@ function App(){
         })()}</div>
         <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{...btnG,marginBottom:12}}>🤖 KI-Lösungen entdecken →</button>
         <div style={{...card,marginBottom:16}}>
-          <div style={{fontSize:11,color:TX,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht teilen</div>
-          <div style={{display:"flex",gap:8,marginBottom:10}}>
-            <button onClick={generatePDF} style={{flex:1,padding:"10px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>📄 PDF herunterladen</button>
-            <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ.txt";a.click();}} style={{flex:1,padding:"10px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>⬇ Text herunterladen</button>
-          </div>
+          <div style={{fontSize:11,color:TX,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht per E-Mail</div>
           <div style={{display:"flex",gap:8}}>
-            <input placeholder="Per E-Mail senden..." value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
+            <input placeholder="E-Mail-Adresse..." value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
             <button onClick={function(){if(!mailShare)return;window.open("mailto:"+mailShare+"?subject=ONLION IQ Bericht&body="+encodeURIComponent(btxt()));setMailSent(true);setTimeout(function(){setMailSent(false);},3000);}} style={{padding:"10px 16px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500,whiteSpace:"nowrap"}}>{mailSent?"✓ Gesendet":"Senden"}</button>
           </div>
         </div>
-        <div style={{height:1,background:BD,margin:"20px 0"}}/>
-        <div style={{fontSize:11,color:TX,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Nächste Schritte</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
-          <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>🤖</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>KI-Lösungen</div><div style={{fontSize:12,color:TX}}>Tools entdecken</div></button>
-          <button onClick={function(){setStep("termin");}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>📅</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>Kostenloses Gespräch</div><div style={{fontSize:12,color:TX}}>Termin buchen</div></button>
-        </div>
-        {/* Förderung Banner */}
-        <div onClick={function(){setStep("foerderung");}} style={{
-          background:"#0a1a00",
-          border:"1px solid "+G+"60",
-          borderRadius:10,padding:"1rem",cursor:"pointer",
-          marginBottom:10,display:"flex",alignItems:"center",gap:14,
-          transition:"border-color 0.2s"
-        }}
-          onMouseEnter={function(e){e.currentTarget.style.borderColor=G}}
-          onMouseLeave={function(e){e.currentTarget.style.borderColor=G+"60"}}
-        >
-          <span style={{fontSize:28,flexShrink:0}}>🏛️</span>
-          <div style={{flex:1}}>
-            <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:3}}>Staatliche Förderung sichern</div>
-            <div style={{fontSize:12,color:TX,lineHeight:1.5}}>Bis zu 100% der Kosten können staatlich gefördert werden → mehr erfahren</div>
-          </div>
-          <span style={{color:G,fontSize:18,flexShrink:0}}>→</span>
-        </div>
-        <div style={{display:"flex",gap:8,marginTop:8}}>
-          <button onClick={function(){setStep("auswertung");}} style={{flex:1,padding:"10px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{flex:1,padding:"10px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>Neue Analyse</button>
+        <div style={{display:"flex",gap:8,marginTop:4,marginBottom:8}}>
+          <button onClick={function(){setStep("auswertung");}} style={{flex:1,padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:TX}}>← IQ-Score</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{flex:1,padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:TX}}>Neue Analyse</button>
         </div>
       </div>
     );
@@ -560,7 +532,19 @@ function App(){
           {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:TX,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">Mehr →</a></div>);})}
         </div>
       }
-      <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div><p style={{fontSize:13,color:TX,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>Kostenloses Gespräch buchen →</button></div>
+      <div style={{...cardG,textAlign:"center",padding:"1.5rem",marginBottom:12}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div><p style={{fontSize:13,color:TX,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>Kostenloses Gespräch buchen →</button></div>
+      <div onClick={function(){setStep("foerderung");}} style={{background:"#0a1a00",border:"1px solid "+G+"60",borderRadius:10,padding:"1rem",cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",gap:14}}>
+        <span style={{fontSize:24,flexShrink:0}}>🏛️</span>
+        <div style={{flex:1}}>
+          <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:3}}>Staatliche Förderung sichern</div>
+          <div style={{fontSize:12,color:TX,lineHeight:1.5}}>Bis zu 100 % der Kosten können gefördert werden → mehr erfahren</div>
+        </div>
+        <span style={{color:G,fontSize:18,flexShrink:0}}>→</span>
+      </div>
+      <div style={{display:"flex",gap:8,marginBottom:8}}>
+        <button onClick={function(){setStep("auswertung");}} style={{flex:1,padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:TX}}>← IQ-Score</button>
+        <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{flex:1,padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:TX}}>Neue Analyse</button>
+      </div>
     </div>
   );
   if(step==="termin"){
