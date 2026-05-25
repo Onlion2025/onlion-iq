@@ -309,11 +309,11 @@ function App(){
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
   function renderMd(t){
-    return t.replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:15px;font-weight:500;margin:1.2rem 0 0.4rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:4px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:4px 0;color:"+T2+";line-height:1.5'>$1</li>").replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
+    return t.replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:13px;font-weight:600;margin:0.6rem 0 0.15rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:3px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:2px 0;color:"+TX+";line-height:1.4;font-size:12px'>$1</li>").replace(/\n\n/g," ").replace(/\n/g,"<br/>");
   }
   function btxt(){var g=ges();return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;}
-  var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1.25rem",marginBottom:16};
-  var cardG={background:"#081200",border:"0.5px solid "+G+"40",borderRadius:10,padding:"1.25rem",marginBottom:16};
+  var card={background:D2,border:"0.5px solid "+BD,borderRadius:10,padding:"1rem",marginBottom:12};
+  var cardG={background:"#081200",border:"0.5px solid "+G+"40",borderRadius:10,padding:"1rem",marginBottom:12};
   var btnG={width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:14,color:G,fontWeight:500};
   var btn={width:"100%",padding:"11px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:14,color:TX,marginTop:8};
   var btnO={width:"100%",padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:TX,marginTop:8};
@@ -498,7 +498,7 @@ function App(){
           <p style={{fontSize:13,color:TX,lineHeight:1.7,marginBottom:16}}>Was das konkret für dich in Euro bedeutet, besprechen wir in einem persönlichen Gespräch  -  kostenlos, individuell und ohne Verpflichtung.</p>
           <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>📅 Jetzt Termin sichern & Potenzial erfahren →</button>
         </div>
-        <div style={{...card,lineHeight:1.7,fontSize:13,color:TX,marginBottom:16}} dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
+        <div style={{...card,lineHeight:1.5,fontSize:13,color:TX,marginBottom:12,padding:"0.9rem"}} dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
         <div style={{...card,marginBottom:16}}>
           <div style={{fontSize:11,color:TX,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht teilen</div>
           <div style={{display:"flex",gap:8,marginBottom:10}}>
