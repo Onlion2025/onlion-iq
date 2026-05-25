@@ -633,7 +633,7 @@ function App(){
         why:"Mit deiner KI-Reife bist du bereit für ein Multi-Agent-Ökosystem das ganze Geschäftsbereiche transformiert."
       }
     ];
-    var recommended=tiers.find(function(t){return pScore>=t.minScore&&pScore<=t.maxScore;})||tiers[0];
+    var recommended=tiers[0];
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:680,margin:"0 auto"}}>
         <Logo/>
