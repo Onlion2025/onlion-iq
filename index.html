@@ -208,6 +208,7 @@ function App(){
   window.__adminLogin=function(){setStep("adminpin");};
   var r_adminTab=useState("checkliste"),adminTab=r_adminTab[0],setAdminTab=r_adminTab[1];
   var r_selTier=useState(""),selTier=r_selTier[0],setSelTier=r_selTier[1];
+  var r_openSects=useState({"0":true,"1":true,"2":true,"3":true}),openSects=r_openSects[0],setOpenSects=r_openSects[1];
   var r_agPlatform=useState("Make.com"),agPlatform=r_agPlatform[0],setAgPlatform=r_agPlatform[1];
   var r_agResult=useState(""),agResult=r_agResult[0],setAgResult=r_agResult[1];
   var r_agLoading=useState(false),agLoading=r_agLoading[0],setAgLoading=r_agLoading[1];
@@ -498,7 +499,25 @@ function App(){
           <p style={{fontSize:13,color:TX,lineHeight:1.7,marginBottom:16}}>Was das konkret für dich in Euro bedeutet, besprechen wir in einem persönlichen Gespräch  -  kostenlos, individuell und ohne Verpflichtung.</p>
           <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>📅 Jetzt Termin sichern & Potenzial erfahren →</button>
         </div>
-        <div style={{...card,lineHeight:1.5,fontSize:13,color:TX,marginBottom:12,padding:"0.9rem"}} dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
+        <div style={{marginBottom:12}}>{(function(){
+          var sects=[];
+          var parts=bericht.split(/^## /m);
+          parts.forEach(function(p){if(!p.trim())return;var ls=p.split("\n");var title=ls[0].replace(/^##\s*/,"").trim();var items=ls.slice(1).map(function(l){return l.replace(/^-\s*/,"").replace(/\*\*(.+?)\*\*/g,"$1").replace(/^[□☐]\s*/,"").trim();}).filter(function(l){return l&&l!=="---";});sects.push({title:title,items:items});});
+          return sects.map(function(s,i){
+            var isOpen=openSects[i]!==false;
+            return(
+              <div key={i} style={{marginBottom:4,borderRadius:10,overflow:"hidden",border:"0.5px solid "+BD}}>
+                <div onClick={function(){setOpenSects(function(p){var n=Object.assign({},p);n[i]=!isOpen;return n;});}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 14px",cursor:"pointer",background:isOpen?G+"12":D2}}>
+                  <span style={{fontSize:13,fontWeight:600,color:GL}}>{s.title}</span>
+                  <span style={{fontSize:16,color:G,fontWeight:300,lineHeight:1}}>{isOpen?"−":"+"}</span>
+                </div>
+                {isOpen&&<div style={{padding:"8px 14px 10px",background:D2}}>
+                  {s.items.map(function(it,j){return(<div key={j} style={{fontSize:12,color:TX,lineHeight:1.5,padding:"3px 0",borderBottom:j<s.items.length-1?"0.5px solid "+BD+"55":"none"}}>{it}</div>);})}
+                </div>}
+              </div>
+            );
+          });
+        })()}</div>
         <div style={{...card,marginBottom:16}}>
           <div style={{fontSize:11,color:TX,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht teilen</div>
           <div style={{display:"flex",gap:8,marginBottom:10}}>
