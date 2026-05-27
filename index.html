@@ -336,11 +336,11 @@ function App(){
 
       <div style={{...card,marginBottom:20}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>In 5 Minuten erhältst du</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
           {[["🧠","IQ-Score"],["🤖","KI-Potenzial"],["💶","Einsparpotenzial"],["⚙️","Empfehlungen"],["🗺️","KI-Roadmap"],["📧","Bericht per Mail"]].map(function(x,i){return(
-            <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginTop:i>2?8:0}}>
-              <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span>
-              <span style={{fontSize:13,color:T2}}>{x[1]}</span>
+            <div key={i} style={{display:"flex",gap:8,alignItems:"center"}}>
+              <span style={{fontSize:18,flexShrink:0}}>{x[0]}</span>
+              <span style={{fontSize:13,color:T2,whiteSpace:"nowrap"}}>{x[1]}</span>
             </div>
           );})}
         </div>
