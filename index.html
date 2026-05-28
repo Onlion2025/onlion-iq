@@ -497,6 +497,8 @@ function LangDropdown(props){
 function App(){
   var useState=React.useState;
   var r1=useState("intro"),step=r1[0],setStep=r1[1];
+  var rL=useState("de"),lang=rL[0],setLang=rL[1];
+  var T=(window.ONLION_T&&window.ONLION_T[lang])||window.ONLION_T["de"]||{};
   window.__adminLogin=function(){setStep("adminpin");};
   var r_adminTab=useState("checkliste"),adminTab=r_adminTab[0],setAdminTab=r_adminTab[1];
   var r_agPlatform=useState("Make.com"),agPlatform=r_agPlatform[0],setAgPlatform=r_agPlatform[1];
