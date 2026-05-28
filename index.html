@@ -142,14 +142,12 @@ function Logo(props){
         React.createElement("span",null,"ION"),
         React.createElement("span",{style:{color:G,marginLeft:6}},"IQ")
       ),
-      React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
+      React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},(T&&T.iqSub?"INTELLIGENCE QUOTIENT":T_ALL["de"].iqSub))
     ),
-    React.createElement("div",{style:{display:"flex",alignItems:"center",gap:6}},
-      showLogin&&React.createElement("button",{
-        onClick:function(){if(window.__adminLogin)window.__adminLogin();},
-        style:{background:"transparent",border:"none",color:G,fontSize:12,padding:"5px 0",cursor:"pointer",letterSpacing:1,fontFamily:"inherit",fontWeight:500,marginLeft:4}
-      },"LOGIN")
-    )
+    showLogin?React.createElement("button",{
+      onClick:function(){if(window.__adminLogin)window.__adminLogin();},
+      style:{background:"transparent",border:"none",color:G,fontSize:12,padding:"5px 0",cursor:"pointer",letterSpacing:1,fontFamily:"inherit",fontWeight:500}
+    },"LOGIN"):null
   );
 }
 
@@ -207,12 +205,287 @@ var ALL_LANGS=[
   {l:"tr",flag:"🇹🇷",label:"Türkçe"}
 ];
 
-var LANG_TRANS={
-  de:{headline:"Wie intelligent arbeitet dein Unternehmen?",sub:"ONLION IQ analysiert mit KI dein Automatisierungspotenzial  -  kostenlos in 5 Minuten."},
-  en:{headline:"How intelligently does your company work?",sub:"ONLION IQ analyzes your automation potential with AI  -  free in 5 minutes."},
-  pl:{headline:"Jak inteligentnie działa Twoja firma?",sub:"ONLION IQ analizuje potencjał automatyzacji z AI  -  bezpłatnie w 5 minut."},
-  fr:{headline:"Avec quelle intelligence votre entreprise travaille-t-elle?",sub:"ONLION IQ analyse votre potentiel d'automatisation avec l'IA  -  gratuitement en 5 minutes."},
-  tr:{headline:"Şirketiniz ne kadar akıllı çalışıyor?",sub:"ONLION IQ, yapay zeka ile otomasyon potansiyelinizi analiz eder  -  5 dakikada ücretsiz."}
+var T_ALL={
+  de:{
+    headline:"Wie intelligent arbeitet dein Unternehmen?",
+    sub:"ONLION IQ analysiert mit KI dein Automatisierungspotenzial - kostenlos in 5 Minuten.",
+    in5:"In 5 Minuten erhältst du",
+    cats:[{k:"ki",l:"KI & Agenten",i:"🤖",d:"KI, Chatbots, LLMs"},{k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}],
+    features:[["🧠","IQ-Score"],["🤖","KI-Potenzial"],["💶","Einsparpotenzial"],["⚙️","Empfehlungen"],["🗺️","KI-Roadmap"],["📧","Bericht per Mail"]],
+    emailPh:"Deine E-Mail *",firmaPh:"Firmenname (optional)",
+    branchePh:"Branche auswählen *",
+    branchen:["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"],
+    descLabel:"Beschreib dein Unternehmen *",descPh:"Z.B. Mitarbeiteranzahl, welche Prozesse noch manuell laufen...",
+    pflicht:"Pflichtfeld",
+    dsgvo1:"Ich habe die ",dsgvoLink:"Datenschutzerklärung",dsgvo2:" gelesen und bin einverstanden, dass meine Daten verarbeitet werden.",
+    startBtn:"IQ-Analyse starten →",noSpam:"Deine E-Mail wird nur für den Bericht verwendet. Kein Spam.",
+    impressum:"Impressum",datenschutz:"Datenschutz",login:"LOGIN",iqSub:"INTELLIGENCE QUOTIENT",
+    errFill:T.errFill,
+    loadMsg:"KI erstellt deine Analysebereiche...",loadSub:"ca. 10 Sekunden",
+    loadSteps:["Beschreibung lesen","Bereiche erstellen","Fragen generieren"],
+    back:"← Zurück",
+    bereiche_h:"KI-generierte Analysebereiche",bereiche_fuer:"Für: ",
+    alle_abw:"Alle abwählen",alle_ausw:"Alle auswählen",
+    weiter_fragen:"Fragebogen starten →",
+    auswertung_h:"Dein ONLION IQ-Score",iq_score:"IQ-Score",ki_pot:"KI-Potenzial",
+    einsparpot:"💶 Dein Einsparpotenzial",
+    einsparpot_text:"Basierend auf deinem IQ-Score steckt in deinem Unternehmen ",
+    einsparpot_bold:"erhebliches Automatisierungspotenzial",
+    einsparpot_sub:"Wie viel das konkret in Euro bedeutet  -  das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an.",
+    termin_btn:"Kostenloses Gespräch buchen →",
+    bericht_h:"IQ-Bericht & KI-Roadmap",bericht_pot:"KI-POTENZIAL",
+    bericht_mail:"Dein persönlicher Bericht wurde an ",bericht_mail2:" gesendet!",
+    bericht_text:"Dein IQ-Score zeigt: In deinem Unternehmen steckt ",bericht_bold:"erhebliches ungenutztes Potenzial",
+    loes_h:"KI & Automatisierungs-Lösungen",loes_mehr:"Mehr →",
+    loes_beratung:"Individuelle KI-Beratung?",loes_btn:"Kostenloses Gespräch buchen →",
+    loes_loading:"KI sucht passende Lösungen...",loes_sub:"ca. 8 Sekunden",
+    loes_steps:["Bereiche prüfen","Tools suchen","Empfehlungen"],
+    termin_h:"Kostenloses KI-Beratungsgespräch",termin_sub:"30 Minuten · kostenlos · unverbindlich",
+    termin_pot:"Dein KI-Potenzial",termin_unge:"% ungenutzt",
+    termin_einsp:"💶 Erfahre dein konkretes Einsparpotenzial",
+    termin_p:"Wir zeigen dir in 30 Minuten wie du dieses Potenzial konkret heben kannst.",
+    termin_was:"Was dich erwartet",
+    termin_liste:T.termin_liste,
+    termin_buchen:"Termin buchen →",
+    foerd_h:"Staatliche Förderung für deine KI-Automatisierung",
+    foerd_p:"Wusstest du, dass du als Unternehmen Anspruch auf staatliche Förderung hast? Deine KI- und Automatisierungsprojekte können bis zu ",foerd_bold:"100% gefördert",foerd_p2:" werden.",
+    foerd_was:"Was gefördert werden kann",
+    foerd_liste:[["💶","Bis zu 100% der Weiterbildungskosten","nach dem Qualifizierungschancengesetz (QCG)"],["💰","Bis zu 75% der Gehaltskosten","für sozialversicherungspflichtige Angestellte"],["📅","Förderung für bis zu 14 Monate","laufende Unterstützung während der Umsetzung"],["✅","Kein Risiko & keine Rückzahlung","auch nicht bei Abbruch der Maßnahme"]],
+    foerd_anspruch:"Wer hat Anspruch?",
+    foerd_btn:"Jetzt Förderpotenzial prüfen →",
+    imp_h:"Impressum",imp_angaben:"Angaben gemäß § 5 TMG",imp_kontakt:"Kontakt",imp_verantw:"Verantwortlich für den Inhalt",imp_haft:"Haftungsausschluss",
+    imp_haft_text:"Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.",
+    ds_h:"Datenschutzerklärung",ds_verantw:"Verantwortlicher",ds_daten:"Welche Daten wir erheben",
+    ds_daten_liste:T.ds_daten_liste,
+    ds_dritte:"Drittanbieter",ds_rechte:"Deine Rechte (DSGVO)",
+    ds_rechte_liste:T.ds_rechte_liste,
+    ds_anfragen:"Anfragen: onlion-@outlook.de"
+
+  },
+  en:{
+    headline:"How intelligently does your company work?",
+    sub:"ONLION IQ analyzes your automation potential with AI - free in 5 minutes.",
+    in5:"In 5 minutes you receive",
+    cats:[{k:"ki",l:"AI & Agents",i:"🤖",d:"AI, Chatbots, LLMs"},{k:"rpa",l:"Automation",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotics",i:"🦾",d:"Robots, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}],
+    features:[["🧠","IQ Score"],["🤖","AI Potential"],["💶","Savings Potential"],["⚙️","Recommendations"],["🗺️","AI Roadmap"],["📧","Report by Mail"]],
+    emailPh:"Your E-Mail *",firmaPh:"Company name (optional)",
+    branchePh:"Select industry *",
+    branchen:["Production / Manufacturing","Services / Office","Trade / Logistics","IT / Technology","Healthcare","Education","Finance / Insurance","Other"],
+    descLabel:"Describe your company *",descPh:"E.g. number of employees, which processes are still manual...",
+    pflicht:"Required",
+    dsgvo1:"I have read the ",dsgvoLink:"Privacy Policy",dsgvo2:" and agree that my data will be processed.",
+    startBtn:"Start IQ Analysis →",noSpam:"Your email is only used for the report. No spam.",
+    impressum:"Imprint",datenschutz:"Privacy",login:"LOGIN",iqSub:"INTELLIGENCE QUOTIENT",
+    errFill:"Please fill in all required fields.",
+    loadMsg:"AI is creating your analysis areas...",loadSub:"approx. 10 seconds",
+    loadSteps:["Reading description","Creating areas","Generating questions"],
+    back:"← Back",
+    bereiche_h:"AI-generated analysis areas",bereiche_fuer:"For: ",
+    alle_abw:"Deselect all",alle_ausw:"Select all",
+    weiter_fragen:"Start questionnaire →",
+    auswertung_h:"Your ONLION IQ Score",iq_score:"IQ Score",ki_pot:"AI Potential",
+    einsparpot:"💶 Your Savings Potential",
+    einsparpot_text:"Based on your IQ score, your company has ",
+    einsparpot_bold:"significant automation potential",
+    einsparpot_sub:"How much that means in euros - we will work that out together in a free 30-minute consultation.",
+    termin_btn:"Book free consultation →",
+    bericht_h:"IQ Report & AI Roadmap",bericht_pot:"AI POTENTIAL",
+    bericht_mail:"Your personal report was sent to ",bericht_mail2:"!",
+    bericht_text:"Your IQ score shows: Your company has ",bericht_bold:"significant untapped potential",
+    loes_h:"AI & Automation Solutions",loes_mehr:"More →",
+    loes_beratung:"Individual AI Consulting?",loes_btn:"Book free consultation →",
+    loes_loading:"AI is searching for suitable solutions...",loes_sub:"approx. 8 seconds",
+    loes_steps:["Checking areas","Searching tools","Recommendations"],
+    termin_h:"Free AI Consultation",termin_sub:"30 minutes · free · non-binding",
+    termin_pot:"Your AI Potential",termin_unge:"% unused",
+    termin_einsp:"💶 Discover your concrete savings potential",
+    termin_p:"We show you in 30 minutes how you can concretely leverage this potential.",
+    termin_was:"What to expect",
+    termin_liste:["Evaluation of your personal IQ score","Which AI solutions are immediately applicable","Your concrete savings potential in euros","Realistic costs and ROI calculation","Concrete next steps"],
+    termin_buchen:"Book appointment →",
+    foerd_h:"Government Funding for your AI Automation",
+    foerd_p:"Did you know that as a company you are entitled to government funding? Your AI and automation projects can be funded up to ",foerd_bold:"100%",foerd_p2:".",
+    foerd_was:"What can be funded",
+    foerd_liste:[["💶","Up to 100% of training costs","under the Skills Development Act"],["💰","Up to 75% of salary costs","for employees with social insurance"],["📅","Funding for up to 14 months","ongoing support during implementation"],["✅","No risk & no repayment","even if the measure is discontinued"]],
+    foerd_anspruch:"Who is eligible?",
+    foerd_btn:"Check funding potential now →",
+    imp_h:"Legal Notice",imp_angaben:"Information according to § 5 TMG",imp_kontakt:"Contact",imp_verantw:"Responsible for content",imp_haft:"Disclaimer",
+    imp_haft_text:"The AI-supported analyses are for information purposes only and do not replace professional advice.",
+    ds_h:"Privacy Policy",ds_verantw:"Controller",ds_daten:"What data we collect",
+    ds_daten_liste:["Email address (for the report)","Company name and industry","Questionnaire answers","Technical data via Netlify hosting"],
+    ds_dritte:"Third parties",ds_rechte:"Your rights (GDPR)",
+    ds_rechte_liste:["Access (Art. 15)","Rectification (Art. 16)","Erasure (Art. 17)","Objection (Art. 21)"],
+    ds_anfragen:"Requests: onlion-@outlook.de"
+
+  },
+  pl:{
+    headline:"Jak inteligentnie działa Twoja firma?",
+    sub:"ONLION IQ analizuje potencjał automatyzacji z AI - bezpłatnie w 5 minut.",
+    in5:"W 5 minut otrzymasz",
+    cats:[{k:"ki",l:"AI i Agenci",i:"🤖",d:"AI, Chatboty, LLM"},{k:"rpa",l:"Automatyzacja",i:"⚙️",d:"Przepływy pracy, RPA"},{k:"robotik",l:"Robotyka",i:"🦾",d:"Roboty, Coboty"},{k:"daten",l:"Analityka",i:"📊",d:"Dashboardy, BI"}],
+    features:[["🧠","Wynik IQ"],["🤖","Potencjał AI"],["💶","Potencjał oszczędności"],["⚙️","Rekomendacje"],["🗺️","Plan AI"],["📧","Raport na mail"]],
+    emailPh:"Twój e-mail *",firmaPh:"Nazwa firmy (opcjonalnie)",
+    branchePh:"Wybierz branżę *",
+    branchen:["Produkcja / Przemysł","Usługi / Biuro","Handel / Logistyka","IT / Technologia","Ochrona zdrowia","Edukacja","Finanse / Ubezpieczenia","Inne"],
+    descLabel:"Opisz swoją firmę *",descPh:"Np. liczba pracowników, które procesy są jeszcze ręczne...",
+    pflicht:"Wymagane",
+    dsgvo1:"Przeczytałem/am ",dsgvoLink:"Politykę prywatności",dsgvo2:" i zgadzam się na przetwarzanie moich danych.",
+    startBtn:"Rozpocznij analizę IQ →",noSpam:"Twój e-mail jest używany tylko do raportu. Bez spamu.",
+    impressum:"Impressum",datenschutz:"Prywatność",login:"LOGOWANIE",iqSub:"ILORAZ INTELIGENCJI",
+    errFill:"Proszę wypełnić wszystkie wymagane pola.",
+    loadMsg:"AI tworzy obszary analizy...",loadSub:"ok. 10 sekund",
+    loadSteps:["Czytanie opisu","Tworzenie obszarów","Generowanie pytań"],
+    back:"← Wróć",
+    bereiche_h:"Obszary analizy generowane przez AI",bereiche_fuer:"Dla: ",
+    alle_abw:"Odznacz wszystkie",alle_ausw:"Zaznacz wszystkie",
+    weiter_fragen:"Rozpocznij ankietę →",
+    auswertung_h:"Twój wynik ONLION IQ",iq_score:"Wynik IQ",ki_pot:"Potencjał AI",
+    einsparpot:"💶 Twój potencjał oszczędności",
+    einsparpot_text:"Na podstawie Twojego wyniku IQ, Twoja firma ma ",
+    einsparpot_bold:"znaczny potencjał automatyzacji",
+    einsparpot_sub:"Ile to oznacza w euro - sprawdzimy to razem podczas bezpłatnej 30-minutowej konsultacji.",
+    termin_btn:"Zarezerwuj bezpłatną konsultację →",
+    bericht_h:"Raport IQ i Plan AI",bericht_pot:"POTENCJAŁ AI",
+    bericht_mail:"Twój osobisty raport został wysłany na ",bericht_mail2:"!",
+    bericht_text:"Twój wynik IQ pokazuje: Twoja firma ma ",bericht_bold:"znaczny niewykorzystany potencjał",
+    loes_h:"Rozwiązania AI i Automatyzacji",loes_mehr:"Więcej →",
+    loes_beratung:"Indywidualne doradztwo AI?",loes_btn:"Zarezerwuj bezpłatną konsultację →",
+    loes_loading:"AI szuka odpowiednich rozwiązań...",loes_sub:"ok. 8 sekund",
+    loes_steps:["Sprawdzanie obszarów","Szukanie narzędzi","Rekomendacje"],
+    termin_h:"Bezpłatna konsultacja AI",termin_sub:"30 minut · bezpłatnie · bez zobowiązań",
+    termin_pot:"Twój potencjał AI",termin_unge:"% niewykorzystany",
+    termin_einsp:"💶 Poznaj swój konkretny potencjał oszczędności",
+    termin_p:"Pokażemy Ci w 30 minut, jak możesz konkretnie wykorzystać ten potencjał.",
+    termin_was:"Czego się spodziewać",
+    termin_liste:["Ocena Twojego osobistego wyniku IQ","Które rozwiązania AI są natychmiast stosowalne","Twój konkretny potencjał oszczędności w euro","Realistyczne koszty i obliczenia ROI","Konkretne kolejne kroki"],
+    termin_buchen:"Zarezerwuj termin →",
+    foerd_h:"Dofinansowanie państwowe dla Twojej automatyzacji AI",
+    foerd_p:"Czy wiedziałeś, że jako firma masz prawo do dofinansowania państwowego? Twoje projekty AI i automatyzacji mogą być dofinansowane do ",foerd_bold:"100%",foerd_p2:".",
+    foerd_was:"Co może być dofinansowane",
+    foerd_liste:[["💶","Do 100% kosztów szkoleń","w ramach ustawy o szansach kwalifikacyjnych"],["💰","Do 75% kosztów wynagrodzeń","dla pracowników z ubezpieczeniem społecznym"],["📅","Dofinansowanie do 14 miesięcy","bieżące wsparcie podczas wdrożenia"],["✅","Brak ryzyka i brak zwrotu","nawet po przerwaniu działania"]],
+    foerd_anspruch:"Kto ma prawo?",
+    foerd_btn:"Sprawdź potencjał dofinansowania →",
+    imp_h:"Impressum",imp_angaben:"Dane zgodnie z § 5 TMG",imp_kontakt:"Kontakt",imp_verantw:"Odpowiedzialny za treść",imp_haft:"Zastrzeżenie",
+    imp_haft_text:"Analizy wspomagane przez AI służą wyłącznie do celów informacyjnych i nie zastępują profesjonalnego doradztwa.",
+    ds_h:"Polityka prywatności",ds_verantw:"Administrator",ds_daten:"Jakie dane zbieramy",
+    ds_daten_liste:["Adres e-mail (do raportu)","Nazwa firmy i branża","Odpowiedzi z ankiety","Dane techniczne przez hosting Netlify"],
+    ds_dritte:"Podmioty trzecie",ds_rechte:"Twoje prawa (RODO)",
+    ds_rechte_liste:["Dostęp (Art. 15)","Sprostowanie (Art. 16)","Usunięcie (Art. 17)","Sprzeciw (Art. 21)"],
+    ds_anfragen:"Zapytania: onlion-@outlook.de"
+
+  },
+  fr:{
+    headline:"Avec quelle intelligence votre entreprise travaille-t-elle?",
+    sub:"ONLION IQ analyse votre potentiel d'automatisation avec l'IA - gratuitement en 5 minutes.",
+    in5:"En 5 minutes vous recevez",
+    cats:[{k:"ki",l:"IA & Agents",i:"🤖",d:"IA, Chatbots, LLMs"},{k:"rpa",l:"Automatisation",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotique",i:"🦾",d:"Robots, Cobots"},{k:"daten",l:"Analytique",i:"📊",d:"Tableaux de bord, BI"}],
+    features:[["🧠","Score IQ"],["🤖","Potentiel IA"],["💶","Potentiel d'économies"],["⚙️","Recommandations"],["🗺️","Feuille de route IA"],["📧","Rapport par mail"]],
+    emailPh:"Votre e-mail *",firmaPh:"Nom de l'entreprise (optionnel)",
+    branchePh:"Sélectionner le secteur *",
+    branchen:["Production / Industrie","Services / Bureau","Commerce / Logistique","IT / Technologie","Santé","Éducation","Finance / Assurance","Autre"],
+    descLabel:"Décrivez votre entreprise *",descPh:"Ex. nombre d'employés, quels processus sont encore manuels...",
+    pflicht:"Obligatoire",
+    dsgvo1:"J'ai lu la ",dsgvoLink:"politique de confidentialité",dsgvo2:" et j'accepte le traitement de mes données.",
+    startBtn:"Démarrer l'analyse IQ →",noSpam:"Votre e-mail est utilisé uniquement pour le rapport. Pas de spam.",
+    impressum:"Mentions légales",datenschutz:"Confidentialité",login:"CONNEXION",iqSub:"QUOTIENT D'INTELLIGENCE",
+    errFill:"Veuillez remplir tous les champs obligatoires.",
+    loadMsg:"L'IA crée vos domaines d'analyse...",loadSub:"environ 10 secondes",
+    loadSteps:["Lecture de la description","Création des domaines","Génération des questions"],
+    back:"← Retour",
+    bereiche_h:"Domaines d'analyse générés par IA",bereiche_fuer:"Pour: ",
+    alle_abw:"Tout désélectionner",alle_ausw:"Tout sélectionner",
+    weiter_fragen:"Démarrer le questionnaire →",
+    auswertung_h:"Votre score ONLION IQ",iq_score:"Score IQ",ki_pot:"Potentiel IA",
+    einsparpot:"💶 Votre potentiel d'économies",
+    einsparpot_text:"Basé sur votre score IQ, votre entreprise a ",
+    einsparpot_bold:"un potentiel d'automatisation considérable",
+    einsparpot_sub:"Ce que cela représente en euros - nous l'examinerons ensemble lors d'une consultation gratuite de 30 minutes.",
+    termin_btn:"Réserver une consultation gratuite →",
+    bericht_h:"Rapport IQ & Feuille de route IA",bericht_pot:"POTENTIEL IA",
+    bericht_mail:"Votre rapport personnel a été envoyé à ",bericht_mail2:"!",
+    bericht_text:"Votre score IQ montre: Votre entreprise a ",bericht_bold:"un potentiel inexploité considérable",
+    loes_h:"Solutions IA & Automatisation",loes_mehr:"Plus →",
+    loes_beratung:"Conseil IA individuel?",loes_btn:"Réserver une consultation gratuite →",
+    loes_loading:"L'IA recherche des solutions adaptées...",loes_sub:"environ 8 secondes",
+    loes_steps:["Vérification des domaines","Recherche d'outils","Recommandations"],
+    termin_h:"Consultation IA gratuite",termin_sub:"30 minutes · gratuit · sans engagement",
+    termin_pot:"Votre potentiel IA",termin_unge:"% inutilisé",
+    termin_einsp:"💶 Découvrez votre potentiel d'économies concret",
+    termin_p:"Nous vous montrons en 30 minutes comment exploiter concrètement ce potentiel.",
+    termin_was:"Ce qui vous attend",
+    termin_liste:["Évaluation de votre score IQ personnel","Quelles solutions IA sont immédiatement applicables","Votre potentiel d'économies concret en euros","Coûts réalistes et calcul du ROI","Prochaines étapes concrètes"],
+    termin_buchen:"Réserver un rendez-vous →",
+    foerd_h:"Financement public pour votre automatisation IA",
+    foerd_p:"Saviez-vous qu'en tant qu'entreprise vous avez droit à des financements publics? Vos projets IA et automatisation peuvent être financés jusqu'à ",foerd_bold:"100%",foerd_p2:".",
+    foerd_was:"Ce qui peut être financé",
+    foerd_liste:[["💶","Jusqu'à 100% des coûts de formation","selon la loi sur les opportunités de qualification"],["💰","Jusqu'à 75% des coûts salariaux","pour les employés avec assurance sociale"],["📅","Financement jusqu'à 14 mois","soutien continu pendant la mise en œuvre"],["✅","Aucun risque & aucun remboursement","même en cas d'interruption de la mesure"]],
+    foerd_anspruch:"Qui est éligible?",
+    foerd_btn:"Vérifier le potentiel de financement →",
+    imp_h:"Mentions légales",imp_angaben:"Informations selon § 5 TMG",imp_kontakt:"Contact",imp_verantw:"Responsable du contenu",imp_haft:"Avertissement",
+    imp_haft_text:"Les analyses assistées par IA sont uniquement à titre informatif et ne remplacent pas un conseil professionnel.",
+    ds_h:"Politique de confidentialité",ds_verantw:"Responsable du traitement",ds_daten:"Données que nous collectons",
+    ds_daten_liste:["Adresse e-mail (pour le rapport)","Nom et secteur de l'entreprise","Réponses au questionnaire","Données techniques via l'hébergement Netlify"],
+    ds_dritte:"Tiers",ds_rechte:"Vos droits (RGPD)",
+    ds_rechte_liste:["Accès (Art. 15)","Rectification (Art. 16)","Effacement (Art. 17)","Opposition (Art. 21)"],
+    ds_anfragen:"Demandes: onlion-@outlook.de"
+
+  },
+  tr:{
+    headline:"Şirketiniz ne kadar akıllı çalışıyor?",
+    sub:"ONLION IQ, yapay zeka ile otomasyon potansiyelinizi analiz eder - 5 dakikada ücretsiz.",
+    in5:"5 dakikada alacaksınız",
+    cats:[{k:"ki",l:"AI ve Ajanlar",i:"🤖",d:"AI, Chatbotlar, LLM"},{k:"rpa",l:"Otomasyon",i:"⚙️",d:"İş Akışları, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Robotlar, Cobotlar"},{k:"daten",l:"Analitik",i:"📊",d:"Panolar, BI"}],
+    features:[["🧠","IQ Skoru"],["🤖","AI Potansiyeli"],["💶","Tasarruf Potansiyeli"],["⚙️","Öneriler"],["🗺️","AI Yol Haritası"],["📧","Posta ile Rapor"]],
+    emailPh:"E-postanız *",firmaPh:"Şirket adı (isteğe bağlı)",
+    branchePh:"Sektör seçin *",
+    branchen:["Üretim / İmalat","Hizmetler / Ofis","Ticaret / Lojistik","IT / Teknoloji","Sağlık","Eğitim","Finans / Sigorta","Diğer"],
+    descLabel:"Şirketinizi tanımlayın *",descPh:"Örn. çalışan sayısı, hangi süreçler hâlâ manuel...",
+    pflicht:"Zorunlu",
+    dsgvo1:"",dsgvoLink:"Gizlilik Politikası",dsgvo2:"'nı okudum ve verilerimin işlenmesine izin veriyorum.",
+    startBtn:"IQ Analizini Başlat →",noSpam:"E-postanız yalnızca rapor için kullanılır. Spam yok.",
+    impressum:"Künyemiz",datenschutz:"Gizlilik",login:"GİRİŞ",iqSub:"ZEKA KATSAYISI",
+    errFill:"Lütfen tüm zorunlu alanları doldurun.",
+    loadMsg:"AI analiz alanlarınızı oluşturuyor...",loadSub:"yaklaşık 10 saniye",
+    loadSteps:["Açıklama okunuyor","Alanlar oluşturuluyor","Sorular üretiliyor"],
+    back:"← Geri",
+    bereiche_h:"AI tarafından oluşturulan analiz alanları",bereiche_fuer:"İçin: ",
+    alle_abw:"Tümünü kaldır",alle_ausw:"Tümünü seç",
+    weiter_fragen:"Anketi başlat →",
+    auswertung_h:"ONLION IQ Puanınız",iq_score:"IQ Puanı",ki_pot:"AI Potansiyeli",
+    einsparpot:"💶 Tasarruf Potansiyeliniz",
+    einsparpot_text:"IQ puanınıza göre şirketinizde ",
+    einsparpot_bold:"önemli otomasyon potansiyeli",
+    einsparpot_sub:" bulunmaktadır. Bunun euro cinsinden ne anlama geldiğini - ücretsiz 30 dakikalık bir görüşmede birlikte inceleyeceğiz.",
+    termin_btn:"Ücretsiz görüşme rezervasyonu →",
+    bericht_h:"IQ Raporu & AI Yol Haritası",bericht_pot:"AI POTANSİYELİ",
+    bericht_mail:"Kişisel raporunuz şu adrese gönderildi: ",bericht_mail2:"!",
+    bericht_text:"IQ puanınız gösteriyor: Şirketinizde ",bericht_bold:"önemli kullanılmamış potansiyel var",
+    loes_h:"AI & Otomasyon Çözümleri",loes_mehr:"Daha fazla →",
+    loes_beratung:"Bireysel AI Danışmanlığı?",loes_btn:"Ücretsiz görüşme rezervasyonu →",
+    loes_loading:"AI uygun çözümler arıyor...",loes_sub:"yaklaşık 8 saniye",
+    loes_steps:["Alanlar kontrol ediliyor","Araçlar aranıyor","Öneriler"],
+    termin_h:"Ücretsiz AI Danışma Görüşmesi",termin_sub:"30 dakika · ücretsiz · bağlayıcı değil",
+    termin_pot:"AI Potansiyeliniz",termin_unge:"% kullanılmamış",
+    termin_einsp:"💶 Somut tasarruf potansiyelinizi keşfedin",
+    termin_p:"Bu potansiyeli 30 dakikada somut olarak nasıl kullanabileceğinizi gösteriyoruz.",
+    termin_was:"Sizi neler bekliyor",
+    termin_liste:["Kişisel IQ puanınızın değerlendirmesi","Hangi AI çözümleri hemen uygulanabilir","Euro cinsinden somut tasarruf potansiyeliniz","Gerçekçi maliyetler ve ROI hesabı","Somut sonraki adımlar"],
+    termin_buchen:"Randevu al →",
+    foerd_h:"AI Otomasyonunuz için Devlet Desteği",
+    foerd_p:"Şirket olarak devlet desteğine hakkınız olduğunu biliyor muydunuz? AI ve otomasyon projeleriniz ",foerd_bold:"%100'e kadar desteklenebilir",foerd_p2:".",
+    foerd_was:"Neler desteklenebilir",
+    foerd_liste:[["💶","Eğitim maliyetlerinin %100'üne kadar","Nitelendirme Fırsatları Yasası kapsamında"],["💰","Maaş maliyetlerinin %75'ine kadar","sosyal sigortalı çalışanlar için"],["📅","14 aya kadar destek","uygulama sırasında süregelen destek"],["✅","Risk yok & geri ödeme yok","tedbirin iptal edilmesi halinde bile"]],
+    foerd_anspruch:"Kimler hak kazanabilir?",
+    foerd_btn:"Şimdi destek potansiyelini kontrol et →",
+    imp_h:"Künyemiz",imp_angaben:"§ 5 TMG uyarınca bilgiler",imp_kontakt:"İletişim",imp_verantw:"İçerikten sorumlu",imp_haft:"Sorumluluk reddi",
+    imp_haft_text:"AI destekli analizler yalnızca bilgi amaçlıdır ve profesyonel danışmanlığın yerini tutmaz.",
+    ds_h:"Gizlilik Politikası",ds_verantw:"Sorumlu kişi",ds_daten:"Hangi verileri topluyoruz",
+    ds_daten_liste:["E-posta adresi (rapor için)","Şirket adı ve sektör","Anket yanıtları","Netlify hosting üzerinden teknik veriler"],
+    ds_dritte:"Üçüncü taraflar",ds_rechte:"Haklarınız (KVKK/GDPR)",
+    ds_rechte_liste:["Erişim (Md. 15)","Düzeltme (Md. 16)","Silme (Md. 17)","İtiraz (Md. 21)"],
+    ds_anfragen:"Talepler: onlion-@outlook.de"
+
+  }
 };
 
 function LangDropdown(props){
@@ -222,15 +495,10 @@ function LangDropdown(props){
   return React.createElement("div",{style:{position:"relative",marginBottom:16,display:"flex",justifyContent:"flex-end"}},
     React.createElement("button",{
       onClick:function(){setOpen(!open);},
-      style:{
-        display:"flex",alignItems:"center",gap:8,
-        padding:"7px 14px",borderRadius:24,
+      style:{display:"flex",alignItems:"center",gap:8,padding:"7px 14px",borderRadius:24,
         background:"rgba(0,0,0,0.45)",backdropFilter:"blur(8px)",
-        border:"1px solid rgba(255,255,255,0.15)",
-        color:"#f0f0f0",cursor:"pointer",fontSize:13,
-        fontFamily:"inherit",fontWeight:500,
-        boxShadow:"0 2px 8px rgba(0,0,0,0.3)"
-      }
+        border:"1px solid rgba(255,255,255,0.15)",color:"#f0f0f0",cursor:"pointer",
+        fontSize:13,fontFamily:"inherit",fontWeight:500,boxShadow:"0 2px 8px rgba(0,0,0,0.3)"}
     },
       React.createElement("span",{style:{fontSize:18}},current.flag),
       React.createElement("span",null,current.label),
@@ -238,28 +506,18 @@ function LangDropdown(props){
     ),
     open&&React.createElement("div",{style:{
       position:"absolute",top:"calc(100% + 6px)",right:0,
-      background:"rgba(15,15,15,0.95)",backdropFilter:"blur(12px)",
-      border:"1px solid rgba(255,255,255,0.12)",
-      borderRadius:14,overflow:"hidden",
-      boxShadow:"0 8px 24px rgba(0,0,0,0.6)",
-      zIndex:999,minWidth:160
-    }},
+      background:"rgba(15,15,15,0.97)",backdropFilter:"blur(12px)",
+      border:"1px solid rgba(255,255,255,0.12)",borderRadius:14,overflow:"hidden",
+      boxShadow:"0 8px 24px rgba(0,0,0,0.6)",zIndex:999,minWidth:170}},
       ALL_LANGS.map(function(item,i){
         var active=item.l===lang;
-        return React.createElement("button",{
-          key:item.l,
+        return React.createElement("button",{key:item.l,
           onClick:function(){setLang(item.l);setOpen(false);},
-          style:{
-            display:"flex",alignItems:"center",gap:10,
-            width:"100%",padding:"10px 16px",
-            background:active?"rgba(122,200,0,0.15)":"transparent",
-            border:"none",
+          style:{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"11px 16px",
+            background:active?"rgba(122,200,0,0.15)":"transparent",border:"none",
             borderBottom:i<ALL_LANGS.length-1?"1px solid rgba(255,255,255,0.06)":"none",
-            color:active?"#7AC800":"#f0f0f0",
-            cursor:"pointer",fontSize:13,fontFamily:"inherit",
-            fontWeight:active?600:400,textAlign:"left"
-          }
-        },
+            color:active?"#7AC800":"#f0f0f0",cursor:"pointer",fontSize:13,
+            fontFamily:"inherit",fontWeight:active?600:400,textAlign:"left"}},
           React.createElement("span",{style:{fontSize:20}},item.flag),
           React.createElement("span",null,item.label),
           active&&React.createElement("span",{style:{marginLeft:"auto",fontSize:14}},"✓")
@@ -273,6 +531,7 @@ function App(){
   var useState=React.useState;
   var r1=useState("intro"),step=r1[0],setStep=r1[1];
   var rL=useState("de"),lang=rL[0],setLang=rL[1];
+  var T=T_ALL[lang]||T_ALL["de"];
   window.__adminLogin=function(){setStep("adminpin");};
   var r_adminTab=useState("checkliste"),adminTab=r_adminTab[0],setAdminTab=r_adminTab[1];
   var r_agPlatform=useState("Make.com"),agPlatform=r_agPlatform[0],setAgPlatform=r_agPlatform[1];
@@ -326,7 +585,7 @@ function App(){
   }
 
   async function ladeBereiche(){
-    if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
+    if(!canStart){setErr(T.errFill);return;}
     setLoadB(true);setErr("");
     var prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirma: "+safe(firma)+"\nBeschreibung: "+safe(desc)+"\n\nWichtig: Die Fragen sollen DIREKT auf die Beschreibung eingehen und konkrete Situationen aus dem Unternehmen ansprechen.\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[KI-Potenzial in 1 Satz]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
     try{
@@ -379,7 +638,7 @@ function App(){
     var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
     var bHTML=gefB.map(function(b){var sc=gs(b.id),bc=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";return "<div style='margin-bottom:14px'><div style='display:flex;justify-content:space-between;margin-bottom:5px'><span style='font-size:13px;color:#f0f0f0'>"+b.icon+" "+b.label+"</span><span style='font-size:12px;color:#7AC800'>"+sc+"%</span></div><div style='height:6px;background:#1e1e1e;border-radius:3px'><div style='height:100%;width:"+sc+"%;background:"+bc+";border-radius:3px'></div></div></div>";}).join("");
     var rHTML=bericht.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/^## (.+)$/gm,"<h3 style='font-size:14px;color:#7AC800;margin:16px 0 6px;border-bottom:1px solid #2a2a2a;padding-bottom:4px'>$1</h3>").replace(/^- (.+)$/gm,"<li style='margin:3px 0;color:#888;font-size:12px'>$1</li>").replace(/\n/g,"<br/>");
-    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ</title><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body><div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'><div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>Automatisierungs-Analyse</div><h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+safe(firma||branche)+"</h1><p style='font-size:14px;color:#888;margin-bottom:40px'>"+safe(branche)+" - "+datum+"</p><div style='display:flex;gap:48px'><div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>IQ-SCORE</div><div style='font-size:52px;font-weight:700;color:#fff'>"+g+"%</div></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:6px'>KI-POTENZIAL</div><div style='font-size:52px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div></div><div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlion-iq.netlify.app</p></div></div><div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'><h2 style='font-size:20px;font-weight:600;color:#fff;margin-bottom:24px'>Ergebnisse je Bereich</h2>"+bHTML+"</div><div style='background:#0a0a0a;min-height:100vh;padding:48px'><div style='font-size:13px;color:#888;line-height:1.8'>"+rHTML+"</div><div style='margin-top:40px;padding:20px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:13px;font-weight:600;color:#7AC800;margin-bottom:6px'>Kostenloses KI-Beratungsgespraech buchen</div><div style='font-size:12px;color:#888'>calendly.com/ridge-linear5958-eagereverest/30min</div></div></div></body></html>";
+    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ</title><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body><div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'><div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>Automatisierungs-Analyse</div><h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+safe(firma||branche)+"</h1><p style='font-size:14px;color:#888;margin-bottom:40px'>"+safe(branche)+" - "+datum+"</p><div style='display:flex;gap:48px'><div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>IQ-SCORE</div><div style='font-size:52px;font-weight:700;color:#fff'>"+g+"%</div></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:6px'>{T.bericht_pot}</div><div style='font-size:52px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div></div><div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlion-iq.netlify.app</p></div></div><div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'><h2 style='font-size:20px;font-weight:600;color:#fff;margin-bottom:24px'>Ergebnisse je Bereich</h2>"+bHTML+"</div><div style='background:#0a0a0a;min-height:100vh;padding:48px'><div style='font-size:13px;color:#888;line-height:1.8'>"+rHTML+"</div><div style='margin-top:40px;padding:20px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:13px;font-weight:600;color:#7AC800;margin-bottom:6px'>Kostenloses KI-Beratungsgespraech buchen</div><div style='font-size:12px;color:#888'>calendly.com/ridge-linear5958-eagereverest/30min</div></div></div></body></html>";
     var w=window.open("","_blank");
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
@@ -397,24 +656,22 @@ function App(){
   var btnO={width:"100%",padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2,marginTop:8};
   function bdg(c){return{display:"inline-block",padding:"2px 8px",borderRadius:20,background:c+"22",border:"0.5px solid "+c+"66",fontSize:10,color:c};}
 
-  var TL=LANG_TRANS[lang]||LANG_TRANS["de"];
-
   if(step==="intro") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo showLogin={true}/>
       <LangDropdown lang={lang} setLang={setLang}/>
-      <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>{TL.headline}</h1>
-      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>{TL.sub}</p>
+      <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>{T.headline}</h1>
+      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>{T.sub}</p>
 
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
-        {[{k:"ki",l:"KI & Agenten",i:"🤖",d:"KI, Chatbots, LLMs"},{k:"rpa",l:"Automatisierung",i:"⚙️",d:"Workflows, RPA"},{k:"robotik",l:"Robotik",i:"🦾",d:"Roboter, Cobots"},{k:"daten",l:"Analytics",i:"📊",d:"Dashboards, BI"}].map(function(k){return <KatCard key={k.k} k={k}/>;})
+        {T.cats.map(function(k){return <KatCard key={k.k} k={k}/>;})
         }
       </div>
 
       <div style={{...card,marginBottom:20}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>In 5 Minuten erhältst du</div>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>{T.in5}</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          {[["🧠","IQ-Score"],["🤖","KI-Potenzial"],["💶","Einsparpotenzial"],["⚙️","Empfehlungen"],["🗺️","KI-Roadmap"],["📧","Bericht per Mail"]].map(function(x,i){return(
+          {T.features.map(function(x,i){return(
             <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginTop:i>2?8:0}}>
               <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span>
               <span style={{fontSize:13,color:T2,whiteSpace:"nowrap"}}>{x[1]}</span>
@@ -423,19 +680,19 @@ function App(){
         </div>
       </div>
 
-      <input placeholder="Deine E-Mail *" value={email} onChange={function(e){setEmail(e.target.value);}} type="email"/>
-      <input placeholder="Firmenname (optional)" value={firma} onChange={function(e){setFirma(e.target.value);}}/>
+      <input placeholder={T.emailPh} value={email} onChange={function(e){setEmail(e.target.value);}} type="email"/>
+      <input placeholder={T.firmaPh} value={firma} onChange={function(e){setFirma(e.target.value);}}/>
       <select value={branche} onChange={function(e){setBranche(e.target.value);}} style={{marginBottom:10}}>
-        <option value="">Branche auswählen *</option>
-        {BRANCHEN.map(function(b){return <option key={b} value={b}>{b}</option>;})}
+        <option value="">{T.branchePh}</option>
+        {T.branchen.map(function(b){return <option key={b} value={b}>{b}</option>;})}
       </select>
 
       <div style={{marginBottom:10,background:D3,border:"0.5px solid "+(descValid?G:BD),borderRadius:8,padding:"9px 12px",transition:"border-color 0.2s"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-          <span style={{fontSize:14,color:TX}}>Beschreib dein Unternehmen *</span>
-          <span style={{fontSize:10,color:"#e05a5a"}}>Pflichtfeld</span>
+          <span style={{fontSize:14,color:TX}}>{T.descLabel}</span>
+          <span style={{fontSize:10,color:"#e05a5a"}}>{T.pflicht}</span>
         </div>
-        <textarea placeholder="Z.B. Mitarbeiteranzahl, welche Prozesse noch manuell laufen..." value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:12,color:TX,width:"100%",outline:"none"}}/>
+        <textarea placeholder={T.descPh} value={desc} onChange={function(e){setDesc(e.target.value);}} rows={3} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:12,color:TX,width:"100%",outline:"none"}}/>
       </div>
 
       {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
@@ -450,15 +707,15 @@ function App(){
           style={{width:16,height:16,flexShrink:0,marginTop:2,marginBottom:0,accentColor:G,cursor:"pointer"}}
         />
         <label htmlFor="dsgvo" style={{fontSize:12,color:T2,lineHeight:1.6,cursor:"pointer"}}>
-          Ich habe die <button onClick={function(e){e.preventDefault();setStep("datenschutz");}} style={{background:"none",border:"none",color:G,cursor:"pointer",fontSize:12,textDecoration:"underline",padding:0}}>Datenschutzerklärung</button> gelesen und bin einverstanden, dass meine Daten zur Erstellung des Analyseberichts verarbeitet werden.
+          {T.dsgvo1}<button onClick={function(e){e.preventDefault();setStep("datenschutz");}} style={{background:"none",border:"none",color:G,cursor:"pointer",fontSize:12,textDecoration:"underline",padding:0}}>{T.dsgvoLink}</button>{T.dsgvo2}
         </label>
       </div>
 
       {loadB
-        ?<LoadBox msg="KI erstellt deine Analysebereiche..." sub="ca. 10 Sekunden" steps={["Beschreibung lesen","Bereiche erstellen","Fragen generieren"]}/>
-        :<button disabled={!canStart||!dsgvo} onClick={ladeBereiche} style={{...btnG,opacity:(canStart&&dsgvo)?1:0.4}}>IQ-Analyse starten →</button>
+        ?<LoadBox msg={T.loadMsg} sub={T.loadSub} steps={T.loadSteps}/>
+        :<button disabled={!canStart||!dsgvo} onClick={ladeBereiche} style={{...btnG,opacity:(canStart&&dsgvo)?1:0.4}}>{T.startBtn}</button>
       }
-      <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>Deine E-Mail wird nur für den Bericht verwendet. Kein Spam.</p>
+      <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>{T.noSpam}</p>
       <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,paddingTop:16,borderTop:"0.5px solid "+BD}}>
         <button onClick={function(){setStep("impressum");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Impressum</button>
         <button onClick={function(){setStep("datenschutz");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Datenschutz</button>
@@ -471,13 +728,13 @@ function App(){
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
-        <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>KI-generierte Analysebereiche</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:20}}>Für: <span style={{color:G}}>{firma||branche}</span></p>
+        <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{T.back}</button>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>{T.bereiche_h}</h1>
+        <p style={{color:T2,fontSize:13,marginBottom:20}}>{T.bereiche_fuer}<span style={{color:G}}>{firma||branche}</span></p>
         <div style={{...card,marginBottom:16}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
             <span style={{fontSize:13,color:T2}}>{aktiv.length} von {bereiche.length}</span>
-            <button onClick={function(){setAktiv(alle?[]:bereiche.map(function(b){return b.id;}));}} style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid "+(alle?G:BD),background:alle?G+"18":"transparent",cursor:"pointer",fontSize:12,color:alle?G:T2}}>{alle?"Alle abwählen":"Alle auswählen"}</button>
+            <button onClick={function(){setAktiv(alle?[]:bereiche.map(function(b){return b.id;}));}} style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid "+(alle?G:BD),background:alle?G+"18":"transparent",cursor:"pointer",fontSize:12,color:alle?G:T2}}>{alle?T.alle_abw:T.alle_ausw}</button>
           </div>
           {bereiche.map(function(b){
             var a=aktiv.indexOf(b.id)>=0,kc=KC[b.kiKat]||G,kl=KL[b.kiKat]||"KI";
@@ -542,17 +799,17 @@ function App(){
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>Dein ONLION IQ-Score</h1>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>{T.auswertung_h}</h1>
         <p style={{color:T2,fontSize:13,marginBottom:0}}>{firma||"Dein Unternehmen"} - {branche}</p>
         <IQMeter score={g}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-          <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>IQ-Score</div><div style={{fontSize:28,fontWeight:500}}>{g}%</div></div>
-          <div style={cardG}><div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>KI-Potenzial</div><div style={{fontSize:28,fontWeight:500,color:G}}>{p}%</div></div>
+          <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>{T.iq_score}</div><div style={{fontSize:28,fontWeight:500}}>{g}%</div></div>
+          <div style={cardG}><div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>{T.ki_pot}</div><div style={{fontSize:28,fontWeight:500,color:G}}>{p}%</div></div>
         </div>
         <div style={{...cardG,marginBottom:20}}>
-          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>💶 Dein Einsparpotenzial</div>
-          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:10}}>Basierend auf deinem IQ-Score steckt in deinem Unternehmen <strong style={{color:G}}>erhebliches Automatisierungspotenzial</strong>.</p>
-          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Wie viel das konkret in Euro bedeutet  -  das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an. Individuell. Unverbindlich.</p>
+          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{T.einsparpot}</div>
+          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:10}}>{T.einsparpot_text}<strong style={{color:G}}>{T.einsparpot_bold}</strong>.</p>
+          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>{T.einsparpot_sub.slice(0,0)||T.einsparpot_sub||"" /* placeholder */}<präch an. Individuell. Unverbindlich.</p>
           <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>📅 Jetzt Termin sichern →</button>
         </div>
         {gefB.map(function(b){var sc=gs(b.id),kc=KC[b.kiKat]||G;return(
@@ -566,7 +823,7 @@ function App(){
         );})}
         {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
         <div style={{height:1,background:BD,margin:"20px 0"}}/>
-        {loadR?<LoadBox msg="KI erstellt deinen Bericht..." sub="ca. 10 Sekunden" steps={["Auswerten","Empfehlungen","Roadmap"]}/>:<button onClick={analysiereReport} style={btnG}>KI-Bericht & Roadmap erstellen →</button>}
+        {loadR?<LoadBox msg="KI erstellt deinen Bericht..." sub={T.loadSub} steps={["Auswerten","Empfehlungen","Roadmap"]}/>:<button onClick={analysiereReport} style={btnG}>KI-Bericht & Roadmap erstellen →</button>}
         {!loadR&&<button onClick={function(){setStep("fragebogen");}} style={btn}>← Antworten bearbeiten</button>}
       </div>
     );
@@ -577,17 +834,17 @@ function App(){
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
-        {emailSent&&<div style={{background:"#081200",border:"0.5px solid "+G+"40",borderRadius:8,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>📧</span><span style={{fontSize:12,color:G}}>Dein persönlicher Bericht wurde an <strong>{email}</strong> gesendet!</span></div>}
+        {emailSent&&<div style={{background:"#081200",border:"0.5px solid "+G+"40",borderRadius:8,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>📧</span><span style={{fontSize:12,color:G}}>{T.bericht_mail}<strong>{email}</strong>{T.bericht_mail2}</span></div>}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
-          <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>IQ-Bericht & KI-Roadmap</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||"Dein Unternehmen"} - {branche}</p></div>
-          <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>KI-POTENZIAL</div></div>
+          <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>{T.bericht_h}</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||"Dein Unternehmen"} - {branche}</p></div>
+          <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>{T.bericht_pot}</div></div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat("+Math.min(gefB.length,3)+",1fr)",gap:8,marginBottom:16}}>
           {gefB.map(function(b){var kc=KC[b.kiKat]||G;return(<div key={b.id} style={{...card,padding:"0.75rem",textAlign:"center",marginBottom:0}}><div style={{fontSize:9,color:T2,marginBottom:2}}>{b.label}</div><div style={{fontSize:18,fontWeight:500,color:TX}}>{gs(b.id)}%</div></div>);})}
         </div>
         <div style={{...cardG,marginBottom:16}}>
-          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>💶 Dein Einsparpotenzial</div>
-          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>Dein IQ-Score zeigt: In deinem Unternehmen steckt <strong style={{color:G}}>erhebliches ungenutztes Potenzial</strong>.</p>
+          <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{T.einsparpot}</div>
+          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>{T.bericht_text}<strong style={{color:G}}>{T.bericht_bold}</strong>.</p>
           <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Was das konkret für dich in Euro bedeutet, besprechen wir in einem persönlichen Gespräch  -  kostenlos, individuell und ohne Verpflichtung.</p>
           <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>📅 Jetzt Termin sichern & Potenzial erfahren →</button>
         </div>
@@ -639,15 +896,15 @@ function App(){
   if(step==="loesungen") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
-      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>KI & Automatisierungs-Lösungen</h1>
+      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{T.back}</button>
+      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>{T.loes_h}</h1>
       <p style={{color:T2,fontSize:13,marginBottom:16}}>Für <span style={{color:G}}>{firma||branche}</span></p>
-      {loadL?<LoadBox msg="KI sucht passende Lösungen..." sub="ca. 8 Sekunden" steps={["Bereiche prüfen","Tools suchen","Empfehlungen"]}/>:
+      {loadL?<LoadBox msg={T.loes_loading} sub={T.loes_sub} steps={T.loes_steps}/>:
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-          {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">Mehr →</a></div>);})}
+          {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">{T.loes_mehr}</a></div>);})}
         </div>
       }
-      <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div><p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>Kostenloses Gespräch buchen →</button></div>
+      <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div><p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>{T.loes_btn}</button></div>
     </div>
   );
 
@@ -656,19 +913,19 @@ function App(){
     return(
       <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo/>
-        <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>Kostenloses KI-Beratungsgespräch</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:20}}>30 Minuten · kostenlos · unverbindlich</p>
+        <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{T.back}</button>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>{T.termin_h}</h1>
+        <p style={{color:T2,fontSize:13,marginBottom:20}}>{T.termin_sub}</p>
         <div style={{...cardG,marginBottom:24}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-            <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>Dein KI-Potenzial</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div><div style={{fontSize:13,color:G,marginTop:4}}>💶 Erfahre dein konkretes Einsparpotenzial</div></div>
+            <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>{T.termin_pot}</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div><div style={{fontSize:13,color:G,marginTop:4}}>{T.termin_einsp}</div></div>
             <div style={{fontSize:36}}>🚀</div>
           </div>
-          <p style={{fontSize:13,color:T2,lineHeight:1.6}}>Wir zeigen dir in 30 Minuten wie du dieses Potenzial konkret heben kannst.</p>
+          <p style={{fontSize:13,color:T2,lineHeight:1.6}}>{T.termin_p}</p>
         </div>
         <div style={{...card,marginBottom:16}}>
-          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>Was dich erwartet</div>
-          {["Auswertung deines persönlichen IQ-Scores","Welche KI-Lösungen sofort einsetzbar sind","Dein konkretes Einsparpotenzial in Euro","Realistische Kosten und ROI-Berechnung","Konkrete nächste Schritte"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:8}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}
+          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>{T.termin_was}</div>
+          {T.termin_liste.map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:8}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}
         </div>
         <div style={{background:G+"08",border:"1px solid "+G+"30",borderRadius:10,padding:"12px 14px",marginBottom:14,display:"flex",alignItems:"flex-start",gap:10}}>
           <span style={{fontSize:16,flexShrink:0}}>🎁</span>
@@ -858,24 +1115,19 @@ function App(){
   if(step==="foerderung") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
-      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{T.back}</button>
 
       {/* Hero */}
       <div style={{background:"#0a1a00",border:"1px solid "+G+"50",borderRadius:12,padding:"1.5rem",marginBottom:20,textAlign:"center"}}>
         <div style={{fontSize:36,marginBottom:10}}>🏛️</div>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 8px",color:G}}>Staatliche Förderung für deine KI-Automatisierung</h1>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Wusstest du, dass du als Unternehmen Anspruch auf staatliche Förderung hast? Deine KI- und Automatisierungsprojekte können bis zu <strong style={{color:G}}>100% gefördert</strong> werden.</p>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 8px",color:G}}>{T.foerd_h}</h1>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>{T.foerd_p}<strong style={{color:G}}>{T.foerd_bold}</strong>{T.foerd_p2}</p>
       </div>
 
       {/* Förder-Highlights */}
       <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Was gefördert werden kann</div>
-        {[
-          ["💶","Bis zu 100% der Weiterbildungskosten","nach dem Qualifizierungschancengesetz (QCG)"],
-          ["💰","Bis zu 75% der Gehaltskosten","für sozialversicherungspflichtige Angestellte"],
-          ["📅","Förderung für bis zu 14 Monate","laufende Unterstützung während der Umsetzung"],
-          ["✅","Kein Risiko & keine Rückzahlung","auch nicht bei Abbruch der Maßnahme"]
-        ].map(function(x,i){return(
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>{T.foerd_was}</div>
+        {T.foerd_liste.map(function(x,i){return(
           <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:14,paddingBottom:i<3?14:0,borderBottom:i<3?"0.5px solid "+BD:"none"}}>
             <span style={{fontSize:22,flexShrink:0}}>{x[0]}</span>
             <div>
@@ -888,7 +1140,7 @@ function App(){
 
       {/* Wer hat Anspruch */}
       <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Wer hat Anspruch?</div>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>{T.foerd_anspruch}</div>
         {[
           "Kleine und mittelständische Unternehmen (KMU)",
           "Unternehmen mit sozialversicherungspflichtigen Angestellten",
@@ -1253,23 +1505,23 @@ function App(){
   if(step==="impressum") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
-      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>Impressum</h1>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Angaben gemäß § 5 TMG</div><p style={{fontSize:14,color:TX,marginBottom:4}}>Adam Cebulla</p><p style={{fontSize:13,color:T2,marginBottom:2}}>ONLION (Einzelunternehmen)</p><p style={{fontSize:13,color:T2,marginBottom:2}}>Loher Hauptstrasse 81a</p><p style={{fontSize:13,color:T2,marginBottom:16}}>90427 Nürnberg</p><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>Kontakt</div><p style={{fontSize:13,color:T2}}>E-Mail: onlion-@outlook.de</p></div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Verantwortlich für den Inhalt</div><p style={{fontSize:13,color:T2}}>Adam Cebulla, Loher Hauptstrasse 81a, 90427 Nürnberg</p></div>
-      <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Haftungsausschluss</div><p style={{fontSize:12,color:T2,lineHeight:1.7}}>Die KI-gestützten Analysen dienen ausschließlich zur Information und ersetzen keine professionelle Beratung.</p></div>
+      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{T.back}</button>
+      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>{T.imp_h}</h1>
+      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{T.imp_angaben}</div><p style={{fontSize:14,color:TX,marginBottom:4}}>Adam Cebulla</p><p style={{fontSize:13,color:T2,marginBottom:2}}>ONLION (Einzelunternehmen)</p><p style={{fontSize:13,color:T2,marginBottom:2}}>Loher Hauptstrasse 81a</p><p style={{fontSize:13,color:T2,marginBottom:16}}>90427 Nürnberg</p><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{T.imp_kontakt}</div><p style={{fontSize:13,color:T2}}>E-Mail: onlion-@outlook.de</p></div>
+      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{T.imp_verantw}</div><p style={{fontSize:13,color:T2}}>Adam Cebulla, Loher Hauptstrasse 81a, 90427 Nürnberg</p></div>
+      <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{T.imp_haft}</div><p style={{fontSize:12,color:T2,lineHeight:1.7}}>{T.imp_haft_text}</p></div>
     </div>
   );
 
   if(step==="datenschutz") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo/>
-      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>Datenschutzerklärung</h1>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Verantwortlicher</div><p style={{fontSize:13,color:T2,lineHeight:1.7}}>Adam Cebulla · ONLION · Loher Hauptstrasse 81a · 90427 Nürnberg · onlion-@outlook.de</p></div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Welche Daten wir erheben</div>{["E-Mail-Adresse (für den Bericht)","Firmenname und Branche","Antworten des Fragebogens","Technische Daten durch Netlify-Hosting"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G,flexShrink:0}}>→</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}</div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Drittanbieter</div>{[["Anthropic API","anthropic.com/privacy"],["Netlify","netlify.com/privacy"],["Calendly","calendly.com/privacy"],["Brevo","brevo.com/legal/privacypolicy"]].map(function(t,i){return(<div key={i} style={{marginBottom:10}}><p style={{fontSize:13,color:TX,marginBottom:3}}>{t[0]}</p><p style={{fontSize:11,color:T2}}>{t[1]}</p></div>);})}</div>
-      <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Deine Rechte (DSGVO)</div>{["Auskunft (Art. 15)","Berichtigung (Art. 16)","Löschung (Art. 17)","Widerspruch (Art. 21)"].map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}<p style={{fontSize:12,color:T2,marginTop:10}}>Anfragen: onlion-@outlook.de</p></div>
+      <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{T.back}</button>
+      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>{T.ds_h}</h1>
+      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{T.ds_verantw}</div><p style={{fontSize:13,color:T2,lineHeight:1.7}}>Adam Cebulla · ONLION · Loher Hauptstrasse 81a · 90427 Nürnberg · onlion-@outlook.de</p></div>
+      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{T.ds_daten}</div>{T.ds_daten_liste.map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G,flexShrink:0}}>→</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}</div>
+      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{T.ds_dritte}</div>{[["Anthropic API","anthropic.com/privacy"],["Netlify","netlify.com/privacy"],["Calendly","calendly.com/privacy"],["Brevo","brevo.com/legal/privacypolicy"]].map(function(t,i){return(<div key={i} style={{marginBottom:10}}><p style={{fontSize:13,color:TX,marginBottom:3}}>{t[0]}</p><p style={{fontSize:11,color:T2}}>{t[1]}</p></div>);})}</div>
+      <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{T.ds_rechte}</div>{T.ds_rechte_liste.map(function(t,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{t}</span></div>);})}<p style={{fontSize:12,color:T2,marginTop:10}}>{T.ds_anfragen}</p></div>
     </div>
   );
 
