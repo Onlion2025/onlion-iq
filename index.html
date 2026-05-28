@@ -337,29 +337,31 @@ function App(){
   if(step==="intro") return(
     <div style={{background:D,minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo showLogin={true}/>
-      <div style={{display:"flex",gap:8,marginBottom:16,justifyContent:"flex-end"}}>
+      <div style={{display:"flex",gap:4,marginBottom:16,justifyContent:"flex-end",background:"rgba(0,0,0,0.35)",backdropFilter:"blur(8px)",borderRadius:30,padding:"4px",width:"fit-content",alignSelf:"flex-end",marginLeft:"auto"}}>
         {[
-          {l:"de",flag:"🇩🇪"},
-          {l:"en",flag:"🇬🇧"},
-          {l:"pl",flag:"🇵🇱"}
+          {l:"de",flag:"🇩🇪",label:"DE"},
+          {l:"en",flag:"🇬🇧",label:"EN"},
+          {l:"pl",flag:"🇵🇱",label:"PL"}
         ].map(function(item){
           var active=lang===item.l;
           return React.createElement("button",{
             key:item.l,
             onClick:function(){setLang(item.l);},
             style:{
-              width:42,height:32,
-              borderRadius:8,
-              border:"2px solid "+(active?G:"rgba(255,255,255,0.15)"),
-              background:active?"rgba(122,200,0,0.15)":"rgba(255,255,255,0.05)",
-              fontSize:20,cursor:"pointer",
-              display:"flex",alignItems:"center",justifyContent:"center",
-              boxShadow:active?"0 0 8px rgba(122,200,0,0.4)":"none",
-              transform:active?"scale(1.15)":"scale(1)",
-              transition:"all 0.2s",
-              padding:0,lineHeight:1
+              padding:"5px 12px",
+              borderRadius:24,
+              border:"none",
+              background:active?G:"transparent",
+              color:active?"#000":"rgba(255,255,255,0.6)",
+              fontSize:12,fontWeight:600,cursor:"pointer",
+              fontFamily:"inherit",letterSpacing:0.5,
+              display:"flex",alignItems:"center",gap:5,
+              transition:"all 0.2s"
             }
-          },item.flag);
+          },
+          React.createElement("span",{style:{fontSize:16}},item.flag),
+          React.createElement("span",null,item.label)
+          );
         })}
       </div>
       <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>{TL.headline}</h1>
