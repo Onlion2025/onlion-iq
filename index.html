@@ -30,6 +30,7 @@ textarea::-moz-placeholder{color:#888;opacity:1}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes softGlow{0%,100%{text-shadow:0 0 5px rgba(122,200,0,0.4),0 0 10px rgba(122,200,0,0.25)}50%{text-shadow:0 0 14px rgba(122,200,0,0.95),0 0 28px rgba(122,200,0,0.6),0 0 42px rgba(122,200,0,0.35)}}
 </style>
 </head>
 <body>
@@ -52,7 +53,9 @@ var I18N={
   de:{
     langName:"Deutsch",
     heroTitle:"Wie intelligent arbeitet dein Unternehmen?",
-    heroSub:"ONLION IQ analysiert mit KI dein Automatisierungspotenzial - kostenlos in 5 Minuten.",
+    heroSubPre:"ONLION IQ analysiert mit KI dein Automatisierungspotenzial - kostenlos in ",
+    heroSubHi:"5 Minuten",
+    heroSubPost:".",
     catKiTitle:"KI & Agenten", catKiSub:"KI, Chatbots, LLMs",
     catAutoTitle:"Automatisierung", catAutoSub:"Workflows, RPA",
     catRoboTitle:"Robotik", catRoboSub:"Roboter, Cobots",
@@ -238,7 +241,9 @@ var I18N={
   en:{
     langName:"English",
     heroTitle:"How intelligently does your business work?",
-    heroSub:"ONLION IQ uses AI to analyze your automation potential - free, in 5 minutes.",
+    heroSubPre:"ONLION IQ uses AI to analyze your automation potential - free, in ",
+    heroSubHi:"5 minutes",
+    heroSubPost:".",
     catKiTitle:"AI & Agents", catKiSub:"AI, chatbots, LLMs",
     catAutoTitle:"Automation", catAutoSub:"Workflows, RPA",
     catRoboTitle:"Robotics", catRoboSub:"Robots, cobots",
@@ -424,7 +429,9 @@ var I18N={
   pl:{
     langName:"Polski",
     heroTitle:"Jak inteligentnie działa Twoja firma?",
-    heroSub:"ONLION IQ analizuje za pomocą AI Twój potencjał automatyzacji - bezpłatnie, w 5 minut.",
+    heroSubPre:"ONLION IQ analizuje za pomocą AI Twój potencjał automatyzacji - bezpłatnie, w ",
+    heroSubHi:"5 minut",
+    heroSubPost:".",
     catKiTitle:"AI i agenci", catKiSub:"AI, chatboty, LLM",
     catAutoTitle:"Automatyzacja", catAutoSub:"Procesy, RPA",
     catRoboTitle:"Robotyka", catRoboSub:"Roboty, coboty",
@@ -1025,7 +1032,7 @@ function App(){
     <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo showLogin={true} lang={lang} setLang={setLang} loginLabel={t("login")}/>
       <h1 style={{fontSize:22,fontWeight:500,margin:"0 0 8px"}}>{t("heroTitle")}</h1>
-      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>{t("heroSub")}</p>
+      <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>{t("heroSubPre")}<strong style={{color:G,fontWeight:500,fontSize:16,display:"inline-block",animation:"softGlow 4s ease-in-out infinite"}}>{t("heroSubHi")}</strong>{t("heroSubPost")}</p>
 
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
         {[{k:"ki",l:t("catKiTitle"),i:"🤖",d:t("catKiSub"),desc:t("descKi")},{k:"rpa",l:t("catAutoTitle"),i:"⚙️",d:t("catAutoSub"),desc:t("descRpa")},{k:"robotik",l:t("catRoboTitle"),i:"🦾",d:t("catRoboSub"),desc:t("descRobotik")},{k:"daten",l:t("catDataTitle"),i:"📊",d:t("catDataSub"),desc:t("descDaten")}].map(function(k){return <KatCard key={k.k} k={k} desc={k.desc}/>;})
