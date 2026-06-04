@@ -48,6 +48,9 @@ exports.handler = async (event) => {
   var potential = 100 - score;
   var bereiche = body.bereiche || "";
 
+  // Adresse, an die deine Lead-Benachrichtigungen gehen
+  var LEAD_EMPFAENGER = "onlion-@outlook.de";
+
   var htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -125,6 +128,31 @@ body { background: #0a0a0a; color: #f0f0f0; font-family: system-ui, -apple-syste
 </body>
 </html>`;
 
+  // Lead-Benachrichtigung an ONLION (intern)
+  var leadHtml = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"/></head>
+<body style="font-family:system-ui,-apple-system,sans-serif;background:#f4f4f4;padding:20px;color:#111">
+  <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:10px;padding:28px;border:1px solid #e0e0e0">
+    <h2 style="margin:0 0 4px;font-size:20px;color:#111">🎯 Neuer ONLION IQ Lead</h2>
+    <p style="margin:0 0 20px;font-size:13px;color:#777">Eine neue Analyse wurde abgeschlossen.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:14px">
+      <tr><td style="padding:8px 0;color:#777;width:140px">Firma</td><td style="padding:8px 0;font-weight:600">${firma || "(nicht angegeben)"}</td></tr>
+      <tr><td style="padding:8px 0;color:#777">Branche</td><td style="padding:8px 0">${branche || "-"}</td></tr>
+      <tr><td style="padding:8px 0;color:#777">IQ-Score</td><td style="padding:8px 0">${score}%</td></tr>
+      <tr><td style="padding:8px 0;color:#777">KI-Potenzial</td><td style="padding:8px 0;font-weight:600;color:#5a9500">${potential}%</td></tr>
+      <tr><td style="padding:8px 0;color:#777">Schwache Bereiche</td><td style="padding:8px 0">${bereiche || "-"}</td></tr>
+      <tr><td style="padding:8px 0;color:#777">E-Mail Kunde</td><td style="padding:8px 0"><a href="mailto:${email}" style="color:#5a9500;font-weight:600">${email}</a></td></tr>
+    </table>
+    <a href="mailto:${email}" style="display:inline-block;margin-top:20px;background:#7AC800;color:#000;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;font-size:14px">✉️ Lead direkt antworten</a>
+  </div>
+</body>
+</html>`;
+
+  // 1) Kunden-Mail senden (wichtigste Mail - zuerst)
+  var kundeOk = false;
+  var kundeFehler = "";
   try {
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
@@ -140,29 +168,49 @@ body { background: #0a0a0a; color: #f0f0f0; font-family: system-ui, -apple-syste
         htmlContent: htmlContent
       })
     });
-
     const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        statusCode: 500,
-        headers: { "Access-Control-Allow-Origin": "*" },
-        body: JSON.stringify({ error: data.message || "E-Mail Fehler" })
-      };
+    if (response.ok) {
+      kundeOk = true;
+    } else {
+      kundeFehler = data.message || "E-Mail Fehler";
     }
-
-    return {
-      statusCode: 200,
-      headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ success: true })
-    };
-
   } catch (err) {
+    kundeFehler = err.message;
+  }
+
+  // 2) Lead-Benachrichtigung an ONLION senden (unabhaengig - blockiert die Kunden-Mail nicht)
+  try {
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "api-key": apiKey
+      },
+      body: JSON.stringify({
+        sender: { name: "ONLION IQ Leads", email: "crux.pecan7583@eagereverest.com" },
+        to: [{ email: LEAD_EMPFAENGER, name: "Adam Cebulla" }],
+        replyTo: { email: email, name: firma || name },
+        subject: `🎯 Neuer Lead: ${firma || branche || "Unbekannt"} (${potential}% Potenzial)`,
+        htmlContent: leadHtml
+      })
+    });
+  } catch (err) {
+    // Fehler bei der Lead-Mail wird ignoriert, damit die Kunden-Mail davon unberuehrt bleibt
+  }
+
+  // Antwort richtet sich nach der Kunden-Mail
+  if (!kundeOk) {
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: err.message })
+      body: JSON.stringify({ error: kundeFehler })
     };
   }
+
+  return {
+    statusCode: 200,
+    headers: { "Access-Control-Allow-Origin": "*" },
+    body: JSON.stringify({ success: true })
+  };
 
 };
