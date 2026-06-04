@@ -49,11 +49,16 @@ var KT={
 };
 var BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"];
 
-function safe(s){return(s||"").replace(/[^\w\s.,\-äöüÄÖÜß]/g," ").replace(/\s+/g," ").trim();}
+function safe(s){return(s||"").replace(/[\u2018\u2019\u201A\u201B]/g,"'").replace(/[\u201C\u201D\u201E\u201F]/g,'"').replace(/[\u2013\u2014\u2015]/g,"-").replace(/\u00A0/g," ").replace(/[^\w\s.,;:!?'"()\/&%@+\-äöüÄÖÜß]/g," ").replace(/\s+/g," ").trim();}
 
 function parseBereicheText(text,branche){
+  var r=parseBereicheTextRaw(text);
+  return(r&&r.length>=3)?r:getDefault(branche);
+}
+function cleanHint(h){return(h||"").replace(/^\s*[-*•]\s*/,"").replace(/^\s*KI[-\s]?Potenzial(analyse)?\s*[:\-]?\s*/i,"").trim();}
+function parseBereicheTextRaw(text){
   var bereiche=[];
-  var blocks=text.split(/\n(?=BEREICH)/);
+  var blocks=(text||"").split(/\n(?=BEREICH)/);
   for(var i=0;i<blocks.length&&bereiche.length<6;i++){
     var block=blocks[i].trim();
     if(!block)continue;
@@ -61,7 +66,7 @@ function parseBereicheText(text,branche){
     if(lines.length<4)continue;
     var label=lines[0].replace(/^BEREICH\s*\d*[:.\s]*/i,"").trim();
     var icon=lines[1]||"⚙️";
-    var hint=lines[2]||"";
+    var hint=cleanHint(lines[2]||"");
     var kat="rpa";
     var ll=label.toLowerCase()+hint.toLowerCase();
     if(ll.indexOf("ki ")>=0||ll.indexOf("chatbot")>=0||ll.indexOf("agent")>=0)kat="ki";
@@ -78,7 +83,6 @@ function parseBereicheText(text,branche){
     }
     if(fragen.length>0)bereiche.push({id:"b"+(i+1),label:label,icon:icon,hint:hint,kiKat:kat,fragen:fragen});
   }
-  if(bereiche.length<3)return getDefault(branche);
   return bereiche;
 }
 
@@ -203,6 +207,7 @@ function App(){
   var r2=useState(""),branche=r2[0],setBranche=r2[1];
   var r3=useState(""),firma=r3[0],setFirma=r3[1];
   var r4=useState(""),desc=r4[0],setDesc=r4[1];
+  var rWeb=useState(""),webText=rWeb[0],setWebText=rWeb[1];
   var r5=useState(""),email=r5[0],setEmail=r5[1];
   var r6=useState([]),bereiche=r6[0],setBereiche=r6[1];
   var r7=useState([]),aktiv=r7[0],setAktiv=r7[1];
@@ -245,6 +250,7 @@ function App(){
       if(data.error){setUrlError(data.error);setUrlLoading(false);return;}
       if(data.beschreibung){
         setDesc(data.beschreibung);
+        if(data.webText)setWebText(data.webText);
         setUrlModal(false);
         setUrlInput("");
       }
@@ -270,12 +276,20 @@ function App(){
   async function ladeBereiche(){
     if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
     setLoadB(true);setErr("");
-    var prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirma: "+safe(firma)+"\nBeschreibung: "+safe(desc)+"\n\nWichtig: Die Fragen sollen DIREKT auf die Beschreibung eingehen und konkrete Situationen aus dem Unternehmen ansprechen.\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[KI-Potenzial in 1 Satz]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
-    try{
-      var t=await callApi(prompt,3500);
-      var p=parseBereicheText(t,branche);
+    var webBlock=webText?("\n\nORIGINAL-INHALT DER FIRMEN-WEBSEITE (Titel, Ueberschriften, Texte - nutze diese konkreten Infos):\n"+safe(webText)+"\n\nWichtig: Leite die Bereiche und Fragen aus den konkreten Leistungen, Produkten und Prozessen dieser Webseite ab, nicht aus allgemeinem Branchenwissen."):"";
+    var prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirmenname (immer exakt so schreiben, niemals abkuerzen oder veraendern): "+safe(firma)+"\nBeschreibung: "+safe(desc)+webBlock+"\n\nWichtig:\n- Verwende den Firmennamen IMMER exakt wie angegeben, Schreibweise nicht veraendern.\n- Die Fragen sollen DIREKT auf die Beschreibung und den Webseiten-Inhalt eingehen und konkrete Situationen aus diesem Unternehmen ansprechen, keine generischen Standardbereiche.\n- Schreibe den KI-Potenzial-Satz OHNE das Wort 'KI-Potenzial' davor (nur den Satz selbst).\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[Ein Satz zum Automatisierungspotenzial, ohne Label davor]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
+    var p=null;
+    for(var attempt=0;attempt<2&&!p;attempt++){
+      try{
+        var t=await callApi(prompt,3500);
+        var parsed=parseBereicheTextRaw(t);
+        if(parsed&&parsed.length>=3)p=parsed;
+      }catch(e){}
+    }
+    if(p){
       setBereiche(p);setAktiv(p.map(function(b){return b.id;}));setStep("bereiche");
-    }catch(e){
+    }else{
+      setErr("Die KI-Analyse hat diesmal kein verwertbares Ergebnis geliefert. Bitte erneut versuchen oder die Beschreibung praezisieren. (Es wurden Standardbereiche geladen.)");
       var df=getDefault(branche);
       setBereiche(df);setAktiv(df.map(function(b){return b.id;}));setStep("bereiche");
     }
@@ -287,7 +301,8 @@ function App(){
     try{
       var g=ges();
       var info=gefB.map(function(b){return b.label+" "+gs(b.id)+"%";}).join(", ");
-      var t=await callApi("Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). IQ-Score: "+g+" Prozent. Bereiche: "+info+". Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. Max 350 Woerter.",800);
+      var ctx=webText?(" Beziehe dich auf diese Firmen-Infos: "+safe(webText).substring(0,1500)+"."):(desc?(" Unternehmensbeschreibung: "+safe(desc)+"."):"");
+      var t=await callApi("Schreibe einen kurzen KI-Automatisierungsbericht auf Deutsch fuer "+safe(firma||branche)+" ("+safe(branche)+"). Schreibe den Firmennamen immer exakt, nicht abkuerzen. IQ-Score: "+g+" Prozent. Bereiche: "+info+"."+ctx+" Struktur: ## IQ-Bewertung ## Staerken ## Potenzial je Bereich ## Tool-Empfehlungen ## Roadmap 3 Phasen. Max 350 Woerter.",800);
       setBericht(t);setStep("bericht");sendeEmail(g);
     }catch(e){setErr("Fehler: "+e.message);}
     setLoadR(false);
@@ -484,7 +499,7 @@ function App(){
           </div>
           <div style={{background:kc+"0d",border:"0.5px solid "+kc+"33",borderRadius:6,padding:"8px 10px",marginBottom:16,display:"flex",gap:8}}>
             <span style={{fontSize:14,flexShrink:0}}>💡</span>
-            <span style={{fontSize:11,color:kc+"cc",lineHeight:1.5}}><strong style={{color:kc}}>KI-Potenzial:</strong> {curB.hint}</span>
+            <span style={{fontSize:11,color:kc+"cc",lineHeight:1.5}}><strong style={{color:kc}}>KI-Potenzial:</strong> {cleanHint(curB.hint)}</span>
           </div>
           {(curB.fragen||[]).map(function(item,i){
             return(
@@ -596,7 +611,7 @@ function App(){
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
           <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setWebText("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
         </div>
       </div>
     );
