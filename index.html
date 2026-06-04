@@ -229,6 +229,10 @@ var I18N={
     br_bildung:"Bildung",
     br_finanz:"Finanzen / Versicherung",
     br_sonst:"Sonstige",
+    reportEmailTitle:"📧 Wohin sollen wir deinen Bericht schicken?",
+    reportEmailSub:"Du erhältst deinen ausführlichen IQ-Bericht & deine KI-Roadmap per E-Mail.",
+    reportEmailPh:"Deine E-Mail-Adresse *",
+    reportEmailErr:"Bitte gib eine gültige E-Mail-Adresse ein.",
     aiLang:"Deutsch"
   },
   en:{
@@ -411,6 +415,10 @@ var I18N={
     br_bildung:"Education",
     br_finanz:"Finance / Insurance",
     br_sonst:"Other",
+    reportEmailTitle:"📧 Where should we send your report?",
+    reportEmailSub:"You'll receive your detailed IQ report & AI roadmap by email.",
+    reportEmailPh:"Your email address *",
+    reportEmailErr:"Please enter a valid email address.",
     aiLang:"English"
   },
   pl:{
@@ -593,6 +601,10 @@ var I18N={
     br_bildung:"Edukacja",
     br_finanz:"Finanse / Ubezpieczenia",
     br_sonst:"Inne",
+    reportEmailTitle:"📧 Gdzie mamy wysłać Twój raport?",
+    reportEmailSub:"Otrzymasz szczegółowy raport IQ i mapę drogową AI e-mailem.",
+    reportEmailPh:"Twój adres e-mail *",
+    reportEmailErr:"Proszę podać prawidłowy adres e-mail.",
     aiLang:"Polnisch (Polski)"
   }
 };
@@ -883,7 +895,7 @@ function App(){
   var totalF=gefB.reduce(function(s,b){return s+(b.fragen?b.fragen.length:0);},0);
   var prog=totalF>0?Math.round(Object.keys(antw).length/totalF*100):0;
   var descValid=desc.trim().length>=10;
-  var canStart=email&&branche&&descValid;
+  var canStart=branche&&descValid;
 
   function setA(bid,fi,val){setAntw(function(p){var n=Object.assign({},p);n[bid+"_"+fi]=val;return n;});}
   function gs(bid){var b=bereiche.filter(function(x){return x.id===bid;})[0];if(!b)return 0;var v=b.fragen.map(function(_,i){var x=antw[bid+"_"+i];return x!=null?x:null;}).filter(function(x){return x!==null;});return v.length?Math.round(v.reduce(function(s,x){return s+x;},0)/v.length):0;}
@@ -1032,7 +1044,6 @@ function App(){
         </div>
       </div>
 
-      <input placeholder={t("emailPh")} value={email} onChange={function(e){setEmail(e.target.value);}} type="email"/>
       <input placeholder={t("firmaPh")} value={firma} onChange={function(e){setFirma(e.target.value);}}/>
       <select value={branche} onChange={function(e){setBranche(e.target.value);}} style={{marginBottom:10}}>
         <option value="">{t("branchePh")}</option>
@@ -1202,7 +1213,14 @@ function App(){
         );})}
         {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
         <div style={{height:1,background:BD,margin:"20px 0"}}/>
-        {loadR?<LoadBox msg={t("loadReportMsg")} sub={t("loadBereicheSub")} steps={[t("loadReportS1"),t("loadReportS2"),t("loadReportS3")]}/>:<button onClick={analysiereReport} style={btnG}>{t("reportCreateBtn")}</button>}
+        {loadR?<LoadBox msg={t("loadReportMsg")} sub={t("loadBereicheSub")} steps={[t("loadReportS1"),t("loadReportS2"),t("loadReportS3")]}/>:
+          <div style={{...cardG,marginBottom:10}}>
+            <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>{t("reportEmailTitle")}</div>
+            <p style={{fontSize:12,color:T2,lineHeight:1.6,marginBottom:12}}>{t("reportEmailSub")}</p>
+            <input placeholder={t("reportEmailPh")} value={email} onChange={function(e){setEmail(e.target.value);setErr("");}} type="email" style={{marginBottom:10}}/>
+            <button onClick={function(){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setErr(t("reportEmailErr"));return;}analysiereReport();}} style={{...btnG,marginTop:0}}>{t("reportCreateBtn")}</button>
+          </div>
+        }
         {!loadR&&<button onClick={function(){setStep("fragebogen");}} style={btn}>{t("editAnswers")}</button>}
       </div>
     );
