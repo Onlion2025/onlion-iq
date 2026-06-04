@@ -276,12 +276,12 @@ function App(){
   async function ladeBereiche(){
     if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
     setLoadB(true);setErr("");
-    var webBlock=webText?("\n\nORIGINAL-INHALT DER FIRMEN-WEBSEITE (Titel, Ueberschriften, Texte - nutze diese konkreten Infos):\n"+safe(webText)+"\n\nWichtig: Leite die Bereiche und Fragen aus den konkreten Leistungen, Produkten und Prozessen dieser Webseite ab, nicht aus allgemeinem Branchenwissen."):"";
+    var webBlock=webText?("\n\nORIGINAL-INHALT DER FIRMEN-WEBSEITE (Titel, Ueberschriften, Texte - nutze diese konkreten Infos):\n"+safe(webText).substring(0,2000)+"\n\nWichtig: Leite die Bereiche und Fragen aus den konkreten Leistungen, Produkten und Prozessen dieser Webseite ab, nicht aus allgemeinem Branchenwissen."):"";
     var prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirmenname (immer exakt so schreiben, niemals abkuerzen oder veraendern): "+safe(firma)+"\nBeschreibung: "+safe(desc)+webBlock+"\n\nWichtig:\n- Verwende den Firmennamen IMMER exakt wie angegeben, Schreibweise nicht veraendern.\n- Die Fragen sollen DIREKT auf die Beschreibung und den Webseiten-Inhalt eingehen und konkrete Situationen aus diesem Unternehmen ansprechen, keine generischen Standardbereiche.\n- Schreibe den KI-Potenzial-Satz OHNE das Wort 'KI-Potenzial' davor (nur den Satz selbst).\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[Ein Satz zum Automatisierungspotenzial, ohne Label davor]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
     var p=null,lastErr="";
     for(var attempt=0;attempt<2&&!p;attempt++){
       try{
-        var t=await callApi(prompt,3500);
+        var t=await callApi(prompt,2400);
         var parsed=parseBereicheTextRaw(t);
         if(parsed&&parsed.length>=3)p=parsed;
         else lastErr="Antwort konnte nicht ausgewertet werden.";
