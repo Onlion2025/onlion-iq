@@ -47,7 +47,7 @@ var KT={
   robotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik  -  präzise, schnell und ermüdungsfrei.",
   daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen  -  Entscheidungen basieren auf aktuellen Daten, nicht auf Bauchgefühl."
 };
-var BRANCHEN=["Produktion / Fertigung","Dienstleistung / Büro","Handel / Logistik","IT / Technologie","Gesundheit / Pflege","Bildung","Finanzen / Versicherung","Sonstige"];
+var BRANCHEN=[{v:"Produktion / Fertigung",k:"br_prod"},{v:"Dienstleistung / Büro",k:"br_dienst"},{v:"Handel / Logistik",k:"br_handel"},{v:"IT / Technologie",k:"br_it"},{v:"Gesundheit / Pflege",k:"br_health"},{v:"Bildung",k:"br_bildung"},{v:"Finanzen / Versicherung",k:"br_finanz"},{v:"Sonstige",k:"br_sonst"}];
 var I18N={
   de:{
     langName:"Deutsch",
@@ -77,6 +77,7 @@ var I18N={
     urlModalTitle:"Wir lesen deine Webseite und erstellen automatisch eine Beschreibung deines Unternehmens.",
     urlModalPh:"https://deine-firma.de",
     urlModalLoad:"KI erstellt Beschreibung...",
+    urlModalReading:"🔄 Lese deine Webseite...",
     urlModalCancel:"Abbrechen",
     urlModalGo:"Analysieren →",
     errFields:"Bitte alle Pflichtfelder ausfüllen.",
@@ -135,6 +136,99 @@ var I18N={
     terminE3:"Dein konkretes Einsparpotenzial in Euro",
     terminE4:"Realistische Kosten und ROI-Berechnung",
     terminE5:"Konkrete nächste Schritte",
+    berichtSentPre:"Dein persönlicher Bericht wurde an",
+    berichtSentPost:"gesendet!",
+    berichtTitle:"IQ-Bericht & KI-Roadmap",
+    berichtPotLabel:"KI-POTENZIAL",
+    berichtEinspar1pre:"Dein IQ-Score zeigt: In deinem Unternehmen steckt ",
+    berichtEinspar1strong:"erhebliches ungenutztes Potenzial",
+    berichtEinspar1post:".",
+    berichtEinspar2:"Was das konkret für dich in Euro bedeutet, besprechen wir in einem persönlichen Gespräch - kostenlos, individuell und ohne Verpflichtung.",
+    berichtTerminBtn:"📅 Jetzt Termin sichern & Potenzial erfahren →",
+    berichtTeilen:"Bericht teilen",
+    berichtPdf:"📄 PDF herunterladen",
+    berichtTextBtn:"⬇ Text",
+    berichtMailPh:"Per E-Mail senden...",
+    berichtSenden:"Senden",
+    berichtGesendet:"Gesendet",
+    berichtNext:"Nächste Schritte",
+    berichtLoesTitle:"KI-Lösungen",
+    berichtLoesSub:"Tools entdecken",
+    berichtGespraechTitle:"Kostenloses Gespräch",
+    berichtGespraechSub:"Termin buchen",
+    foerderBannerTitle:"Staatliche Förderung sichern",
+    foerderBannerText:"Bis zu 100% der Kosten können staatlich gefördert werden → mehr erfahren",
+    berichtBackScore:"← IQ-Score",
+    neueAnalyse:"Neue Analyse",
+    loadReportMsg:"KI erstellt deinen Bericht...",
+    loadReportS1:"Auswerten", loadReportS2:"Empfehlungen", loadReportS3:"Roadmap",
+    reportCreateBtn:"KI-Bericht & Roadmap erstellen →",
+    loesTitle:"KI & Automatisierungs-Lösungen",
+    loesLoadMsg:"KI sucht passende Lösungen...",
+    loesLoadSub:"ca. 8 Sekunden",
+    loesS1:"Bereiche prüfen", loesS2:"Tools suchen", loesS3:"Empfehlungen",
+    loesMehr:"Mehr →",
+    loesBeratungTitle:"Individuelle KI-Beratung?",
+    loesBeratungText:"30 Minuten, kostenlos.",
+    loesBeratungBtn:"Kostenloses Gespräch buchen →",
+    terminTitle:"Kostenloses KI-Beratungsgespräch",
+    terminSub:"30 Minuten · kostenlos · unverbindlich",
+    terminPotLabel:"Dein KI-Potenzial",
+    terminUngenutzt:"ungenutzt",
+    terminPotSub:"💶 Erfahre dein konkretes Einsparpotenzial",
+    terminPotText:"Wir zeigen dir in 30 Minuten wie du dieses Potenzial konkret heben kannst.",
+    terminNachTitle:"Nach der Terminbuchung",
+    terminNachTextPre:"Wir zeigen dir unser Angebot - individuell auf deinen IQ-Score von",
+    terminNachTextPost:"Potenzial angepasst.",
+    terminBookBtn:"📅 Termin buchen →",
+    terminAngebotBtn:"📦 Unser Angebot ansehen →",
+    foerderTitle:"Staatliche Förderung für deine KI-Automatisierung",
+    foerderHero:"Wusstest du, dass du als Unternehmen Anspruch auf staatliche Förderung hast? Deine KI- und Automatisierungsprojekte können bis zu",
+    foerderHeroStrong:"100% gefördert",
+    foerderHeroPost:"werden.",
+    foerderWasTitle:"Was gefördert werden kann",
+    foerderWas1a:"Bis zu 100% der Weiterbildungskosten", foerderWas1b:"nach dem Qualifizierungschancengesetz (QCG)",
+    foerderWas2a:"Bis zu 75% der Gehaltskosten", foerderWas2b:"für sozialversicherungspflichtige Angestellte",
+    foerderWas3a:"Förderung für bis zu 14 Monate", foerderWas3b:"laufende Unterstützung während der Umsetzung",
+    foerderWas4a:"Kein Risiko & keine Rückzahlung", foerderWas4b:"auch nicht bei Abbruch der Maßnahme",
+    foerderWerTitle:"Wer hat Anspruch?",
+    foerderWer1:"Kleine und mittelständische Unternehmen (KMU)",
+    foerderWer2:"Unternehmen mit sozialversicherungspflichtigen Angestellten",
+    foerderWer3:"Unternehmen die KI, Digitalisierung oder Automatisierung einführen wollen",
+    foerderWer4:"Kein Mindestumsatz oder Mindestgröße erforderlich",
+    foerderWieTitle:"So einfach funktioniert es",
+    foerderWie1a:"Beratungsgespräch", foerderWie1b:"Wir prüfen gemeinsam deine Förderfähigkeit und berechnen die genaue Fördersumme.",
+    foerderWie2a:"Antragstellung", foerderWie2b:"Wir unterstützen dich beim Antrag - dein Aufwand: ca. 1 Stunde.",
+    foerderWie3a:"Förderung erhalten", foerderWie3b:"Nach Bewilligung startet die Maßnahme und du erhältst den Zuschuss.",
+    foerderCtaTitle:"Jetzt Förderung prüfen",
+    foerderCtaText:"Erfahre in einem kostenlosen Gespräch wie viel Förderung du für deine KI-Projekte bekommst - unverbindlich und ohne Risiko.",
+    foerderCtaBtn:"🏛️ Jetzt Förderfähigkeit prüfen →",
+    foerderCtaNote:"Du wirst zur Förderberatung weitergeleitet",
+    foerderBackBtn:"← Zurück zum Bericht",
+    pktBadge:"✦ Lösung aus dem ONLION-Portfolio",
+    pktTitle1:"Dein Score zeigt das Potenzial.",
+    pktTitle2:"Ein KI-Agent hebt es.",
+    pktIntroPre:"Für",
+    pktIntroMid:"mit einem IQ-Score von",
+    pktIntroPost:"empfehlen wir als nächsten Schritt die",
+    pktEmpfohlen:"Empfohlen für dich",
+    pktWarum:"Warum für dich",
+    pktBeispiele:"💡 Echte Beispiele aus der Praxis",
+    pktCtaTitle:"Bereit, dein Potenzial zu heben?",
+    pktCtaTextPre:"Vereinbare ein unverbindliches Strategiegespräch. Wir besprechen deinen Score, deine Ziele und welcher Schritt für",
+    pktCtaTextPost:"jetzt der richtige ist.",
+    pktCtaBook:"📅 Termin sichern →",
+    pktCtaFoerder:"🏛️ Förderung",
+    pktTrust:"Kein Druck. Keine Verkaufsshow. Nur eine ehrliche Einschätzung deines Potenzials.",
+    editAnswers:"← Antworten bearbeiten",
+    br_prod:"Produktion / Fertigung",
+    br_dienst:"Dienstleistung / Büro",
+    br_handel:"Handel / Logistik",
+    br_it:"IT / Technologie",
+    br_health:"Gesundheit / Pflege",
+    br_bildung:"Bildung",
+    br_finanz:"Finanzen / Versicherung",
+    br_sonst:"Sonstige",
     aiLang:"Deutsch"
   },
   en:{
@@ -165,6 +259,7 @@ var I18N={
     urlModalTitle:"We read your website and automatically create a description of your business.",
     urlModalPh:"https://your-company.com",
     urlModalLoad:"AI is creating description...",
+    urlModalReading:"🔄 Reading your website...",
     urlModalCancel:"Cancel",
     urlModalGo:"Analyze →",
     errFields:"Please fill in all required fields.",
@@ -223,6 +318,99 @@ var I18N={
     terminE3:"Your concrete savings potential in euros",
     terminE4:"Realistic costs and ROI calculation",
     terminE5:"Concrete next steps",
+    berichtSentPre:"Your personal report has been sent to",
+    berichtSentPost:"!",
+    berichtTitle:"IQ Report & AI Roadmap",
+    berichtPotLabel:"AI POTENTIAL",
+    berichtEinspar1pre:"Your IQ score shows: your business holds ",
+    berichtEinspar1strong:"significant untapped potential",
+    berichtEinspar1post:".",
+    berichtEinspar2:"What that means for you in concrete euros - we'll discuss in a personal call: free, individual and with no obligation.",
+    berichtTerminBtn:"📅 Book a call & discover your potential →",
+    berichtTeilen:"Share report",
+    berichtPdf:"📄 Download PDF",
+    berichtTextBtn:"⬇ Text",
+    berichtMailPh:"Send by email...",
+    berichtSenden:"Send",
+    berichtGesendet:"Sent",
+    berichtNext:"Next steps",
+    berichtLoesTitle:"AI solutions",
+    berichtLoesSub:"Discover tools",
+    berichtGespraechTitle:"Free consultation",
+    berichtGespraechSub:"Book a call",
+    foerderBannerTitle:"Secure government funding",
+    foerderBannerText:"Up to 100% of costs can be covered by government funding → learn more",
+    berichtBackScore:"← IQ score",
+    neueAnalyse:"New analysis",
+    loadReportMsg:"AI is creating your report...",
+    loadReportS1:"Evaluating", loadReportS2:"Recommendations", loadReportS3:"Roadmap",
+    reportCreateBtn:"Create AI report & roadmap →",
+    loesTitle:"AI & automation solutions",
+    loesLoadMsg:"AI is finding suitable solutions...",
+    loesLoadSub:"approx. 8 seconds",
+    loesS1:"Checking areas", loesS2:"Finding tools", loesS3:"Recommendations",
+    loesMehr:"More →",
+    loesBeratungTitle:"Individual AI consulting?",
+    loesBeratungText:"30 minutes, free.",
+    loesBeratungBtn:"Book a free consultation →",
+    terminTitle:"Free AI consultation call",
+    terminSub:"30 minutes · free · no obligation",
+    terminPotLabel:"Your AI potential",
+    terminUngenutzt:"untapped",
+    terminPotSub:"💶 Discover your concrete savings potential",
+    terminPotText:"In 30 minutes we'll show you how to realize this potential concretely.",
+    terminNachTitle:"After booking",
+    terminNachTextPre:"We'll show you our offer - tailored individually to your IQ score of",
+    terminNachTextPost:"potential.",
+    terminBookBtn:"📅 Book a call →",
+    terminAngebotBtn:"📦 View our offer →",
+    foerderTitle:"Government funding for your AI automation",
+    foerderHero:"Did you know that as a company you are entitled to government funding? Your AI and automation projects can be",
+    foerderHeroStrong:"funded up to 100%",
+    foerderHeroPost:".",
+    foerderWasTitle:"What can be funded",
+    foerderWas1a:"Up to 100% of training costs", foerderWas1b:"under the German Qualification Opportunities Act (QCG)",
+    foerderWas2a:"Up to 75% of salary costs", foerderWas2b:"for employees subject to social insurance",
+    foerderWas3a:"Funding for up to 14 months", foerderWas3b:"ongoing support during implementation",
+    foerderWas4a:"No risk & no repayment", foerderWas4b:"even if the measure is discontinued",
+    foerderWerTitle:"Who is eligible?",
+    foerderWer1:"Small and medium-sized enterprises (SMEs)",
+    foerderWer2:"Companies with employees subject to social insurance",
+    foerderWer3:"Companies wanting to introduce AI, digitalization or automation",
+    foerderWer4:"No minimum revenue or company size required",
+    foerderWieTitle:"How it works",
+    foerderWie1a:"Consultation", foerderWie1b:"Together we check your eligibility and calculate the exact funding amount.",
+    foerderWie2a:"Application", foerderWie2b:"We support you with the application - your effort: approx. 1 hour.",
+    foerderWie3a:"Receive funding", foerderWie3b:"After approval, the measure starts and you receive the grant.",
+    foerderCtaTitle:"Check funding now",
+    foerderCtaText:"Find out in a free consultation how much funding you can get for your AI projects - no obligation, no risk.",
+    foerderCtaBtn:"🏛️ Check eligibility now →",
+    foerderCtaNote:"You will be redirected to the funding consultation",
+    foerderBackBtn:"← Back to report",
+    pktBadge:"✦ Solution from the ONLION portfolio",
+    pktTitle1:"Your score shows the potential.",
+    pktTitle2:"An AI agent unlocks it.",
+    pktIntroPre:"For",
+    pktIntroMid:"with an IQ score of",
+    pktIntroPost:"we recommend as the next step the",
+    pktEmpfohlen:"Recommended for you",
+    pktWarum:"Why for you",
+    pktBeispiele:"💡 Real examples from practice",
+    pktCtaTitle:"Ready to unlock your potential?",
+    pktCtaTextPre:"Arrange a no-obligation strategy call. We'll discuss your score, your goals and which step is right for",
+    pktCtaTextPost:"now.",
+    pktCtaBook:"📅 Book a call →",
+    pktCtaFoerder:"🏛️ Funding",
+    pktTrust:"No pressure. No sales show. Just an honest assessment of your potential.",
+    editAnswers:"← Edit answers",
+    br_prod:"Production / Manufacturing",
+    br_dienst:"Services / Office",
+    br_handel:"Retail / Logistics",
+    br_it:"IT / Technology",
+    br_health:"Healthcare / Nursing",
+    br_bildung:"Education",
+    br_finanz:"Finance / Insurance",
+    br_sonst:"Other",
     aiLang:"English"
   },
   pl:{
@@ -253,6 +441,7 @@ var I18N={
     urlModalTitle:"Czytamy Twoją stronę i automatycznie tworzymy opis Twojej firmy.",
     urlModalPh:"https://twoja-firma.pl",
     urlModalLoad:"AI tworzy opis...",
+    urlModalReading:"🔄 Czytanie Twojej strony...",
     urlModalCancel:"Anuluj",
     urlModalGo:"Analizuj →",
     errFields:"Proszę wypełnić wszystkie wymagane pola.",
@@ -311,8 +500,190 @@ var I18N={
     terminE3:"Twój konkretny potencjał oszczędności w euro",
     terminE4:"Realistyczne koszty i obliczenie ROI",
     terminE5:"Konkretne kolejne kroki",
+    berichtSentPre:"Twój osobisty raport został wysłany na",
+    berichtSentPost:"!",
+    berichtTitle:"Raport IQ i mapa drogowa AI",
+    berichtPotLabel:"POTENCJAŁ AI",
+    berichtEinspar1pre:"Twój wynik IQ pokazuje: Twoja firma ma ",
+    berichtEinspar1strong:"znaczny niewykorzystany potencjał",
+    berichtEinspar1post:".",
+    berichtEinspar2:"Co to konkretnie oznacza w euro - omówimy podczas osobistej rozmowy: bezpłatnie, indywidualnie i bez zobowiązań.",
+    berichtTerminBtn:"📅 Zarezerwuj rozmowę i poznaj swój potencjał →",
+    berichtTeilen:"Udostępnij raport",
+    berichtPdf:"📄 Pobierz PDF",
+    berichtTextBtn:"⬇ Tekst",
+    berichtMailPh:"Wyślij e-mailem...",
+    berichtSenden:"Wyślij",
+    berichtGesendet:"Wysłano",
+    berichtNext:"Kolejne kroki",
+    berichtLoesTitle:"Rozwiązania AI",
+    berichtLoesSub:"Odkryj narzędzia",
+    berichtGespraechTitle:"Bezpłatna konsultacja",
+    berichtGespraechSub:"Zarezerwuj rozmowę",
+    foerderBannerTitle:"Zapewnij sobie dofinansowanie państwowe",
+    foerderBannerText:"Do 100% kosztów może zostać pokryte z dofinansowania państwowego → dowiedz się więcej",
+    berichtBackScore:"← Wynik IQ",
+    neueAnalyse:"Nowa analiza",
+    loadReportMsg:"AI tworzy Twój raport...",
+    loadReportS1:"Ocena", loadReportS2:"Rekomendacje", loadReportS3:"Mapa drogowa",
+    reportCreateBtn:"Utwórz raport AI i mapę drogową →",
+    loesTitle:"Rozwiązania AI i automatyzacji",
+    loesLoadMsg:"AI szuka odpowiednich rozwiązań...",
+    loesLoadSub:"ok. 8 sekund",
+    loesS1:"Sprawdzanie obszarów", loesS2:"Szukanie narzędzi", loesS3:"Rekomendacje",
+    loesMehr:"Więcej →",
+    loesBeratungTitle:"Indywidualne doradztwo AI?",
+    loesBeratungText:"30 minut, bezpłatnie.",
+    loesBeratungBtn:"Zarezerwuj bezpłatną konsultację →",
+    terminTitle:"Bezpłatna konsultacja AI",
+    terminSub:"30 minut · bezpłatnie · bez zobowiązań",
+    terminPotLabel:"Twój potencjał AI",
+    terminUngenutzt:"niewykorzystane",
+    terminPotSub:"💶 Poznaj swój konkretny potencjał oszczędności",
+    terminPotText:"W 30 minut pokażemy Ci, jak konkretnie wykorzystać ten potencjał.",
+    terminNachTitle:"Po rezerwacji",
+    terminNachTextPre:"Pokażemy Ci naszą ofertę - dopasowaną indywidualnie do Twojego wyniku IQ wynoszącego",
+    terminNachTextPost:"potencjału.",
+    terminBookBtn:"📅 Zarezerwuj rozmowę →",
+    terminAngebotBtn:"📦 Zobacz naszą ofertę →",
+    foerderTitle:"Dofinansowanie państwowe Twojej automatyzacji AI",
+    foerderHero:"Czy wiesz, że jako firma masz prawo do dofinansowania państwowego? Twoje projekty AI i automatyzacji mogą być",
+    foerderHeroStrong:"dofinansowane do 100%",
+    foerderHeroPost:".",
+    foerderWasTitle:"Co może być dofinansowane",
+    foerderWas1a:"Do 100% kosztów szkoleń", foerderWas1b:"zgodnie z niemiecką ustawą o szansach kwalifikacyjnych (QCG)",
+    foerderWas2a:"Do 75% kosztów wynagrodzeń", foerderWas2b:"dla pracowników objętych ubezpieczeniem społecznym",
+    foerderWas3a:"Dofinansowanie do 14 miesięcy", foerderWas3b:"bieżące wsparcie podczas wdrożenia",
+    foerderWas4a:"Bez ryzyka i bez zwrotu", foerderWas4b:"nawet w przypadku przerwania działania",
+    foerderWerTitle:"Kto jest uprawniony?",
+    foerderWer1:"Małe i średnie przedsiębiorstwa (MŚP)",
+    foerderWer2:"Firmy z pracownikami objętymi ubezpieczeniem społecznym",
+    foerderWer3:"Firmy chcące wprowadzić AI, cyfryzację lub automatyzację",
+    foerderWer4:"Bez wymaganego minimalnego obrotu lub wielkości",
+    foerderWieTitle:"To takie proste",
+    foerderWie1a:"Konsultacja", foerderWie1b:"Wspólnie sprawdzamy Twoją kwalifikowalność i obliczamy dokładną kwotę dofinansowania.",
+    foerderWie2a:"Złożenie wniosku", foerderWie2b:"Wspieramy Cię przy wniosku - Twój nakład: ok. 1 godzina.",
+    foerderWie3a:"Otrzymanie dofinansowania", foerderWie3b:"Po zatwierdzeniu rozpoczyna się działanie i otrzymujesz dotację.",
+    foerderCtaTitle:"Sprawdź dofinansowanie teraz",
+    foerderCtaText:"Dowiedz się podczas bezpłatnej rozmowy, ile dofinansowania możesz otrzymać na swoje projekty AI - bez zobowiązań i bez ryzyka.",
+    foerderCtaBtn:"🏛️ Sprawdź kwalifikowalność →",
+    foerderCtaNote:"Zostaniesz przekierowany do doradztwa w sprawie dofinansowania",
+    foerderBackBtn:"← Powrót do raportu",
+    pktBadge:"✦ Rozwiązanie z portfolio ONLION",
+    pktTitle1:"Twój wynik pokazuje potencjał.",
+    pktTitle2:"Agent AI go uwalnia.",
+    pktIntroPre:"Dla",
+    pktIntroMid:"z wynikiem IQ",
+    pktIntroPost:"zalecamy jako następny krok",
+    pktEmpfohlen:"Polecane dla Ciebie",
+    pktWarum:"Dlaczego dla Ciebie",
+    pktBeispiele:"💡 Prawdziwe przykłady z praktyki",
+    pktCtaTitle:"Gotowy uwolnić swój potencjał?",
+    pktCtaTextPre:"Umów niezobowiązującą rozmowę strategiczną. Omówimy Twój wynik, cele i który krok jest odpowiedni dla",
+    pktCtaTextPost:"teraz.",
+    pktCtaBook:"📅 Zarezerwuj rozmowę →",
+    pktCtaFoerder:"🏛️ Dofinansowanie",
+    pktTrust:"Bez presji. Bez pokazu sprzedażowego. Tylko szczera ocena Twojego potencjału.",
+    editAnswers:"← Edytuj odpowiedzi",
+    br_prod:"Produkcja / Wytwarzanie",
+    br_dienst:"Usługi / Biuro",
+    br_handel:"Handel / Logistyka",
+    br_it:"IT / Technologia",
+    br_health:"Opieka zdrowotna / Pielęgnacja",
+    br_bildung:"Edukacja",
+    br_finanz:"Finanse / Ubezpieczenia",
+    br_sonst:"Inne",
     aiLang:"Polnisch (Polski)"
   }
+};
+var PKG={
+  de:[
+    {step:"Schritt 1",name:"KI-Potenzialanalyse",headline:"Verstehen, bevor du baust",price:"ab 3.500 €",priceNote:"Festpreis",duration:"2-3 Wochen",
+     desc:"Wir analysieren deine Prozesse vor Ort und liefern eine schriftliche Roadmap mit den lukrativsten KI-Use-Cases.",
+     features:["2 Workshop-Tage bei dir vor Ort","Analyse deiner Prozesse & IT-Landschaft","5-8 priorisierte Use Cases","Schriftliche Roadmap (20-30 Seiten)","Präsentation für die Geschäftsführung"],
+     why:"Bei deinem aktuellen Reifegrad ist eine fundierte Bestandsaufnahme der wichtigste erste Schritt. Erst verstehen, dann gezielt investieren.",
+     examples:[
+       {b:"🦷 Zahnarztpraxis (8 MA)",t:"Roadmap mit 6 Quick Wins identifiziert: Automatische Terminerinnerung, KI-Anrufannahme, digitale Anamnese. Geschätztes Einsparpotenzial: 18h/Woche."},
+       {b:"🚛 Spedition (25 MA)",t:"Analyse zeigte 12 manuelle Prozesse die automatisierbar sind. Empfehlung: Start mit Disposition + Rechnungsverarbeitung. ROI in 4 Monaten."},
+       {b:"🏗️ Handwerksbetrieb (15 MA)",t:"Komplette Prozesskette analysiert: Angebot Auftrag Rechnung. Roadmap zeigt 14h/Woche Einsparpotenzial allein in der Verwaltung."}
+     ]},
+    {step:"Schritt 2",name:"Pilot-Agent",headline:"Vom Konzept zum produktiven System",price:"9.500 - 22.000 €",priceNote:"Festpreis je nach Komplexität",duration:"4-8 Wochen",
+     desc:"Wir bauen deinen ersten produktiven KI-Agenten - end-to-end von der Konzeption über die Integration bis zur Schulung.",
+     features:["Detailkonzeption inkl. Datenschutz","Entwicklung des KI-Agenten","Integration in deine Bestandssysteme","Testing mit echten Daten","30 Tage Hypercare nach Go-Live"],
+     why:"Deine Strukturen sind bereit für die Umsetzung. Ein produktiver Pilot-Agent liefert messbaren ROI und bildet die Basis für weitere.",
+     examples:[
+       {b:"📞 Hausarztpraxis (12 MA)",t:"KI-Telefonassistent für Terminvergabe. Beantwortet 80% der Anrufe automatisch, spart 3 Praxismanagerinnen-Stellen tageweise. Investition: 14.500€."},
+       {b:"📧 Marketing-Agentur (30 MA)",t:"E-Mail-Agent für Kundenanfragen. Klassifiziert, beantwortet einfache Fragen, leitet komplexe weiter. 85% schnellere Bearbeitung. Investition: 18.000€."},
+       {b:"📦 Online-Shop (50 MA)",t:"KI-Bestellverarbeitung mit ERP-Anbindung. Rechnungen, Versandlabel, Lager-Update vollautomatisch. 22h/Woche gespart. Investition: 16.500€."}
+     ]},
+    {step:"Schritt 3",name:"Skalierung & Betrieb",headline:"KI als strategischer Hebel",price:"ab 2.500 € / Monat",priceNote:"Retainer · 6 Mon. Mindestlaufzeit",duration:"Laufend",
+     desc:"Kontinuierliche Weiterentwicklung deiner Agenten-Landschaft. Neue Agenten, Optimierung, Support.",
+     features:["Monatliche Roadmap-Sessions","Entwicklung neuer Agenten","Monitoring & Optimierung","Slack/Teams-Support mit SLA","Quartalsweise Team-Schulung"],
+     why:"Mit deiner KI-Reife bist du bereit für ein Multi-Agent-Ökosystem das ganze Geschäftsbereiche transformiert.",
+     examples:[
+       {b:"🏭 Maschinenbauer (180 MA)",t:"Multi-Agent-System: Vertrieb, Service, Einkauf, HR. Insgesamt 12 Agenten aktiv. ROI: 340.000€/Jahr. Laufender Retainer 4.500€/Monat."},
+       {b:"💼 Steuerkanzlei (40 MA)",t:"Agenten-Landschaft für Mandanten-Onboarding, Belegverarbeitung, automatisierte Voranmeldungen. 35% Kapazitätsgewinn. Retainer 3.200€/Monat."},
+       {b:"🏥 Klinikgruppe (500 MA)",t:"Skalierung von 3 auf 18 Agenten über 12 Monate. Patientenkommunikation, Dokumentation, Abrechnung. Jährliche Einsparung: 1,2 Mio€."}
+     ]}
+  ],
+  en:[
+    {step:"Step 1",name:"AI Potential Analysis",headline:"Understand before you build",price:"from 3,500 €",priceNote:"Fixed price",duration:"2-3 weeks",
+     desc:"We analyze your processes on site and deliver a written roadmap with the most lucrative AI use cases.",
+     features:["2 workshop days on site","Analysis of your processes & IT landscape","5-8 prioritized use cases","Written roadmap (20-30 pages)","Presentation for management"],
+     why:"At your current maturity level, a solid assessment is the most important first step. Understand first, then invest precisely.",
+     examples:[
+       {b:"🦷 Dental practice (8 staff)",t:"Roadmap identified 6 quick wins: automatic appointment reminders, AI call handling, digital anamnesis. Estimated savings: 18h/week."},
+       {b:"🚛 Freight company (25 staff)",t:"Analysis revealed 12 manual processes that can be automated. Recommendation: start with dispatching + invoice processing. ROI in 4 months."},
+       {b:"🏗️ Trade business (15 staff)",t:"Complete process chain analyzed: quote order invoice. Roadmap shows 14h/week savings in administration alone."}
+     ]},
+    {step:"Step 2",name:"Pilot Agent",headline:"From concept to productive system",price:"9,500 - 22,000 €",priceNote:"Fixed price depending on complexity",duration:"4-8 weeks",
+     desc:"We build your first productive AI agent - end to end, from concept through integration to training.",
+     features:["Detailed concept incl. data protection","Development of the AI agent","Integration into your existing systems","Testing with real data","30 days hypercare after go-live"],
+     why:"Your structures are ready for implementation. A productive pilot agent delivers measurable ROI and forms the basis for more.",
+     examples:[
+       {b:"📞 GP practice (12 staff)",t:"AI phone assistant for appointments. Answers 80% of calls automatically, saves 3 practice managers part-time. Investment: 14,500€."},
+       {b:"📧 Marketing agency (30 staff)",t:"Email agent for customer inquiries. Classifies, answers simple questions, forwards complex ones. 85% faster processing. Investment: 18,000€."},
+       {b:"📦 Online shop (50 staff)",t:"AI order processing with ERP integration. Invoices, shipping labels, stock updates fully automatic. 22h/week saved. Investment: 16,500€."}
+     ]},
+    {step:"Step 3",name:"Scaling & Operations",headline:"AI as a strategic lever",price:"from 2,500 € / month",priceNote:"Retainer · 6 month minimum term",duration:"Ongoing",
+     desc:"Continuous development of your agent landscape. New agents, optimization, support.",
+     features:["Monthly roadmap sessions","Development of new agents","Monitoring & optimization","Slack/Teams support with SLA","Quarterly team training"],
+     why:"With your AI maturity, you are ready for a multi-agent ecosystem that transforms entire business areas.",
+     examples:[
+       {b:"🏭 Machine builder (180 staff)",t:"Multi-agent system: sales, service, purchasing, HR. 12 agents active in total. ROI: 340,000€/year. Ongoing retainer 4,500€/month."},
+       {b:"💼 Tax firm (40 staff)",t:"Agent landscape for client onboarding, document processing, automated pre-registrations. 35% capacity gain. Retainer 3,200€/month."},
+       {b:"🏥 Clinic group (500 staff)",t:"Scaling from 3 to 18 agents over 12 months. Patient communication, documentation, billing. Annual savings: 1.2M€."}
+     ]}
+  ],
+  pl:[
+    {step:"Krok 1",name:"Analiza potencjału AI",headline:"Zrozum, zanim zbudujesz",price:"od 3.500 €",priceNote:"Cena stała",duration:"2-3 tygodnie",
+     desc:"Analizujemy Twoje procesy na miejscu i dostarczamy pisemną mapę drogową z najbardziej dochodowymi zastosowaniami AI.",
+     features:["2 dni warsztatów u Ciebie","Analiza procesów i infrastruktury IT","5-8 priorytetowych zastosowań","Pisemna mapa drogowa (20-30 stron)","Prezentacja dla zarządu"],
+     why:"Przy Twoim obecnym poziomie dojrzałości rzetelna inwentaryzacja to najważniejszy pierwszy krok. Najpierw zrozum, potem celowo inwestuj.",
+     examples:[
+       {b:"🦷 Gabinet dentystyczny (8 prac.)",t:"Mapa drogowa z 6 szybkimi wygranymi: automatyczne przypomnienia o wizytach, obsługa połączeń AI, cyfrowy wywiad. Szacowane oszczędności: 18h/tydzień."},
+       {b:"🚛 Spedycja (25 prac.)",t:"Analiza wykazała 12 ręcznych procesów do automatyzacji. Zalecenie: start od dyspozycji + przetwarzania faktur. ROI w 4 miesiące."},
+       {b:"🏗️ Firma rzemieślnicza (15 prac.)",t:"Przeanalizowano cały łańcuch procesów: oferta zlecenie faktura. Mapa drogowa pokazuje 14h/tydzień oszczędności w samej administracji."}
+     ]},
+    {step:"Krok 2",name:"Agent pilotażowy",headline:"Od koncepcji do działającego systemu",price:"9.500 - 22.000 €",priceNote:"Cena stała zależna od złożoności",duration:"4-8 tygodni",
+     desc:"Budujemy Twojego pierwszego działającego agenta AI - kompleksowo, od koncepcji przez integrację po szkolenie.",
+     features:["Szczegółowa koncepcja wraz z ochroną danych","Rozwój agenta AI","Integracja z istniejącymi systemami","Testowanie na rzeczywistych danych","30 dni wsparcia po uruchomieniu"],
+     why:"Twoje struktury są gotowe do wdrożenia. Działający agent pilotażowy zapewnia mierzalny ROI i stanowi podstawę dla kolejnych.",
+     examples:[
+       {b:"📞 Przychodnia (12 prac.)",t:"Asystent telefoniczny AI do umawiania wizyt. Odpowiada automatycznie na 80% połączeń, oszczędza 3 etaty menedżerek częściowo. Inwestycja: 14.500€."},
+       {b:"📧 Agencja marketingowa (30 prac.)",t:"Agent e-mail do zapytań klientów. Klasyfikuje, odpowiada na proste pytania, przekazuje złożone. 85% szybsza obsługa. Inwestycja: 18.000€."},
+       {b:"📦 Sklep internetowy (50 prac.)",t:"Przetwarzanie zamówień AI z integracją ERP. Faktury, etykiety wysyłkowe, aktualizacja magazynu w pełni automatycznie. 22h/tydzień oszczędności. Inwestycja: 16.500€."}
+     ]},
+    {step:"Krok 3",name:"Skalowanie i obsługa",headline:"AI jako strategiczna dźwignia",price:"od 2.500 € / miesiąc",priceNote:"Abonament · min. 6 miesięcy",duration:"Ciągłe",
+     desc:"Ciągły rozwój Twojego krajobrazu agentów. Nowi agenci, optymalizacja, wsparcie.",
+     features:["Comiesięczne sesje mapy drogowej","Rozwój nowych agentów","Monitorowanie i optymalizacja","Wsparcie Slack/Teams z SLA","Kwartalne szkolenia zespołu"],
+     why:"Dzięki Twojej dojrzałości AI jesteś gotowy na ekosystem wielu agentów, który przekształca całe obszary biznesowe.",
+     examples:[
+       {b:"🏭 Producent maszyn (180 prac.)",t:"System wielu agentów: sprzedaż, serwis, zakupy, HR. Łącznie 12 aktywnych agentów. ROI: 340.000€/rok. Abonament 4.500€/miesiąc."},
+       {b:"💼 Kancelaria podatkowa (40 prac.)",t:"Krajobraz agentów do onboardingu klientów, przetwarzania dokumentów, automatycznych zgłoszeń. 35% wzrost wydajności. Abonament 3.200€/miesiąc."},
+       {b:"🏥 Grupa klinik (500 prac.)",t:"Skalowanie z 3 do 18 agentów w 12 miesięcy. Komunikacja z pacjentami, dokumentacja, rozliczenia. Roczne oszczędności: 1,2 mln€."}
+     ]}
+  ]
 };
 
 
@@ -505,6 +876,7 @@ function App(){
   var r19=useState(false),dsgvo=r19[0],setDsgvo=r19[1];
   var rLang=useState((typeof navigator!=="undefined"&&navigator.language&&navigator.language.slice(0,2)==="pl")?"pl":(typeof navigator!=="undefined"&&navigator.language&&navigator.language.slice(0,2)==="en")?"en":"de"),lang=rLang[0],setLang=rLang[1];
   function t(k){var L=I18N[lang]||I18N.de;return (L[k]!==undefined)?L[k]:(I18N.de[k]!==undefined?I18N.de[k]:k);}
+  function brLabel(v){for(var i=0;i<BRANCHEN.length;i++){if(BRANCHEN[i].v===v)return t(BRANCHEN[i].k);}return v;}
 
   var gefB=bereiche.filter(function(b){return aktiv.indexOf(b.id)>=0;});
   var curB=gefB[bIdx];
@@ -664,7 +1036,7 @@ function App(){
       <input placeholder={t("firmaPh")} value={firma} onChange={function(e){setFirma(e.target.value);}}/>
       <select value={branche} onChange={function(e){setBranche(e.target.value);}} style={{marginBottom:10}}>
         <option value="">{t("branchePh")}</option>
-        {BRANCHEN.map(function(b){return <option key={b} value={b}>{b}</option>;})}
+        {BRANCHEN.map(function(b){return <option key={b.v} value={b.v}>{t(b.k)}</option>;})}
       </select>
 
       <button onClick={function(){setUrlModal(true);setUrlError("");}} style={{width:"100%",padding:"10px 14px",marginBottom:10,background:"rgba(122,200,0,0.08)",border:"1px solid "+G+"40",borderRadius:8,color:G,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontFamily:"inherit",fontWeight:500}}>
@@ -715,7 +1087,7 @@ function App(){
             {urlLoading?(
               <div style={{textAlign:"center",padding:"20px 0",color:T2,fontSize:13}}>
                 <div style={{display:"inline-block",width:24,height:24,border:"2px solid "+G,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",marginBottom:10}}/>
-                <div>🔄 Lese deine Webseite...</div>
+                <div>{t("urlModalReading")}</div>
                 <div style={{fontSize:11,color:"#555",marginTop:4}}>KI erstellt Beschreibung...</div>
               </div>
             ):(
@@ -737,7 +1109,7 @@ function App(){
         <Logo lang={lang} setLang={setLang}/>
         <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
         <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>{t("bereicheTitle")}</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:20}}>{t("fuer")} <span style={{color:G}}>{firma||branche}</span></p>
+        <p style={{color:T2,fontSize:13,marginBottom:20}}>{t("fuer")} <span style={{color:G}}>{firma||brLabel(branche)}</span></p>
         <div style={{...card,marginBottom:16}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
             <span style={{fontSize:13,color:T2}}>{aktiv.length} {t("vonCount")} {bereiche.length}</span>
@@ -807,7 +1179,7 @@ function App(){
       <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo lang={lang} setLang={setLang}/>
         <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 4px"}}>{t("scoreTitle")}</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:0}}>{firma||"Dein Unternehmen"} - {branche}</p>
+        <p style={{color:T2,fontSize:13,marginBottom:0}}>{firma||t("deinUnternehmen")} - {brLabel(branche)}</p>
         <IQMeter score={g}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
           <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>{t("iqScore")}</div><div style={{fontSize:28,fontWeight:500}}>{g}%</div></div>
@@ -830,8 +1202,8 @@ function App(){
         );})}
         {err&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{err}</p>}
         <div style={{height:1,background:BD,margin:"20px 0"}}/>
-        {loadR?<LoadBox msg="KI erstellt deinen Bericht..." sub="ca. 10 Sekunden" steps={["Auswerten","Empfehlungen","Roadmap"]}/>:<button onClick={analysiereReport} style={btnG}>KI-Bericht & Roadmap erstellen →</button>}
-        {!loadR&&<button onClick={function(){setStep("fragebogen");}} style={btn}>← Antworten bearbeiten</button>}
+        {loadR?<LoadBox msg={t("loadReportMsg")} sub={t("loadBereicheSub")} steps={[t("loadReportS1"),t("loadReportS2"),t("loadReportS3")]}/>:<button onClick={analysiereReport} style={btnG}>{t("reportCreateBtn")}</button>}
+        {!loadR&&<button onClick={function(){setStep("fragebogen");}} style={btn}>{t("editAnswers")}</button>}
       </div>
     );
   }
@@ -841,37 +1213,37 @@ function App(){
     return(
       <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo lang={lang} setLang={setLang}/>
-        {emailSent&&<div style={{background:"#081200",border:"0.5px solid "+G+"40",borderRadius:8,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>📧</span><span style={{fontSize:12,color:G}}>Dein persönlicher Bericht wurde an <strong>{email}</strong> gesendet!</span></div>}
+        {emailSent&&<div style={{background:"#081200",border:"0.5px solid "+G+"40",borderRadius:8,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>📧</span><span style={{fontSize:12,color:G}}>{t("berichtSentPre")} <strong>{email}</strong> {t("berichtSentPost")}</span></div>}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
-          <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>IQ-Bericht & KI-Roadmap</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||"Dein Unternehmen"} - {branche}</p></div>
-          <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>KI-POTENZIAL</div></div>
+          <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>{t("berichtTitle")}</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||t("deinUnternehmen")} - {brLabel(branche)}</p></div>
+          <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>{t("berichtPotLabel")}</div></div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat("+Math.min(gefB.length,3)+",1fr)",gap:8,marginBottom:16}}>
           {gefB.map(function(b){var kc=KC[b.kiKat]||G;return(<div key={b.id} style={{...card,padding:"0.75rem",textAlign:"center",marginBottom:0}}><div style={{fontSize:9,color:T2,marginBottom:2}}>{b.label}</div><div style={{fontSize:18,fontWeight:500,color:TX}}>{gs(b.id)}%</div></div>);})}
         </div>
         <div style={{...cardG,marginBottom:16}}>
           <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{t("einsparTitle")}</div>
-          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>Dein IQ-Score zeigt: In deinem Unternehmen steckt <strong style={{color:G}}>erhebliches ungenutztes Potenzial</strong>.</p>
-          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Was das konkret für dich in Euro bedeutet, besprechen wir in einem persönlichen Gespräch  -  kostenlos, individuell und ohne Verpflichtung.</p>
-          <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>📅 Jetzt Termin sichern & Potenzial erfahren →</button>
+          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>{t("berichtEinspar1pre")}<strong style={{color:G}}>{t("berichtEinspar1strong")}</strong>{t("berichtEinspar1post")}</p>
+          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>{t("berichtEinspar2")}</p>
+          <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>{t("berichtTerminBtn")}</button>
         </div>
         <div style={{...card,lineHeight:1.7,fontSize:13,color:T2,marginBottom:16}} dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
         <div style={{...card,marginBottom:16}}>
-          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Bericht teilen</div>
+          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("berichtTeilen")}</div>
           <div style={{display:"flex",gap:8,marginBottom:12}}>
-            <button onClick={generatePDF} style={{flex:1,padding:"9px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>📄 PDF herunterladen</button>
-            <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ.txt";a.click();}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>⬇ Text</button>
+            <button onClick={generatePDF} style={{flex:1,padding:"9px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>{t("berichtPdf")}</button>
+            <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ.txt";a.click();}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>{t("berichtTextBtn")}</button>
           </div>
           <div style={{display:"flex",gap:8}}>
-            <input placeholder="Per E-Mail senden..." value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
-            <button onClick={function(){if(!mailShare)return;window.open("mailto:"+mailShare+"?subject=ONLION IQ Bericht&body="+encodeURIComponent(btxt()));setMailSent(true);setTimeout(function(){setMailSent(false);},3000);}} style={{padding:"9px 14px",borderRadius:8,border:"0.5px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,whiteSpace:"nowrap"}}>{mailSent?"Gesendet":"Senden"}</button>
+            <input placeholder={t("berichtMailPh")} value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
+            <button onClick={function(){if(!mailShare)return;window.open("mailto:"+mailShare+"?subject=ONLION IQ Bericht&body="+encodeURIComponent(btxt()));setMailSent(true);setTimeout(function(){setMailSent(false);},3000);}} style={{padding:"9px 14px",borderRadius:8,border:"0.5px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,whiteSpace:"nowrap"}}>{mailSent?t("berichtGesendet"):t("berichtSenden")}</button>
           </div>
         </div>
         <div style={{height:1,background:BD,margin:"20px 0"}}/>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Nächste Schritte</div>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("berichtNext")}</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
-          <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>🤖</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>KI-Lösungen</div><div style={{fontSize:12,color:T2}}>Tools entdecken</div></button>
-          <button onClick={function(){setStep("termin");}} style={{background:"#0d0d0d",border:"1px solid "+BD,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>📅</div><div style={{fontSize:14,fontWeight:500,color:TX,marginBottom:4}}>Kostenloses Gespräch</div><div style={{fontSize:12,color:T2}}>Termin buchen</div></button>
+          <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>🤖</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>{t("berichtLoesTitle")}</div><div style={{fontSize:12,color:T2}}>{t("berichtLoesSub")}</div></button>
+          <button onClick={function(){setStep("termin");}} style={{background:"#0d0d0d",border:"1px solid "+BD,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>📅</div><div style={{fontSize:14,fontWeight:500,color:TX,marginBottom:4}}>{t("berichtGespraechTitle")}</div><div style={{fontSize:12,color:T2}}>{t("berichtGespraechSub")}</div></button>
         </div>
 
         {/* Förderung Banner */}
@@ -887,14 +1259,14 @@ function App(){
         >
           <span style={{fontSize:28,flexShrink:0}}>🏛️</span>
           <div style={{flex:1}}>
-            <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:3}}>Staatliche Förderung sichern</div>
-            <div style={{fontSize:12,color:T2,lineHeight:1.5}}>Bis zu 100% der Kosten können staatlich gefördert werden → mehr erfahren</div>
+            <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:3}}>{t("foerderBannerTitle")}</div>
+            <div style={{fontSize:12,color:T2,lineHeight:1.5}}>{t("foerderBannerText")}</div>
           </div>
           <span style={{color:G,fontSize:18,flexShrink:0}}>→</span>
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
-          <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>← IQ-Score</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setWebText("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>Neue Analyse</button>
+          <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>{t("berichtBackScore")}</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setWebText("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("neueAnalyse")}</button>
         </div>
       </div>
     );
@@ -903,15 +1275,15 @@ function App(){
   if(step==="loesungen") return(
     <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo lang={lang} setLang={setLang}/>
-      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>KI & Automatisierungs-Lösungen</h1>
-      <p style={{color:T2,fontSize:13,marginBottom:16}}>Für <span style={{color:G}}>{firma||branche}</span></p>
-      {loadL?<LoadBox msg="KI sucht passende Lösungen..." sub="ca. 8 Sekunden" steps={["Bereiche prüfen","Tools suchen","Empfehlungen"]}/>:
+      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
+      <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>{t("loesTitle")}</h1>
+      <p style={{color:T2,fontSize:13,marginBottom:16}}>{t("fuer")} <span style={{color:G}}>{firma||brLabel(branche)}</span></p>
+      {loadL?<LoadBox msg={t("loesLoadMsg")} sub={t("loesLoadSub")} steps={[t("loesS1"),t("loesS2"),t("loesS3")]}/>:
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-          {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">Mehr →</a></div>);})}
+          {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">{t("loesMehr")}</a></div>);})}
         </div>
       }
-      <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>Individuelle KI-Beratung?</div><p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>30 Minuten, kostenlos.</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>Kostenloses Gespräch buchen →</button></div>
+      <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>{t("loesBeratungTitle")}</div><p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>{t("loesBeratungText")}</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>{t("loesBeratungBtn")}</button></div>
     </div>
   );
 
@@ -920,15 +1292,15 @@ function App(){
     return(
       <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo lang={lang} setLang={setLang}/>
-        <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>Kostenloses KI-Beratungsgespräch</h1>
-        <p style={{color:T2,fontSize:13,marginBottom:20}}>30 Minuten · kostenlos · unverbindlich</p>
+        <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 6px"}}>{t("terminTitle")}</h1>
+        <p style={{color:T2,fontSize:13,marginBottom:20}}>{t("terminSub")}</p>
         <div style={{...cardG,marginBottom:24}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-            <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>Dein KI-Potenzial</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% ungenutzt</div><div style={{fontSize:13,color:G,marginTop:4}}>💶 Erfahre dein konkretes Einsparpotenzial</div></div>
+            <div><div style={{fontSize:12,color:G+"99",marginBottom:4}}>{t("terminPotLabel")}</div><div style={{fontSize:24,fontWeight:500,color:G}}>{100-tg}% {t("terminUngenutzt")}</div><div style={{fontSize:13,color:G,marginTop:4}}>{t("terminPotSub")}</div></div>
             <div style={{fontSize:36}}>🚀</div>
           </div>
-          <p style={{fontSize:13,color:T2,lineHeight:1.6}}>Wir zeigen dir in 30 Minuten wie du dieses Potenzial konkret heben kannst.</p>
+          <p style={{fontSize:13,color:T2,lineHeight:1.6}}>{t("terminPotText")}</p>
         </div>
         <div style={{...card,marginBottom:16}}>
           <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>{t("terminErwartetTitle")}</div>
@@ -937,12 +1309,12 @@ function App(){
         <div style={{background:G+"08",border:"1px solid "+G+"30",borderRadius:10,padding:"12px 14px",marginBottom:14,display:"flex",alignItems:"flex-start",gap:10}}>
           <span style={{fontSize:16,flexShrink:0}}>🎁</span>
           <div>
-            <div style={{fontSize:12,color:G,fontWeight:500,marginBottom:2}}>Nach der Terminbuchung</div>
-            <div style={{fontSize:12,color:T2,lineHeight:1.5}}>Wir zeigen dir unser Angebot  -  individuell auf deinen IQ-Score von <strong style={{color:TX}}>{100-tg}%</strong> Potenzial angepasst.</div>
+            <div style={{fontSize:12,color:G,fontWeight:500,marginBottom:2}}>{t("terminNachTitle")}</div>
+            <div style={{fontSize:12,color:T2,lineHeight:1.5}}>{t("terminNachTextPre")} <strong style={{color:TX}}>{100-tg}%</strong> {t("terminNachTextPost")}</div>
           </div>
         </div>
-        <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("pakete");}} style={btnG}>📅 Termin buchen →</button>
-        <button onClick={function(){setStep("pakete");}} style={{...btn,marginTop:10,color:G,borderColor:G+"40"}}>📦 Unser Angebot ansehen →</button>
+        <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("pakete");}} style={btnG}>{t("terminBookBtn")}</button>
+        <button onClick={function(){setStep("pakete");}} style={{...btn,marginTop:10,color:G,borderColor:G+"40"}}>{t("terminAngebotBtn")}</button>
       </div>
     );
   }
@@ -952,83 +1324,36 @@ function App(){
   if(step==="pakete"){
     var pScore=ges();
     var pFirma=firma||branche||"Dein Unternehmen";
-    var tiers=[
-      {
-        id:"analyse",
-        icon:"🧭",
-        step:"Schritt 1",
-        name:"KI-Potenzialanalyse",
-        headline:"Verstehen, bevor du baust",
-        price:"ab 3.500 €",
-        priceNote:"Festpreis",
-        duration:"2-3 Wochen",
-        minScore:0,maxScore:35,
-        desc:"Wir analysieren deine Prozesse vor Ort und liefern eine schriftliche Roadmap mit den lukrativsten KI-Use-Cases.",
-        features:["2 Workshop-Tage bei dir vor Ort","Analyse deiner Prozesse & IT-Landschaft","5-8 priorisierte Use Cases","Schriftliche Roadmap (20-30 Seiten)","Präsentation für die Geschäftsführung"],
-        why:"Bei deinem aktuellen Reifegrad ist eine fundierte Bestandsaufnahme der wichtigste erste Schritt. Erst verstehen, dann gezielt investieren.",
-        examples:[
-          {b:"🦷 Zahnarztpraxis (8 MA)",t:"Roadmap mit 6 Quick Wins identifiziert: Automatische Terminerinnerung, KI-Anrufannahme, digitale Anamnese. Geschätztes Einsparpotenzial: 18h/Woche."},
-          {b:"🚛 Spedition (25 MA)",t:"Analyse zeigte 12 manuelle Prozesse die automatisierbar sind. Empfehlung: Start mit Disposition + Rechnungsverarbeitung. ROI in 4 Monaten."},
-          {b:"🏗️ Handwerksbetrieb (15 MA)",t:"Komplette Prozesskette analysiert: Angebot → Auftrag → Rechnung. Roadmap zeigt 14h/Woche Einsparpotenzial allein in der Verwaltung."}
-        ]
-      },
-      {
-        id:"pilot",
-        icon:"⚡",
-        step:"Schritt 2",
-        name:"Pilot-Agent",
-        headline:"Vom Konzept zum produktiven System",
-        price:"9.500 - 22.000 €",
-        priceNote:"Festpreis je nach Komplexität",
-        duration:"4-8 Wochen",
-        minScore:36,maxScore:65,
-        desc:"Wir bauen deinen ersten produktiven KI-Agenten - end-to-end von der Konzeption über die Integration bis zur Schulung.",
-        features:["Detailkonzeption inkl. Datenschutz","Entwicklung des KI-Agenten","Integration in deine Bestandssysteme","Testing mit echten Daten","30 Tage Hypercare nach Go-Live"],
-        why:"Deine Strukturen sind bereit für die Umsetzung. Ein produktiver Pilot-Agent liefert messbaren ROI und bildet die Basis für weitere.",
-        examples:[
-          {b:"📞 Hausarztpraxis (12 MA)",t:"KI-Telefonassistent für Terminvergabe. Beantwortet 80% der Anrufe automatisch, spart 3 Praxismanagerinnen-Stellen tageweise. Investition: 14.500€."},
-          {b:"📧 Marketing-Agentur (30 MA)",t:"E-Mail-Agent für Kundenanfragen. Klassifiziert, beantwortet einfache Fragen, leitet komplexe weiter. 85% schnellere Bearbeitung. Investition: 18.000€."},
-          {b:"📦 Online-Shop (50 MA)",t:"KI-Bestellverarbeitung mit ERP-Anbindung. Rechnungen, Versandlabel, Lager-Update vollautomatisch. 22h/Woche gespart. Investition: 16.500€."}
-        ]
-      },
-      {
-        id:"scale",
-        icon:"🚀",
-        step:"Schritt 3",
-        name:"Skalierung & Betrieb",
-        headline:"KI als strategischer Hebel",
-        price:"ab 2.500 € / Monat",
-        priceNote:"Retainer · 6 Mon. Mindestlaufzeit",
-        duration:"Laufend",
-        minScore:66,maxScore:100,
-        desc:"Kontinuierliche Weiterentwicklung deiner Agenten-Landschaft. Neue Agenten, Optimierung, Support.",
-        features:["Monatliche Roadmap-Sessions","Entwicklung neuer Agenten","Monitoring & Optimierung","Slack/Teams-Support mit SLA","Quartalsweise Team-Schulung"],
-        why:"Mit deiner KI-Reife bist du bereit für ein Multi-Agent-Ökosystem das ganze Geschäftsbereiche transformiert.",
-        examples:[
-          {b:"🏭 Maschinenbauer (180 MA)",t:"Multi-Agent-System: Vertrieb, Service, Einkauf, HR. Insgesamt 12 Agenten aktiv. ROI: 340.000€/Jahr. Laufender Retainer 4.500€/Monat."},
-          {b:"💼 Steuerkanzlei (40 MA)",t:"Agenten-Landschaft für Mandanten-Onboarding, Belegverarbeitung, automatisierte Voranmeldungen. 35% Kapazitätsgewinn. Retainer 3.200€/Monat."},
-          {b:"🏥 Klinikgruppe (500 MA)",t:"Skalierung von 3 auf 18 Agenten über 12 Monate. Patientenkommunikation, Dokumentation, Abrechnung. Jährliche Einsparung: 1,2 Mio€."}
-        ]
-      }
+    var meta=[
+      {id:"analyse",icon:"🧭",minScore:0,maxScore:35},
+      {id:"pilot",icon:"⚡",minScore:36,maxScore:65},
+      {id:"scale",icon:"🚀",minScore:66,maxScore:100}
     ];
-    var recommended=tiers.find(function(t){return pScore>=t.minScore&&pScore<=t.maxScore;})||tiers[0];
+    var pkgData=PKG[lang]||PKG.de;
+    var tiers=meta.map(function(m,i){
+      var d=pkgData[i];
+      return {id:m.id,icon:m.icon,minScore:m.minScore,maxScore:m.maxScore,
+        step:d.step,name:d.name,headline:d.headline,price:d.price,priceNote:d.priceNote,
+        duration:d.duration,desc:d.desc,features:d.features,why:d.why,examples:d.examples};
+    });
+    var recommended=tiers.find(function(tr){return pScore>=tr.minScore&&pScore<=tr.maxScore;})||tiers[0];
 
     return(
       <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:680,margin:"0 auto"}}>
         <Logo lang={lang} setLang={setLang}/>
-        <button onClick={function(){setStep("termin");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+        <button onClick={function(){setStep("termin");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
 
         {/* Header */}
         <div style={{textAlign:"center",marginBottom:28}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"5px 14px",borderRadius:20,border:"1px solid "+G+"30",background:G+"08",fontSize:11,color:G,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>
-            ✦ Lösung aus dem ONLION-Portfolio
+            {t("pktBadge")}
           </div>
           <h1 style={{fontSize:24,fontWeight:500,lineHeight:1.3,marginBottom:10}}>
-            Dein Score zeigt das Potenzial.<br/>
-            <span style={{color:G}}>Ein KI-Agent hebt es.</span>
+            {t("pktTitle1")}<br/>
+            <span style={{color:G}}>{t("pktTitle2")}</span>
           </h1>
           <p style={{fontSize:13,color:T2,lineHeight:1.7,maxWidth:500,margin:"0 auto"}}>
-            Für <strong style={{color:TX}}>{pFirma}</strong> mit einem IQ-Score von <strong style={{color:G}}>{pScore}%</strong> empfehlen wir als nächsten Schritt die <strong style={{color:TX}}>{recommended.name}</strong>.
+            {t("pktIntroPre")} <strong style={{color:TX}}>{pFirma}</strong> {t("pktIntroMid")} <strong style={{color:G}}>{pScore}%</strong> {t("pktIntroPost")} <strong style={{color:TX}}>{recommended.name}</strong>.
           </p>
         </div>
 
@@ -1051,7 +1376,7 @@ function App(){
                     position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",
                     background:G,color:"#000",fontSize:10,fontWeight:700,
                     padding:"3px 14px",borderRadius:20,letterSpacing:1,textTransform:"uppercase"
-                  }}>Empfohlen für dich</div>
+                  }}>{t("pktEmpfohlen")}</div>
                 )}
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
                   <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -1081,7 +1406,7 @@ function App(){
                 </div>
                 {isRec&&(
                   <div style={{background:G+"08",borderLeft:"2px solid "+G,padding:"10px 12px",borderRadius:"0 6px 6px 0",marginTop:4,marginBottom:12}}>
-                    <div style={{fontSize:9,color:G,letterSpacing:1,textTransform:"uppercase",marginBottom:4,fontWeight:600}}>Warum für dich</div>
+                    <div style={{fontSize:9,color:G,letterSpacing:1,textTransform:"uppercase",marginBottom:4,fontWeight:600}}>{t("pktWarum")}</div>
                     <p style={{fontSize:11,color:T2,lineHeight:1.6}}>{tier.why}</p>
                   </div>
                 )}
@@ -1089,7 +1414,7 @@ function App(){
                 {/* Echte Beispiele */}
                 <div style={{borderTop:"0.5px solid "+BD,paddingTop:12,marginTop:isRec?0:8}}>
                   <div style={{fontSize:9,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8,fontWeight:600,display:"flex",alignItems:"center",gap:6}}>
-                    <span>💡</span> Echte Beispiele aus der Praxis
+                    <span>💡</span> {t("pktBeispiele")}
                   </div>
                   {tier.examples.map(function(ex,i){return(
                     <div key={i} style={{marginBottom:i<tier.examples.length-1?8:0,padding:"8px 10px",background:D3,borderRadius:6,borderLeft:"2px solid "+(isRec?G+"60":BD)}}>
@@ -1105,16 +1430,16 @@ function App(){
 
         {/* CTA */}
         <div style={{...card,marginBottom:14}}>
-          <h3 style={{fontSize:16,fontWeight:500,marginBottom:6}}>Bereit, dein Potenzial zu heben?</h3>
-          <p style={{fontSize:13,color:T2,lineHeight:1.6,marginBottom:16}}>Vereinbare ein unverbindliches Strategiegespräch. Wir besprechen deinen Score, deine Ziele und welcher Schritt für {pFirma} jetzt der richtige ist.</p>
+          <h3 style={{fontSize:16,fontWeight:500,marginBottom:6}}>{t("pktCtaTitle")}</h3>
+          <p style={{fontSize:13,color:T2,lineHeight:1.6,marginBottom:16}}>{t("pktCtaTextPre")} {pFirma} {t("pktCtaTextPost")}</p>
           <div style={{display:"flex",gap:10}}>
-            <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");}} style={{flex:2,padding:"12px",borderRadius:10,background:G,border:"none",color:"#000",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontFamily:"inherit"}}>📅 Termin sichern →</button>
-            <button onClick={function(){setStep("foerderung");}} style={{flex:1,padding:"12px",borderRadius:10,background:D3,border:"0.5px solid "+BD,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>🏛️ Förderung</button>
+            <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");}} style={{flex:2,padding:"12px",borderRadius:10,background:G,border:"none",color:"#000",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontFamily:"inherit"}}>{t("pktCtaBook")}</button>
+            <button onClick={function(){setStep("foerderung");}} style={{flex:1,padding:"12px",borderRadius:10,background:D3,border:"0.5px solid "+BD,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t("pktCtaFoerder")}</button>
           </div>
         </div>
 
         {/* Trust note */}
-        <p style={{textAlign:"center",fontSize:11,color:"#444",marginBottom:20}}>Kein Druck. Keine Verkaufsshow. Nur eine ehrliche Einschätzung deines Potenzials.</p>
+        <p style={{textAlign:"center",fontSize:11,color:"#444",marginBottom:20}}>{t("pktTrust")}</p>
       </div>
     );
   }
@@ -1122,23 +1447,23 @@ function App(){
   if(step==="foerderung") return(
     <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo lang={lang} setLang={setLang}/>
-      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>← Zurück</button>
+      <button onClick={function(){setStep("bericht");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
 
       {/* Hero */}
       <div style={{background:"#0a1a00",border:"1px solid "+G+"50",borderRadius:12,padding:"1.5rem",marginBottom:20,textAlign:"center"}}>
         <div style={{fontSize:36,marginBottom:10}}>🏛️</div>
-        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 8px",color:G}}>Staatliche Förderung für deine KI-Automatisierung</h1>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Wusstest du, dass du als Unternehmen Anspruch auf staatliche Förderung hast? Deine KI- und Automatisierungsprojekte können bis zu <strong style={{color:G}}>100% gefördert</strong> werden.</p>
+        <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 8px",color:G}}>{t("foerderTitle")}</h1>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>{t("foerderHero")} <strong style={{color:G}}>{t("foerderHeroStrong")}</strong> {t("foerderHeroPost")}</p>
       </div>
 
       {/* Förder-Highlights */}
       <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Was gefördert werden kann</div>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>{t("foerderWasTitle")}</div>
         {[
-          ["💶","Bis zu 100% der Weiterbildungskosten","nach dem Qualifizierungschancengesetz (QCG)"],
-          ["💰","Bis zu 75% der Gehaltskosten","für sozialversicherungspflichtige Angestellte"],
-          ["📅","Förderung für bis zu 14 Monate","laufende Unterstützung während der Umsetzung"],
-          ["✅","Kein Risiko & keine Rückzahlung","auch nicht bei Abbruch der Maßnahme"]
+          ["💶",t("foerderWas1a"),t("foerderWas1b")],
+          ["💰",t("foerderWas2a"),t("foerderWas2b")],
+          ["📅",t("foerderWas3a"),t("foerderWas3b")],
+          ["✅",t("foerderWas4a"),t("foerderWas4b")]
         ].map(function(x,i){return(
           <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:14,paddingBottom:i<3?14:0,borderBottom:i<3?"0.5px solid "+BD:"none"}}>
             <span style={{fontSize:22,flexShrink:0}}>{x[0]}</span>
@@ -1152,27 +1477,22 @@ function App(){
 
       {/* Wer hat Anspruch */}
       <div style={{...card,marginBottom:16}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>Wer hat Anspruch?</div>
-        {[
-          "Kleine und mittelständische Unternehmen (KMU)",
-          "Unternehmen mit sozialversicherungspflichtigen Angestellten",
-          "Unternehmen die KI, Digitalisierung oder Automatisierung einführen wollen",
-          "Kein Mindestumsatz oder Mindestgröße erforderlich"
-        ].map(function(t,i){return(
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>{t("foerderWerTitle")}</div>
+        {[t("foerderWer1"),t("foerderWer2"),t("foerderWer3"),t("foerderWer4")].map(function(it,i){return(
           <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
             <span style={{color:G,flexShrink:0,fontWeight:700}}>✓</span>
-            <span style={{fontSize:13,color:T2,lineHeight:1.5}}>{t}</span>
+            <span style={{fontSize:13,color:T2,lineHeight:1.5}}>{it}</span>
           </div>
         );})}
       </div>
 
       {/* Wie es funktioniert */}
       <div style={{...card,marginBottom:20}}>
-        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>So einfach funktioniert es</div>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:14}}>{t("foerderWieTitle")}</div>
         {[
-          ["1","Beratungsgespräch","Wir prüfen gemeinsam deine Förderfähigkeit und berechnen die genaue Fördersumme."],
-          ["2","Antragstellung","Wir unterstützen dich beim Antrag  -  dein Aufwand: ca. 1 Stunde."],
-          ["3","Förderung erhalten","Nach Bewilligung startet die Maßnahme und du erhältst den Zuschuss."]
+          ["1",t("foerderWie1a"),t("foerderWie1b")],
+          ["2",t("foerderWie2a"),t("foerderWie2b")],
+          ["3",t("foerderWie3a"),t("foerderWie3b")]
         ].map(function(x,i){return(
           <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:i<2?16:0}}>
             <div style={{width:28,height:28,borderRadius:"50%",background:G+"20",border:"1px solid "+G+"50",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:G,fontWeight:700}}>{x[0]}</div>
@@ -1186,15 +1506,15 @@ function App(){
 
       {/* CTA */}
       <div style={{...cardG,textAlign:"center",padding:"1.5rem",marginBottom:16}}>
-        <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>Jetzt Förderung prüfen</div>
-        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>Erfahre in einem kostenlosen Gespräch wie viel Förderung du für deine KI-Projekte bekommst  -  unverbindlich und ohne Risiko.</p>
+        <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{t("foerderCtaTitle")}</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>{t("foerderCtaText")}</p>
         <button onClick={function(){window.open("https://mittelstandsfoerderung-deutschland.de/ac/#survey-question-GwiJBsJn","_blank");}} style={{...btnG,marginTop:0}}>
-          🏛️ Jetzt Förderfähigkeit prüfen →
+          {t("foerderCtaBtn")}
         </button>
-        <p style={{fontSize:11,color:T2,marginTop:10}}>Du wirst zur Förderberatung weitergeleitet</p>
+        <p style={{fontSize:11,color:T2,marginTop:10}}>{t("foerderCtaNote")}</p>
       </div>
 
-      <button onClick={function(){setStep("bericht");}} style={{...btnO,marginTop:0}}>← Zurück zum Bericht</button>
+      <button onClick={function(){setStep("bericht");}} style={{...btnO,marginTop:0}}>{t("foerderBackBtn")}</button>
     </div>
   );
 
