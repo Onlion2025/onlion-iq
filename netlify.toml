@@ -6,3 +6,9 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+[functions."claude"]
+  timeout = 26
+
+[functions."analyzeurl"]
+  timeout = 26
