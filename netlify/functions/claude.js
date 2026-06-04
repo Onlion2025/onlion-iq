@@ -31,12 +31,15 @@ exports.handler = async (event) => {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-      body: JSON.stringify({ model: body.model || "claude-haiku-4-5", max_tokens: body.max_tokens || 800, messages: messages })
+      body: JSON.stringify({ model: body.model || "claude-haiku-4-5-20251001", max_tokens: body.max_tokens || 800, messages: messages })
     });
     const text = await response.text();
     let data;
     try { data = JSON.parse(text); }
     catch (e) { return { statusCode: 500, headers: { "Access-Control-Allow-Origin": "*" }, body: JSON.stringify({ error: "API parse error", raw: text.slice(0, 200) }) }; }
+    if (!response.ok) {
+      return { statusCode: response.status, headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" }, body: JSON.stringify({ error: (data && data.error && data.error.message) ? data.error.message : ("API error " + response.status), details: data }) };
+    }
     return { statusCode: 200, headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" }, body: JSON.stringify(data) };
   } catch (err) {
     return { statusCode: 500, headers: { "Access-Control-Allow-Origin": "*" }, body: JSON.stringify({ error: err.message }) };
