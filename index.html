@@ -259,7 +259,7 @@ function App(){
   }
 
   async function callApi(prompt,mt){
-    var r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
+    var r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:mt||1000,messages:[{role:"user",content:prompt}]})});
     var d=await r.json();
     if(d.error)throw new Error(typeof d.error==="string"?d.error:JSON.stringify(d.error));
     return d.content?d.content.map(function(c){return c.text||"";}).join(""):"";
@@ -278,18 +278,19 @@ function App(){
     setLoadB(true);setErr("");
     var webBlock=webText?("\n\nORIGINAL-INHALT DER FIRMEN-WEBSEITE (Titel, Ueberschriften, Texte - nutze diese konkreten Infos):\n"+safe(webText)+"\n\nWichtig: Leite die Bereiche und Fragen aus den konkreten Leistungen, Produkten und Prozessen dieser Webseite ab, nicht aus allgemeinem Branchenwissen."):"";
     var prompt="Erstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirmenname (immer exakt so schreiben, niemals abkuerzen oder veraendern): "+safe(firma)+"\nBeschreibung: "+safe(desc)+webBlock+"\n\nWichtig:\n- Verwende den Firmennamen IMMER exakt wie angegeben, Schreibweise nicht veraendern.\n- Die Fragen sollen DIREKT auf die Beschreibung und den Webseiten-Inhalt eingehen und konkrete Situationen aus diesem Unternehmen ansprechen, keine generischen Standardbereiche.\n- Schreibe den KI-Potenzial-Satz OHNE das Wort 'KI-Potenzial' davor (nur den Satz selbst).\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[Ein Satz zum Automatisierungspotenzial, ohne Label davor]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
-    var p=null;
+    var p=null,lastErr="";
     for(var attempt=0;attempt<2&&!p;attempt++){
       try{
         var t=await callApi(prompt,3500);
         var parsed=parseBereicheTextRaw(t);
         if(parsed&&parsed.length>=3)p=parsed;
-      }catch(e){}
+        else lastErr="Antwort konnte nicht ausgewertet werden.";
+      }catch(e){lastErr=e.message;}
     }
     if(p){
       setBereiche(p);setAktiv(p.map(function(b){return b.id;}));setStep("bereiche");
     }else{
-      setErr("Die KI-Analyse hat diesmal kein verwertbares Ergebnis geliefert. Bitte erneut versuchen oder die Beschreibung praezisieren. (Es wurden Standardbereiche geladen.)");
+      setErr("KI-Analyse fehlgeschlagen"+(lastErr?(": "+lastErr):"")+". Standardbereiche wurden geladen. Bitte erneut versuchen.");
       var df=getDefault(branche);
       setBereiche(df);setAktiv(df.map(function(b){return b.id;}));setStep("bereiche");
     }
