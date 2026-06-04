@@ -170,6 +170,7 @@ ${textForAi}`;
       headers,
       body: JSON.stringify({
         beschreibung: beschreibung,
+        webText: textForAi.substring(0, 3500),
         url: normalizedUrl
       })
     };
