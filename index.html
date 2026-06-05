@@ -43,10 +43,10 @@ var KC={ki:G,rpa:"#00aaff",robotik:"#ff7700",daten:"#aa44ff"};
 var KL={ki:"KI-Agent",rpa:"Automatisierung",robotik:"Robotik",daten:"Analytics"};
 var KTC={ki:T2,rpa:T2,robotik:T2,daten:T2};
 var KT={
-  ki:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit  -  rund um die Uhr, ohne Pause.",
-  rpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen  -  ohne Programmierung, sofort einsetzbar.",
-  robotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik  -  präzise, schnell und ermüdungsfrei.",
-  daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen  -  Entscheidungen basieren auf aktuellen Daten, nicht auf Bauchgefühl."
+  ki:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit - rund um die Uhr, ohne Pause.",
+  rpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen - ohne Programmierung, sofort einsetzbar.",
+  robotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik - präzise, schnell und ermüdungsfrei.",
+  daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen - Entscheidungen basieren auf aktuellen Daten, nicht auf Bauchgefühl."
 };
 var BRANCHEN=[{v:"Produktion / Fertigung",k:"br_prod"},{v:"Dienstleistung / Büro",k:"br_dienst"},{v:"Handel / Logistik",k:"br_handel"},{v:"IT / Technologie",k:"br_it"},{v:"Gesundheit / Pflege",k:"br_health"},{v:"Bildung",k:"br_bildung"},{v:"Finanzen / Versicherung",k:"br_finanz"},{v:"Sonstige",k:"br_sonst"}];
 var I18N={
@@ -114,7 +114,7 @@ var I18N={
     descRobotik:"Physische Roboter und kollaborative Cobots übernehmen körperliche Aufgaben in Produktion, Lager und Logistik - präzise, schnell und ermüdungsfrei.",
     descDaten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen - Entscheidungen basieren auf aktuellen Daten, nicht auf Bauchgefühl.",
     impressumTitle:"Impressum",
-    imprAngaben:"Angaben gemäß § 5 TMG",
+    imprAngaben:"Angaben gemäß § 5 DDG",
     imprKontakt:"Kontakt",
     imprVerantw:"Verantwortlich für den Inhalt",
     imprHaftung:"Haftungsausschluss",
@@ -302,7 +302,7 @@ var I18N={
     descRobotik:"Physical robots and collaborative cobots take over physical tasks in production, warehousing and logistics - precise, fast and tireless.",
     descDaten:"Real-time dashboards and AI-powered analytics replace manual Excel reports - decisions based on current data, not gut feeling.",
     impressumTitle:"Legal Notice",
-    imprAngaben:"Information pursuant to § 5 TMG",
+    imprAngaben:"Information pursuant to § 5 DDG",
     imprKontakt:"Contact",
     imprVerantw:"Responsible for content",
     imprHaftung:"Disclaimer",
@@ -490,7 +490,7 @@ var I18N={
     descRobotik:"Fizyczne roboty i współpracujące coboty przejmują zadania fizyczne w produkcji, magazynie i logistyce - precyzyjnie, szybko i bez zmęczenia.",
     descDaten:"Pulpity w czasie rzeczywistym i analizy oparte na AI zastępują ręczne raporty Excel - decyzje oparte na aktualnych danych, a nie na przeczuciu.",
     impressumTitle:"Nota prawna",
-    imprAngaben:"Informacje zgodnie z § 5 TMG",
+    imprAngaben:"Informacje zgodnie z § 5 DDG",
     imprKontakt:"Kontakt",
     imprVerantw:"Odpowiedzialny za treść",
     imprHaftung:"Wyłączenie odpowiedzialności",
@@ -950,7 +950,7 @@ function App(){
     if(!canStart){setErr("Bitte alle Pflichtfelder ausfüllen.");return;}
     setLoadB(true);setErr("");
     var webBlock=webText?("\n\nORIGINAL-INHALT DER FIRMEN-WEBSEITE (Titel, Ueberschriften, Texte - nutze diese konkreten Infos):\n"+safe(webText).substring(0,2000)+"\n\nWichtig: Leite die Bereiche und Fragen aus den konkreten Leistungen, Produkten und Prozessen dieser Webseite ab, nicht aus allgemeinem Branchenwissen."):"";
-    var prompt="WICHTIG: Antworte ausschliesslich auf "+t("aiLang")+". Alle Bereichsnamen, Saetze, Fragen und Antwortoptionen muessen in dieser Sprache sein.\n\nErstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirmenname (immer exakt so schreiben, niemals abkuerzen oder veraendern): "+safe(firma)+"\nBeschreibung: "+safe(desc)+webBlock+"\n\nWichtig:\n- Verwende den Firmennamen IMMER exakt wie angegeben, Schreibweise nicht veraendern.\n- Die Fragen sollen DIREKT auf die Beschreibung und den Webseiten-Inhalt eingehen und konkrete Situationen aus diesem Unternehmen ansprechen, keine generischen Standardbereiche.\n- Schreibe den KI-Potenzial-Satz OHNE das Wort 'KI-Potenzial' davor (nur den Satz selbst).\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[Ein Satz zum Automatisierungspotenzial, ohne Label davor]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
+    var prompt="WICHTIG: Antworte ausschliesslich auf "+t("aiLang")+". Alle Bereichsnamen, Saetze, Fragen und Antwortoptionen muessen in dieser Sprache sein.\n\nErstelle 6 individuelle Analysebereiche fuer dieses Unternehmen.\n\nBranche: "+safe(branche)+"\nFirmenname (immer exakt so schreiben, niemals abkuerzen oder veraendern): "+safe(firma)+"\nBeschreibung: "+safe(desc)+webBlock+"\n\nWichtig:\n- Verwende den Firmennamen IMMER exakt wie angegeben, Schreibweise nicht veraendern.\n- Die Fragen sollen DIREKT auf die Beschreibung und den Webseiten-Inhalt eingehen und konkrete Situationen aus diesem Unternehmen ansprechen, keine generischen Standardbereiche.\n- Schreibe den KI-Potenzial-Satz OHNE das Wort 'KI-Potenzial' davor (nur den Satz selbst).\n- Schreibe in klarem, einfachem Deutsch. Verwende KEINE englischen Begriffe wie Booking, Management, Hybrid, Tool, Workflow. Nutze stattdessen deutsche Woerter (z.B. Terminbuchung statt Booking, Verwaltung statt Management).\n- Wenn ein Fachbegriff noetig ist, erklaere ihn in einfachen Worten in Klammern.\n- Schreibe kurze, aktive Saetze. Vermeide verschachtelte Passivkonstruktionen und doppelte koennte/wuerde-Formen in einem Satz.\n- Erfinde KEINE Produktnamen oder Software-Namen. Erwaehne nur Tools, die in der Beschreibung oder im Webseiten-Inhalt wirklich genannt werden.\n- Achte auf korrekte Grammatik. Pruefe jeden Satz, dass Verben und Partizipien richtig gebeugt sind (z.B. 'ausgebaut werden koennte', nicht 'ausbaut werden koennte').\n\nFormat (exakt einhalten):\n\nBEREICH 1: [Name]\n[Emoji]\n[Ein Satz zum Automatisierungspotenzial, ohne Label davor]\nFRAGE 1: [Konkrete Frage zum Unternehmen]\n[Option A - niedrigster Automatisierungsgrad]\n[Option B]\n[Option C]\n[Option D - hoechster Automatisierungsgrad]\nFRAGE 2: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 3: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\nFRAGE 4: [Konkrete Frage]\n[Option A]\n[Option B]\n[Option C]\n[Option D]\n\nBEREICH 2: [Name]\n...";
     var p=null,lastErr="";
     for(var attempt=0;attempt<2&&!p;attempt++){
       try{
@@ -1772,7 +1772,7 @@ function App(){
           {adminTab==="notizen"&&(
             <div>
               <h2 style={{fontSize:20,fontWeight:500,marginBottom:4}}>Gesprächsnotizen</h2>
-              <p style={{color:T2,fontSize:13,marginBottom:20}}>Nur für diese Sitzung  -  nicht gespeichert.</p>
+              <p style={{color:T2,fontSize:13,marginBottom:20}}>Nur für diese Sitzung - nicht gespeichert.</p>
               {["Kunde / Unternehmen","Pain Points","Technisches Setup","Förderung","Nächster Schritt"].map(function(label){return(
                 <div key={label} style={{...card,marginBottom:14}}>
                   <div style={{fontSize:10,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10,fontWeight:500}}>{label}</div>
