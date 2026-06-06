@@ -107,7 +107,7 @@ var I18N={
     einsparText2:"Wie viel das konkret in Euro bedeutet - das schauen wir uns gemeinsam in einem kostenlosen 30-Minuten-Gespräch an. Individuell. Unverbindlich.",
     terminBtn:"📅 Jetzt Termin sichern →",
     loadBereicheMsg:"KI erstellt deine Analysebereiche...",
-    loadBereicheSub:"ca. 10 Sekunden",
+    loadBereicheSub:"Das kann einen Moment dauern",
     loadStep1:"Beschreibung lesen", loadStep2:"Bereiche erstellen", loadStep3:"Fragen generieren",
     descKi:"KI-Agenten übernehmen repetitive Aufgaben, beantworten Kundenanfragen automatisch und analysieren Daten in Echtzeit - rund um die Uhr, ohne Pause.",
     descRpa:"Robotic Process Automation automatisiert manuelle Klick- und Tipp-Aufgaben in bestehenden Systemen - ohne Programmierung, sofort einsetzbar.",
@@ -168,7 +168,7 @@ var I18N={
     reportCreateBtn:"KI-Bericht & Roadmap erstellen →",
     loesTitle:"KI & Automatisierungs-Lösungen",
     loesLoadMsg:"KI sucht passende Lösungen...",
-    loesLoadSub:"ca. 8 Sekunden",
+    loesLoadSub:"Das kann einen Moment dauern",
     loesS1:"Bereiche prüfen", loesS2:"Tools suchen", loesS3:"Empfehlungen",
     loesMehr:"Mehr →",
     loesBeratungTitle:"Individuelle KI-Beratung?",
@@ -297,7 +297,7 @@ var I18N={
     einsparText2:"What that means concretely in euros - we'll look at that together in a free 30-minute call. Individual. No obligation.",
     terminBtn:"📅 Book a call now →",
     loadBereicheMsg:"AI is creating your analysis areas...",
-    loadBereicheSub:"approx. 10 seconds",
+    loadBereicheSub:"This may take a moment",
     loadStep1:"Reading description", loadStep2:"Creating areas", loadStep3:"Generating questions",
     descKi:"AI agents take over repetitive tasks, answer customer inquiries automatically and analyze data in real time - around the clock, without pause.",
     descRpa:"Robotic Process Automation automates manual click and typing tasks in existing systems - no programming, ready to use immediately.",
@@ -358,7 +358,7 @@ var I18N={
     reportCreateBtn:"Create AI report & roadmap →",
     loesTitle:"AI & automation solutions",
     loesLoadMsg:"AI is finding suitable solutions...",
-    loesLoadSub:"approx. 8 seconds",
+    loesLoadSub:"This may take a moment",
     loesS1:"Checking areas", loesS2:"Finding tools", loesS3:"Recommendations",
     loesMehr:"More →",
     loesBeratungTitle:"Individual AI consulting?",
@@ -487,7 +487,7 @@ var I18N={
     einsparText2:"Co to konkretnie oznacza w euro - przyjrzymy się temu wspólnie podczas bezpłatnej 30-minutowej rozmowy. Indywidualnie. Bez zobowiązań.",
     terminBtn:"📅 Zarezerwuj rozmowę →",
     loadBereicheMsg:"AI tworzy Twoje obszary analizy...",
-    loadBereicheSub:"ok. 10 sekund",
+    loadBereicheSub:"To może chwilę potrwać",
     loadStep1:"Czytanie opisu", loadStep2:"Tworzenie obszarów", loadStep3:"Generowanie pytań",
     descKi:"Agenci AI przejmują powtarzalne zadania, automatycznie odpowiadają na zapytania klientów i analizują dane w czasie rzeczywistym - przez całą dobę, bez przerwy.",
     descRpa:"Robotic Process Automation automatyzuje ręczne zadania klikania i pisania w istniejących systemach - bez programowania, gotowe do użycia od razu.",
@@ -548,7 +548,7 @@ var I18N={
     reportCreateBtn:"Utwórz raport AI i mapę drogową →",
     loesTitle:"Rozwiązania AI i automatyzacji",
     loesLoadMsg:"AI szuka odpowiednich rozwiązań...",
-    loesLoadSub:"ok. 8 sekund",
+    loesLoadSub:"To może chwilę potrwać",
     loesS1:"Sprawdzanie obszarów", loesS2:"Szukanie narzędzi", loesS3:"Rekomendacje",
     loesMehr:"Więcej →",
     loesBeratungTitle:"Indywidualne doradztwo AI?",
@@ -1214,7 +1214,6 @@ function App(){
           <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{t("einsparTitle")}</div>
           <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:10}}>{t("einsparText1pre")}<strong style={{color:G}}>{t("einsparText1strong")}</strong>{t("einsparText1post")}</p>
           <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>{t("einsparText2")}</p>
-          <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>{t("terminBtn")}</button>
         </div>
         {gefB.map(function(b){var sc=gs(b.id),kc=KC[b.kiKat]||G;return(
           <div key={b.id} style={{marginBottom:14}}>
