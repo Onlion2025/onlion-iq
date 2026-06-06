@@ -1063,9 +1063,9 @@ function App(){
 
       <div style={{...card,marginBottom:20}}>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>{t("in5Title")}</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
           {[["🧠",t("f1")],["🤖",t("f2")],["💶",t("f3")],["⚙️",t("f4")],["🗺️",t("f5")],["📧",t("f6")]].map(function(x,i){return(
-            <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginTop:i>2?8:0}}>
+            <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",marginTop:i>1?8:0}}>
               <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span>
               <span style={{fontSize:13,color:T2}}>{x[1]}</span>
             </div>
