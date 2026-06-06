@@ -1111,7 +1111,6 @@ function App(){
         ?<LoadBox msg={t("loadBereicheMsg")} sub={t("loadBereicheSub")} steps={[t("loadStep1"),t("loadStep2"),t("loadStep3")]}/>
         :<button disabled={!canStart||!dsgvo} onClick={ladeBereiche} style={{...btnG,opacity:(canStart&&dsgvo)?1:0.4}}>{t("startBtn")}</button>
       }
-      <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>{t("spamNote")}</p>
       <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,paddingTop:16,borderTop:"0.5px solid "+BD}}>
         <button onClick={function(){setStep("impressum");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Impressum</button>
         <button onClick={function(){setStep("datenschutz");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:11,textDecoration:"underline"}}>Datenschutz</button>
@@ -1248,6 +1247,7 @@ function App(){
             <input placeholder={t("reportEmailPh")} value={email} onChange={function(e){setEmail(e.target.value);setErr("");}} type="email" style={{marginBottom:10}}/>
             <input placeholder={t("reportPhonePh")} value={telefon} onChange={function(e){setTelefon(e.target.value);setErr("");}} type="tel" style={{marginBottom:10}}/>
             <button onClick={function(){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setErr(t("reportEmailErr"));return;}if(telefon.replace(/[^0-9]/g,"").length<6){setErr(t("reportPhoneErr"));return;}analysiereReport();}} style={{...btnG,marginTop:0}}>{t("reportCreateBtn")}</button>
+            <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>{t("spamNote")}</p>
           </div>
         }
         {!loadR&&<button onClick={function(){setStep("fragebogen");}} style={btn}>{t("editAnswers")}</button>}
