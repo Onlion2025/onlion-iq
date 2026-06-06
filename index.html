@@ -1037,8 +1037,63 @@ function App(){
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
 
-  function renderMd(t){
-    return t.replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>").replace(/^## (.+)$/gm,"<h2 style='font-size:15px;font-weight:500;margin:1.2rem 0 0.4rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:4px'>$1</h2>").replace(/^- (.+)$/gm,"<li style='margin:4px 0;color:"+T2+";line-height:1.5'>$1</li>").replace(/\n\n/g,"<br/>").replace(/\n/g,"<br/>");
+  function renderMd(md){
+    if(!md)return "";
+    var lines=md.split("\n");
+    var html="";
+    var i=0;
+    while(i<lines.length){
+      var line=lines[i];
+      // Tabelle erkennen: Zeile beginnt mit | und naechste Zeile ist Trenner |---|
+      if(/^\s*\|/.test(line)&&i+1<lines.length&&/^\s*\|[\s:-]*\|/.test(lines[i+1])){
+        var headers=line.split("|").map(function(c){return c.trim();}).filter(function(c){return c!=="";});
+        i+=2; // Kopf + Trennzeile ueberspringen
+        while(i<lines.length&&/^\s*\|/.test(lines[i])){
+          var cells=lines[i].split("|").map(function(c){return c.trim();}).filter(function(c){return c!=="";});
+          html+="<div style='background:rgba(122,200,0,0.06);border:0.5px solid "+BD+";border-radius:8px;padding:10px 12px;margin:8px 0'>";
+          for(var c=0;c<cells.length;c++){
+            var label=headers[c]?headers[c]:"";
+            var val=cells[c].replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+GL+"'>$1</strong>");
+            if(c===0){
+              html+="<div style='font-size:14px;font-weight:600;color:"+TX+";margin-bottom:6px'>"+val+"</div>";
+            }else{
+              html+="<div style='font-size:12px;color:"+T2+";margin-bottom:2px'><span style='color:"+T2+"99'>"+label+":</span> "+val+"</div>";
+            }
+          }
+          html+="</div>";
+          i++;
+        }
+        continue;
+      }
+      // Ueberschriften
+      if(/^### (.+)$/.test(line)){
+        html+="<h3 style='font-size:14px;font-weight:600;margin:1.1rem 0 0.4rem;color:"+GL+"'>"+line.replace(/^### /,"")+"</h3>";i++;continue;
+      }
+      if(/^## (.+)$/.test(line)){
+        html+="<h2 style='font-size:16px;font-weight:600;margin:1.3rem 0 0.5rem;color:"+GL+";border-bottom:0.5px solid "+BD+";padding-bottom:5px'>"+line.replace(/^## /,"")+"</h2>";i++;continue;
+      }
+      if(/^# (.+)$/.test(line)){
+        html+="<h1 style='font-size:18px;font-weight:700;margin:0.5rem 0 0.8rem;color:"+G+"'>"+line.replace(/^# /,"")+"</h1>";i++;continue;
+      }
+      // Bullet-Punkte
+      if(/^[-*] (.+)$/.test(line)){
+        var items="";
+        while(i<lines.length&&/^[-*] (.+)$/.test(lines[i])){
+          var txt=lines[i].replace(/^[-*] /,"").replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>");
+          items+="<li style='margin:5px 0;color:"+T2+";line-height:1.6'>"+txt+"</li>";
+          i++;
+        }
+        html+="<ul style='margin:8px 0;padding-left:20px'>"+items+"</ul>";
+        continue;
+      }
+      // Leerzeile
+      if(line.trim()===""){html+="<div style='height:8px'></div>";i++;continue;}
+      // Normaler Absatz
+      var p=line.replace(/\*\*(.+?)\*\*/g,"<strong style='color:"+TX+"'>$1</strong>");
+      html+="<p style='margin:6px 0;color:"+T2+";line-height:1.7;font-size:13px'>"+p+"</p>";
+      i++;
+    }
+    return html;
   }
 
   function btxt(){var g=ges();return "ONLION IQ\n"+"=".repeat(30)+"\nFirma: "+(firma||"-")+"\nBranche: "+branche+"\nIQ: "+g+"% | Potenzial: "+(100-g)+"%\n\n"+gefB.map(function(b){return b.label+": "+gs(b.id)+"%";}).join("\n")+"\n\n"+bericht;}
