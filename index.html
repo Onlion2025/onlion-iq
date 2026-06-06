@@ -1187,10 +1187,6 @@ function App(){
           {gefB.map(function(b,i){var a=i===bIdx,dn=komp(b.id);return <button key={b.id} onClick={function(){setBIdx(i);}} style={{padding:"4px 10px",borderRadius:20,border:"0.5px solid "+(a?G:dn?"#1a3a0a":BD),background:a?G+"18":dn?"#0f2005":"transparent",fontSize:12,cursor:"pointer",color:a?G:dn?GL:T2}}>{b.icon} {b.label}</button>;})}
         </div>
         <div style={card}>
-          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:4}}>
-            <h2 style={{fontSize:16,fontWeight:500,margin:0,color:TX}}>{curB.icon} {curB.label}</h2>
-            <span style={{...bdg(kc),whiteSpace:"nowrap",marginTop:2}}>{kl}</span>
-          </div>
           <div style={{background:kc+"0d",border:"0.5px solid "+kc+"33",borderRadius:6,padding:"8px 10px",marginBottom:16,display:"flex",gap:8}}>
             <span style={{fontSize:14,flexShrink:0}}>💡</span>
             <span style={{fontSize:11,color:kc+"cc",lineHeight:1.5}}><strong style={{color:kc}}>{t("kiPotLabel")}</strong> {cleanHint(curB.hint)}</span>
@@ -1260,7 +1256,6 @@ function App(){
     return(
       <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
         <Logo lang={lang} setLang={setLang}/>
-        {emailSent&&<div style={{background:"#081200",border:"0.5px solid "+G+"40",borderRadius:8,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>📧</span><span style={{fontSize:12,color:G}}>{t("berichtSentPre")} <strong>{email}</strong> {t("berichtSentPost")}</span></div>}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
           <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>{t("berichtTitle")}</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||t("deinUnternehmen")} - {brLabel(branche)}</p></div>
           <div style={{textAlign:"right"}}><div style={{fontSize:26,fontWeight:500,color:G}}>{pot}%</div><div style={{fontSize:9,color:T2,letterSpacing:1}}>{t("berichtPotLabel")}</div></div>
