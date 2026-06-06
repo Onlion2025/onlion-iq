@@ -236,6 +236,8 @@ var I18N={
     reportEmailSub:"Du erhältst deinen ausführlichen IQ-Bericht & deine KI-Roadmap per E-Mail.",
     reportEmailPh:"Deine E-Mail-Adresse *",
     reportEmailErr:"Bitte gib eine gültige E-Mail-Adresse ein.",
+    reportPhonePh:"Deine Telefonnummer *",
+    reportPhoneErr:"Bitte gib eine gültige Telefonnummer ein.",
     aiLang:"Deutsch"
   },
   en:{
@@ -424,6 +426,8 @@ var I18N={
     reportEmailSub:"You'll receive your detailed IQ report & AI roadmap by email.",
     reportEmailPh:"Your email address *",
     reportEmailErr:"Please enter a valid email address.",
+    reportPhonePh:"Your phone number *",
+    reportPhoneErr:"Please enter a valid phone number.",
     aiLang:"English"
   },
   pl:{
@@ -612,6 +616,8 @@ var I18N={
     reportEmailSub:"Otrzymasz szczegółowy raport IQ i mapę drogową AI e-mailem.",
     reportEmailPh:"Twój adres e-mail *",
     reportEmailErr:"Proszę podać prawidłowy adres e-mail.",
+    reportPhonePh:"Twój numer telefonu *",
+    reportPhoneErr:"Proszę podać prawidłowy numer telefonu.",
     aiLang:"Polnisch (Polski)"
   }
 };
@@ -879,6 +885,7 @@ function App(){
   var r4=useState(""),desc=r4[0],setDesc=r4[1];
   var rWeb=useState(""),webText=rWeb[0],setWebText=rWeb[1];
   var r5=useState(""),email=r5[0],setEmail=r5[1];
+  var r5b=useState(""),telefon=r5b[0],setTelefon=r5b[1];
   var r6=useState([]),bereiche=r6[0],setBereiche=r6[1];
   var r7=useState([]),aktiv=r7[0],setAktiv=r7[1];
   var r8=useState(false),loadB=r8[0],setLoadB=r8[1];
@@ -941,7 +948,7 @@ function App(){
   async function sendeEmail(g){
     try{
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,3).join(", ");
-      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach})});
+      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach})});
       setEmailSent(true);
     }catch(e){console.log("E-Mail Fehler:",e);}
   }
@@ -1225,7 +1232,8 @@ function App(){
             <div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>{t("reportEmailTitle")}</div>
             <p style={{fontSize:12,color:T2,lineHeight:1.6,marginBottom:12}}>{t("reportEmailSub")}</p>
             <input placeholder={t("reportEmailPh")} value={email} onChange={function(e){setEmail(e.target.value);setErr("");}} type="email" style={{marginBottom:10}}/>
-            <button onClick={function(){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setErr(t("reportEmailErr"));return;}analysiereReport();}} style={{...btnG,marginTop:0}}>{t("reportCreateBtn")}</button>
+            <input placeholder={t("reportPhonePh")} value={telefon} onChange={function(e){setTelefon(e.target.value);setErr("");}} type="tel" style={{marginBottom:10}}/>
+            <button onClick={function(){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setErr(t("reportEmailErr"));return;}if(telefon.replace(/[^0-9]/g,"").length<6){setErr(t("reportPhoneErr"));return;}analysiereReport();}} style={{...btnG,marginTop:0}}>{t("reportCreateBtn")}</button>
           </div>
         }
         {!loadR&&<button onClick={function(){setStep("fragebogen");}} style={btn}>{t("editAnswers")}</button>}
@@ -1291,7 +1299,7 @@ function App(){
         </div>
         <div style={{display:"flex",gap:8,marginTop:8}}>
           <button onClick={function(){setStep("auswertung");}} style={{...btnO,flex:1,marginTop:0}}>{t("berichtBackScore")}</button>
-          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setWebText("");setEmail("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("neueAnalyse")}</button>
+          <button onClick={function(){setAntw({});setBranche("");setFirma("");setDesc("");setWebText("");setEmail("");setTelefon("");setBericht("");setBereiche([]);setAktiv([]);setLoes([]);setEmailSent(false);setDsgvo(false);setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("neueAnalyse")}</button>
         </div>
       </div>
     );
