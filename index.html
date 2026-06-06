@@ -151,9 +151,13 @@ var I18N={
     berichtTeilen:"Bericht teilen",
     berichtPdf:"📄 PDF herunterladen",
     berichtTextBtn:"⬇ Text",
-    berichtMailPh:"Per E-Mail senden...",
+    berichtMailPh:"Teile den Bericht weiter...",
     berichtSenden:"Senden",
     berichtGesendet:"Gesendet",
+    shareWa:"WhatsApp",
+    shareMail:"E-Mail",
+    shareTeaser:"Ich habe gerade meinen KI-Reifegrad mit ONLION IQ analysiert - spannendes Ergebnis! Mach den kostenlosen Check auch: https://onlionapp.de",
+    shareMailSubj:"Schau dir ONLION IQ an",
     berichtNext:"Nächste Schritte",
     berichtLoesTitle:"KI-Lösungen",
     berichtLoesSub:"Tools entdecken",
@@ -341,9 +345,13 @@ var I18N={
     berichtTeilen:"Share report",
     berichtPdf:"📄 Download PDF",
     berichtTextBtn:"⬇ Text",
-    berichtMailPh:"Send by email...",
+    berichtMailPh:"Share the report...",
     berichtSenden:"Send",
     berichtGesendet:"Sent",
+    shareWa:"WhatsApp",
+    shareMail:"Email",
+    shareTeaser:"I just analyzed my AI maturity with ONLION IQ - interesting results! Take the free check too: https://onlionapp.de",
+    shareMailSubj:"Check out ONLION IQ",
     berichtNext:"Next steps",
     berichtLoesTitle:"AI solutions",
     berichtLoesSub:"Discover tools",
@@ -531,9 +539,13 @@ var I18N={
     berichtTeilen:"Udostępnij raport",
     berichtPdf:"📄 Pobierz PDF",
     berichtTextBtn:"⬇ Tekst",
-    berichtMailPh:"Wyślij e-mailem...",
+    berichtMailPh:"Udostępnij raport dalej...",
     berichtSenden:"Wyślij",
     berichtGesendet:"Wysłano",
+    shareWa:"WhatsApp",
+    shareMail:"E-mail",
+    shareTeaser:"Właśnie przeanalizowałem swoją dojrzałość AI za pomocą ONLION IQ - ciekawe wyniki! Zrób darmowy test też: https://onlionapp.de",
+    shareMailSubj:"Sprawdź ONLION IQ",
     berichtNext:"Kolejne kroki",
     berichtLoesTitle:"Rozwiązania AI",
     berichtLoesSub:"Odkryj narzędzia",
@@ -1185,7 +1197,7 @@ function App(){
             return(
               <div key={i} style={{marginBottom:20,borderBottom:i<curB.fragen.length-1?"0.5px solid "+BD:"none",paddingBottom:i<curB.fragen.length-1?16:0}}>
                 <p style={{fontSize:14,marginBottom:10,lineHeight:1.6,color:TX,fontWeight:500}}>{i+1}. {item.f}</p>
-                {(item.o||[]).map(function(opt,oi){var val=ov(oi),key=curB.id+"_"+i,sel=antw[key]===val;return <button key={oi} onClick={function(){setA(curB.id,i,val);}} style={{padding:"10px 14px",borderRadius:8,border:"0.5px solid "+(sel?G:BD),background:sel?G+"18":"transparent",fontSize:13,textAlign:"left",cursor:"pointer",color:sel?G:TX,marginBottom:8,width:"100%",display:"block",lineHeight:1.5}}><span style={{color:sel?G:T2,marginRight:8}}>{sel?"◉":"○"}</span>{opt}</button>;})}
+                {(item.o||[]).map(function(opt,oi){var val=ov(oi),key=curB.id+"_"+i,sel=antw[key]===val;return <button key={oi} onClick={function(){setA(curB.id,i,val);}} style={{padding:"10px 14px",borderRadius:8,border:"0.5px solid "+(sel?G:BD),background:sel?G+"18":"transparent",fontSize:13,textAlign:"left",cursor:"pointer",color:sel?G:TX,marginBottom:8,width:"100%",display:"flex",alignItems:"center",gap:10,lineHeight:1.5}}><span style={{flexShrink:0,width:18,height:18,borderRadius:4,border:"1.5px solid "+(sel?G:T2),background:sel?G:"transparent",display:"inline-flex",alignItems:"center",justifyContent:"center"}}>{sel?<span style={{display:"inline-block",width:5,height:9,borderRight:"2px solid #0a0a0a",borderBottom:"2px solid #0a0a0a",transform:"rotate(45deg)",marginTop:-2}}/>:null}</span><span>{opt}</span></button>;})}
               </div>
             );
           })}
@@ -1256,26 +1268,23 @@ function App(){
         <div style={{...cardG,marginBottom:16}}>
           <div style={{fontSize:11,color:G+"99",letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{t("einsparTitle")}</div>
           <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:8}}>{t("berichtEinspar1pre")}<strong style={{color:G}}>{t("berichtEinspar1strong")}</strong>{t("berichtEinspar1post")}</p>
-          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:16}}>{t("berichtEinspar2")}</p>
-          <button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>{t("berichtTerminBtn")}</button>
+          <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:0}}>{t("berichtEinspar2")}</p>
         </div>
         <div style={{...card,lineHeight:1.7,fontSize:13,color:T2,marginBottom:16}} dangerouslySetInnerHTML={{__html:renderMd(bericht)}}/>
         <div style={{...card,marginBottom:16}}>
           <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("berichtTeilen")}</div>
           <div style={{display:"flex",gap:8,marginBottom:12}}>
             <button onClick={generatePDF} style={{flex:1,padding:"9px",borderRadius:8,border:"1px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>{t("berichtPdf")}</button>
-            <button onClick={function(){var bl=new Blob([btxt()],{type:"text/plain"});var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="ONLION-IQ.txt";a.click();}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2}}>{t("berichtTextBtn")}</button>
           </div>
           <div style={{display:"flex",gap:8}}>
-            <input placeholder={t("berichtMailPh")} value={mailShare} onChange={function(e){setMailShare(e.target.value);}} style={{marginBottom:0,flex:1}}/>
-            <button onClick={function(){if(!mailShare)return;window.open("mailto:"+mailShare+"?subject=ONLION IQ Bericht&body="+encodeURIComponent(btxt()));setMailSent(true);setTimeout(function(){setMailSent(false);},3000);}} style={{padding:"9px 14px",borderRadius:8,border:"0.5px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,whiteSpace:"nowrap"}}>{mailSent?t("berichtGesendet"):t("berichtSenden")}</button>
+            <button onClick={function(){window.open("https://wa.me/?text="+encodeURIComponent(t("shareTeaser")),"_blank");}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>💬 {t("shareWa")}</button>
+            <button onClick={function(){window.open("mailto:?subject="+encodeURIComponent(t("shareMailSubj"))+"&body="+encodeURIComponent(t("shareTeaser")));}} style={{flex:1,padding:"9px",borderRadius:8,border:"0.5px solid "+G,background:G+"18",cursor:"pointer",fontSize:13,color:G,fontWeight:500}}>📧 {t("shareMail")}</button>
           </div>
         </div>
         <div style={{height:1,background:BD,margin:"20px 0"}}/>
         <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("berichtNext")}</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10,marginBottom:10}}>
           <button onClick={function(){setStep("loesungen");ladeLoes();}} style={{background:G+"18",border:"1px solid "+G,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>🤖</div><div style={{fontSize:14,fontWeight:500,color:G,marginBottom:4}}>{t("berichtLoesTitle")}</div><div style={{fontSize:12,color:T2}}>{t("berichtLoesSub")}</div></button>
-          <button onClick={function(){setStep("termin");}} style={{background:"#0d0d0d",border:"1px solid "+BD,borderRadius:10,padding:"1rem",cursor:"pointer",textAlign:"left"}}><div style={{fontSize:20,marginBottom:6}}>📅</div><div style={{fontSize:14,fontWeight:500,color:TX,marginBottom:4}}>{t("berichtGespraechTitle")}</div><div style={{fontSize:12,color:T2}}>{t("berichtGespraechSub")}</div></button>
         </div>
 
         {/* Förderung Banner */}
