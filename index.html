@@ -821,7 +821,7 @@ function Logo(props){
   ):null;
   return React.createElement("div",{style:{marginBottom:28,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
     React.createElement("div",null,
-      React.createElement("div",{style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex"}},
+      React.createElement("div",{onClick:function(){if(window.__goHome)window.__goHome();},title:"Zur Startseite",style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex",cursor:"pointer"}},
         React.createElement("span",null,"ON"),
         React.createElement("span",{style:{color:G}},"L"),
         React.createElement("span",null,"ION"),
@@ -892,6 +892,7 @@ function App(){
   var rUrlLoad=useState(false),urlLoading=rUrlLoad[0],setUrlLoading=rUrlLoad[1];
   var rUrlErr=useState(""),urlError=rUrlErr[0],setUrlError=rUrlErr[1];
   window.__adminLogin=function(){setStep("adminpin");};
+  window.__goHome=function(){setStep("intro");};
   var r_adminTab=useState("checkliste"),adminTab=r_adminTab[0],setAdminTab=r_adminTab[1];
   var r_agPlatform=useState("Make.com"),agPlatform=r_agPlatform[0],setAgPlatform=r_agPlatform[1];
   var r_agResult=useState(""),agResult=r_agResult[0],setAgResult=r_agResult[1];
