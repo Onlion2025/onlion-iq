@@ -6,11 +6,11 @@
 <title>Impressum &middot; ONLION IQ</title>
 <style>
   :root {
-    --bg: #0a0a0a;
-    --panel: #131313;
-    --border: #262626;
-    --text: #e8e8e8;
-    --muted: #9a9a9a;
+    --bg: #060606;
+    --panel: rgba(20,20,20,0.72);
+    --border: rgba(255,255,255,0.08);
+    --text: #e9e9e9;
+    --muted: #8f8f8f;
     --accent: #8cf04a;
   }
   * { box-sizing: border-box; }
@@ -19,44 +19,50 @@
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.7;
+    line-height: 1.75;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+    min-height: 100vh;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
-  .logo {
-    font-size: 22px; font-weight: 800; letter-spacing: 4px; color: #fff;
-    margin-bottom: 8px;
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 20%, rgba(140,240,74,0.05), transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #060606 100%);
+    z-index: -2;
   }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 52px 22px 90px; }
+  .brand { margin-bottom: 6px; }
+  .logo { font-size: 24px; font-weight: 800; letter-spacing: 4px; color: #fff; }
   .logo span { color: var(--accent); }
+  .tagline { font-size: 11px; letter-spacing: 5px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
   .back {
-    display: inline-block; margin-bottom: 36px; color: var(--muted);
+    display: inline-block; margin: 26px 0 34px; color: var(--muted);
     text-decoration: none; font-size: 13px; letter-spacing: 1px;
   }
   .back:hover { color: var(--accent); }
-  h1 {
-    font-size: 30px; font-weight: 700; margin: 0 0 4px; color: #fff;
-  }
-  .sub { color: var(--muted); font-size: 14px; margin: 0 0 40px; }
+  h1 { font-size: 32px; font-weight: 700; margin: 0 0 30px; color: #fff; }
   h2 {
-    font-size: 16px; font-weight: 700; color: var(--accent);
-    letter-spacing: 1px; text-transform: uppercase;
-    margin: 38px 0 12px;
+    font-size: 12px; font-weight: 700; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase; margin: 30px 0 10px;
   }
-  p { margin: 0 0 14px; color: var(--text); font-size: 15px; }
-  .muted { color: var(--muted); font-size: 13px; }
+  h2:first-child { margin-top: 0; }
+  p { margin: 0 0 14px; font-size: 15px; }
+  .muted { color: var(--muted); font-size: 13.5px; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
   .card {
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 12px; padding: 24px 26px; margin-bottom: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px 28px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(6px);
   }
-  .note {
-    margin-top: 48px; padding: 16px 18px; border-radius: 10px;
-    background: rgba(140,240,74,0.06); border: 1px solid rgba(140,240,74,0.2);
-    font-size: 13px; color: var(--muted);
-  }
+  strong { color: #fff; }
   footer {
-    margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border);
+    margin-top: 50px; padding-top: 24px; border-top: 1px solid var(--border);
     font-size: 12px; color: var(--muted);
   }
   footer a { color: var(--muted); }
@@ -66,41 +72,56 @@
 <body>
 <div class="wrap">
 
-  <div class="logo">ON<span>L</span>ION&nbsp;<span>IQ</span></div>
+  <div class="brand">
+    <div class="logo">ON<span>L</span>ION&nbsp;<span>IQ</span></div>
+    <div class="tagline">Intelligence Quotient</div>
+  </div>
   <a class="back" href="/">&larr; Zurueck zur App</a>
 
   <h1>Impressum</h1>
-  <p class="sub">Angaben gemaess &sect; 5 DDG (Digitale-Dienste-Gesetz)</p>
 
   <div class="card">
-    <h2>Anbieter</h2>
+    <h2>Angaben gemaess &sect; 5 DDG</h2>
     <p>
-      Adam Cebulla<br/>
-      ONLION<br/>
+      <strong>Adam Cebulla</strong><br/>
+      ONLION (Kleingewerbe)<br/>
       Loher Hauptstrasse 81a<br/>
       90427 Nuernberg<br/>
       Deutschland
     </p>
+  </div>
 
+  <div class="card">
     <h2>Kontakt</h2>
     <p>
-      E-Mail: <a href="mailto:info@onlionapp.de">info@onlionapp.de</a><br/>
-      <!-- HINWEIS: Telefonnummer ist rechtlich empfohlen (schnelle Kontaktaufnahme).
-           Wenn du eine hast, hier eintragen: Telefon: +49 ... -->
+      Telefon: <a href="tel:+4901629721250">0162 9721250</a><br/>
+      E-Mail: <a href="mailto:info@onlionapp.de">info@onlionapp.de</a>
     </p>
+  </div>
 
+  <div class="card">
     <h2>Umsatzsteuer</h2>
     <p class="muted">
       Als Kleinunternehmer im Sinne des &sect; 19 UStG wird keine Umsatzsteuer
       ausgewiesen. Eine Umsatzsteuer-Identifikationsnummer ist daher nicht vorhanden.
     </p>
+  </div>
 
+  <div class="card">
     <h2>Verantwortlich fuer den Inhalt</h2>
-    <p>
-      Adam Cebulla<br/>
-      Anschrift wie oben
-    </p>
+    <p>Adam Cebulla, Anschrift wie oben.</p>
+  </div>
 
+  <div class="card">
+    <h2>Haftungsausschluss</h2>
+    <p class="muted">
+      Die KI-gestuetzten Analysen und Empfehlungen dienen ausschliesslich zur Information
+      und ersetzen keine professionelle Beratung. Fuer die Richtigkeit, Vollstaendigkeit
+      und Aktualitaet der Inhalte wird keine Gewaehr uebernommen.
+    </p>
+  </div>
+
+  <div class="card">
     <h2>Streitschlichtung</h2>
     <p class="muted">
       Die Europaeische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS)
@@ -108,14 +129,6 @@
       Wir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren
       vor einer Verbraucherschlichtungsstelle teilzunehmen.
     </p>
-  </div>
-
-  <div class="note">
-    <strong style="color:var(--text)">Pruefen vor Veroeffentlichung:</strong>
-    Bitte gleiche diese Angaben einmal mit einem kostenlosen Impressum-Generator
-    (z. B. e-recht24.de) ab. Falls du eine Telefonnummer angeben moechtest, traegst
-    du sie im Abschnitt "Kontakt" ein. Diese Vorlage ist sorgfaeltig erstellt,
-    ersetzt aber keine Rechtsberatung.
   </div>
 
   <footer>
