@@ -52,13 +52,11 @@ exports.handler = async (event) => {
   // ===========================================================
   // ABSENDER-EINSTELLUNGEN
   // -----------------------------------------------------------
-  // ABSENDER: Solange onlionapp.de in Resend NICHT verifiziert
-  // ist, MUSS hier "onboarding@resend.dev" stehen, sonst lehnt
-  // Resend die Mail ab. Du kannst dann nur an deine EIGENE
-  // (im Resend-Konto registrierte) Mail-Adresse testen.
-  //
-  // SOBALD onlionapp.de in Resend "Verified" zeigt:
-  // ABSENDER auf "ONLION IQ <info@onlionapp.de>" umstellen.
+  // Solange onlionapp.de in Resend NICHT verifiziert ist, MUSS
+  // hier "onboarding@resend.dev" stehen (Test nur an die eigene
+  // Resend-Konto-Adresse moeglich).
+  // SOBALD onlionapp.de "Verified" ist: auf info@onlionapp.de
+  // umstellen (beide Variablen unten).
   // ===========================================================
   var ABSENDER = "ONLION IQ <onboarding@resend.dev>";
   var ABSENDER_LEADS = "ONLION IQ Leads <onboarding@resend.dev>";
@@ -66,102 +64,109 @@ exports.handler = async (event) => {
   // Adresse, an die deine Lead-Benachrichtigungen gehen
   var LEAD_EMPFAENGER = "onlion-@outlook.de";
 
-  var htmlContent = `
-<!DOCTYPE html>
-<html>
+  // Sichtbare Werte vorbereiten (Fallbacks)
+  var firmaText = firma || "deinem Unternehmen";
+  var brancheZeile = (firma ? firma : "") + (firma && branche ? " &middot; " : "") + (branche ? branche : "");
+
+  var htmlContent = `<!DOCTYPE html>
+<html lang="de">
 <head>
 <meta charset="UTF-8"/>
-<style>
-body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
-.container { max-width: 580px; margin: 0 auto; padding: 40px 24px; background: #ffffff; }
-.logo { font-size: 22px; font-weight: 800; letter-spacing: 4px; color: #111; margin-bottom: 32px; }
-.logo span { color: #5a9500; }
-.hero { background: #f3f9e8; border: 1px solid rgba(122,200,0,0.4); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-.score-big { font-size: 48px; font-weight: 700; color: #5a9500; }
-.label { font-size: 11px; color: #5a9500; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
-.text { font-size: 14px; color: #555; line-height: 1.8; margin-bottom: 16px; }
-.highlight { color: #1a1a1a; font-weight: 600; }
-.cta { display: block; background: #7AC800; color: #000; text-decoration: none; text-align: center; padding: 14px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; letter-spacing: 1px; margin: 24px 0; }
-.footer { border-top: 1px solid #e2e2e2; padding-top: 20px; font-size: 11px; color: #999; }
-.divider { height: 1px; background: #e2e2e2; margin: 20px 0; }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body>
-<div class="container">
-  <div class="logo">ON<span>L</span>ION <span>IQ</span></div>
+<body style="margin:0; padding:0; background-color:#f4f5f2;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f5f2; padding:32px 0;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background-color:#ffffff; border-radius:14px; overflow:hidden; font-family:Arial, Helvetica, sans-serif;">
 
-  <p class="text">Hallo <span class="highlight">${name}</span>,</p>
-  <p class="text">vielen Dank fuer die Teilnahme am ONLION IQ Check 🚀</p>
+  <tr><td style="padding:36px 36px 0 36px;">
+    <div style="font-size:20px; font-weight:bold; letter-spacing:3px; color:#111111;">ON<span style="color:#5a9500;">L</span>ION&nbsp;<span style="color:#5a9500;">IQ</span></div>
+  </td></tr>
 
-  <div class="hero">
-    <div class="label">Erkanntes KI-Potenzial</div>
-    <div class="score-big">${potential}%</div>
-    <p style="font-size:13px;color:#777;margin:8px 0 0">
-      ${firma ? `<strong style="color:#1a1a1a">${firma}</strong> &middot; ` : ""}${branche}
+  <tr><td style="padding:28px 36px 0 36px;">
+    <p style="margin:0 0 14px 0; font-size:15px; line-height:1.7; color:#333333;">Hallo ${name},</p>
+    <p style="margin:0; font-size:15px; line-height:1.7; color:#333333;">danke, dass du den ONLION IQ Check gemacht hast. Hier ist dein Ergebnis.</p>
+  </td></tr>
+
+  <tr><td style="padding:24px 36px 0 36px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3f9e8; border:1px solid #cfe6a3; border-radius:12px;">
+      <tr><td style="padding:24px;">
+        <div style="font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#5a9500; font-weight:bold;">Erkanntes KI-Potenzial</div>
+        <div style="font-size:46px; font-weight:bold; color:#5a9500; line-height:1.1; margin-top:6px;">${potential}%</div>
+        ${brancheZeile ? `<div style="font-size:13px; color:#777777; margin-top:8px;">${brancheZeile}</div>` : ""}
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:24px 36px 0 36px;">
+    <p style="margin:0 0 16px 0; font-size:15px; line-height:1.7; color:#333333;">
+      Dein Check zeigt ein KI-Potenzial von <strong style="color:#111111;">${potential}%</strong>. Das bedeutet: Bei ${firmaText} steckt noch deutliches Potenzial in den Bereichen KI, Automatisierung und digitale Prozesse.
     </p>
-  </div>
+    ${bereiche ? `<p style="margin:0 0 16px 0; font-size:15px; line-height:1.7; color:#333333;">
+      Besonders bei Themen wie <strong style="color:#111111;">${bereiche}</strong> lassen sich schon mit einfachen Loesungen Zeit sparen, Ablaeufe vereinfachen und langfristig Kosten senken.
+    </p>` : ""}
+  </td></tr>
 
-  <p class="text">
-    Besonders spannend ist das erkannte Potenzial von <span class="highlight">${potential}%</span>.
-    Das zeigt, dass bei <span class="highlight">${firma || "Ihrem Unternehmen"}</span> noch enormes Potenzial
-    in den Bereichen KI, Automatisierung und digitale Prozesse steckt.
-  </p>
+  <tr><td style="padding:8px 36px 0 36px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e6e6e6; font-size:0; line-height:0;">&nbsp;</td></tr></table>
+  </td></tr>
 
-  <p class="text">
-    Gerade Themen wie <span class="highlight">${bereiche}</span> koennen heute bereits mit einfachen Loesungen
-    Zeit sparen, Prozesse vereinfachen und langfristig Kosten reduzieren. 🤖
-  </p>
+  <tr><td style="padding:20px 36px 0 36px;">
+    <p style="margin:0 0 20px 0; font-size:15px; line-height:1.7; color:#333333;">
+      Am besten schauen wir uns das gemeinsam an: In einem kurzen, unverbindlichen Gespraech zeige ich dir, welche konkreten Moeglichkeiten es fuer ${firmaText} gibt und was sich schnell umsetzen laesst.
+    </p>
+  </td></tr>
 
-  <div class="divider"></div>
+  <tr><td style="padding:0 36px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+      <tr><td style="background-color:#7AC800; border-radius:8px;">
+        <a href="https://calendly.com/ridge-linear5958-eagereverest/30min" style="display:inline-block; padding:15px 34px; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; letter-spacing:0.5px;">Kostenlosen Termin buchen</a>
+      </td></tr>
+    </table>
+  </td></tr>
 
-  <p class="text">
-    Ich denke, es waere spannend, wenn wir uns dazu einmal persoenlich austauschen und gemeinsam anschauen,
-    welche konkreten Moeglichkeiten es fuer <span class="highlight">${firma || "Ihr Unternehmen"}</span> gibt
-    und welche Massnahmen schnell und sinnvoll umsetzbar waeren.
-  </p>
+  <tr><td style="padding:28px 36px 36px 36px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #e6e6e6; padding-top:20px;">
+      <p style="margin:0; font-size:14px; line-height:1.6; color:#333333;">Viele Gruesse</p>
+      <p style="margin:4px 0 0 0; font-size:14px; font-weight:bold; color:#5a9500;">ONLION</p>
+      <p style="margin:10px 0 0 0; font-size:12px; color:#999999;">info@onlionapp.de &middot; onlionapp.de</p>
+      <p style="margin:8px 0 0 0; font-size:12px;"><a href="https://onlionapp.de/impressum.html" style="color:#999999; text-decoration:underline;">Impressum</a> &nbsp;|&nbsp; <a href="https://onlionapp.de/datenschutz.html" style="color:#999999; text-decoration:underline;">Datenschutz</a></p>
+    </td></tr></table>
+  </td></tr>
 
-  <p class="text">👉 Hier koennen Sie sich direkt einen unverbindlichen Termin sichern:</p>
-
-  <a href="https://calendly.com/ridge-linear5958-eagereverest/30min" class="cta">
-    📅 Kostenlosen Termin buchen
-  </a>
-
-  <p class="text">
-    Vielleicht steckt genau in den <span class="highlight">${potential}%</span> Potenzial die Moeglichkeit,
-    zukuenftig deutlich effizienter zu arbeiten und gleichzeitig Geld zu sparen. 💪
-  </p>
-
-  <div class="footer">
-    <p>Mit freundlichen Gruessen</p>
-    <p style="color:#5a9500;font-weight:600;margin-top:4px">ONLION</p>
-    <p style="margin-top:4px">info@onlionapp.de &middot; onlionapp.de</p>
-    <div class="divider"></div>
-    <p style="margin-top:4px"><a href="https://onlion-iq.netlify.app" style="color:#999">Impressum &amp; Datenschutz</a></p>
-  </div>
-</div>
+</table>
+</td></tr>
+</table>
 </body>
 </html>`;
 
   // Lead-Benachrichtigung an ONLION (intern)
-  var leadHtml = `
-<!DOCTYPE html>
-<html>
+  var leadHtml = `<!DOCTYPE html>
+<html lang="de">
 <head><meta charset="UTF-8"/></head>
-<body style="font-family:system-ui,-apple-system,sans-serif;background:#f4f4f4;padding:20px;color:#111">
-  <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:10px;padding:28px;border:1px solid #e0e0e0">
-    <h2 style="margin:0 0 4px;font-size:20px;color:#111">🎯 Neuer ONLION IQ Lead</h2>
-    <p style="margin:0 0 20px;font-size:13px;color:#777">Eine neue Analyse wurde abgeschlossen.</p>
-    <table style="width:100%;border-collapse:collapse;font-size:14px">
-      <tr><td style="padding:8px 0;color:#777;width:140px">Firma</td><td style="padding:8px 0;font-weight:600">${firma || "(nicht angegeben)"}</td></tr>
-      <tr><td style="padding:8px 0;color:#777">Branche</td><td style="padding:8px 0">${branche || "-"}</td></tr>
-      <tr><td style="padding:8px 0;color:#777">IQ-Score</td><td style="padding:8px 0">${score}%</td></tr>
-      <tr><td style="padding:8px 0;color:#777">KI-Potenzial</td><td style="padding:8px 0;font-weight:600;color:#5a9500">${potential}%</td></tr>
-      <tr><td style="padding:8px 0;color:#777">Schwache Bereiche</td><td style="padding:8px 0">${bereiche || "-"}</td></tr>
-      <tr><td style="padding:8px 0;color:#777">E-Mail Kunde</td><td style="padding:8px 0"><a href="mailto:${email}" style="color:#5a9500;font-weight:600">${email}</a></td></tr>
-      <tr><td style="padding:8px 0;color:#777">Telefon</td><td style="padding:8px 0"><a href="tel:${telefon}" style="color:#5a9500;font-weight:600">${telefon || "(nicht angegeben)"}</a></td></tr>
+<body style="margin:0; padding:0; background-color:#f4f4f4;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4; padding:24px 0;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background-color:#ffffff; border-radius:10px; border:1px solid #e0e0e0; font-family:Arial, Helvetica, sans-serif;">
+  <tr><td style="padding:28px;">
+    <h2 style="margin:0 0 4px 0; font-size:20px; color:#111111;">Neuer ONLION IQ Lead</h2>
+    <p style="margin:0 0 20px 0; font-size:13px; color:#777777;">Eine neue Analyse wurde abgeschlossen.</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+      <tr><td style="padding:8px 0; color:#777777; width:140px;">Firma</td><td style="padding:8px 0; font-weight:bold; color:#111111;">${firma || "(nicht angegeben)"}</td></tr>
+      <tr><td style="padding:8px 0; color:#777777;">Branche</td><td style="padding:8px 0; color:#111111;">${branche || "-"}</td></tr>
+      <tr><td style="padding:8px 0; color:#777777;">IQ-Score</td><td style="padding:8px 0; color:#111111;">${score}%</td></tr>
+      <tr><td style="padding:8px 0; color:#777777;">KI-Potenzial</td><td style="padding:8px 0; font-weight:bold; color:#5a9500;">${potential}%</td></tr>
+      <tr><td style="padding:8px 0; color:#777777;">Schwache Bereiche</td><td style="padding:8px 0; color:#111111;">${bereiche || "-"}</td></tr>
+      <tr><td style="padding:8px 0; color:#777777;">E-Mail Kunde</td><td style="padding:8px 0;"><a href="mailto:${email}" style="color:#5a9500; font-weight:bold;">${email}</a></td></tr>
+      <tr><td style="padding:8px 0; color:#777777;">Telefon</td><td style="padding:8px 0;"><a href="tel:${telefon}" style="color:#5a9500; font-weight:bold;">${telefon || "(nicht angegeben)"}</a></td></tr>
     </table>
-    <a href="mailto:${email}" style="display:inline-block;margin-top:20px;background:#7AC800;color:#000;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;font-size:14px">✉️ Lead direkt antworten</a>
-  </div>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:20px;"><tr><td style="background-color:#7AC800; border-radius:8px;">
+      <a href="mailto:${email}" style="display:inline-block; padding:12px 22px; font-size:14px; font-weight:bold; color:#000000; text-decoration:none;">Lead direkt antworten</a>
+    </td></tr></table>
+  </td></tr>
+</table>
+</td></tr>
+</table>
 </body>
 </html>`;
 
@@ -179,7 +184,7 @@ body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-syste
         from: ABSENDER,
         to: [email],
         reply_to: "onlion-@outlook.de",
-        subject: `Ihr ONLION IQ Ergebnis: ${potential}% KI-Potenzial erkannt 🚀`,
+        subject: `Dein ONLION IQ Ergebnis: ${potential}% KI-Potenzial`,
         html: htmlContent
       })
     });
@@ -193,7 +198,7 @@ body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-syste
     kundeFehler = err.message;
   }
 
-  // 2) Lead-Benachrichtigung an ONLION senden (unabhaengig - blockiert die Kunden-Mail nicht)
+  // 2) Lead-Benachrichtigung an ONLION senden (unabhaengig)
   try {
     await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -205,15 +210,14 @@ body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-syste
         from: ABSENDER_LEADS,
         to: [LEAD_EMPFAENGER],
         reply_to: email,
-        subject: `🎯 Neuer Lead: ${firma || branche || "Unbekannt"} (${potential}% Potenzial)`,
+        subject: `Neuer Lead: ${firma || branche || "Unbekannt"} (${potential}% Potenzial)`,
         html: leadHtml
       })
     });
   } catch (err) {
-    // Fehler bei der Lead-Mail wird ignoriert, damit die Kunden-Mail davon unberuehrt bleibt
+    // Fehler bei der Lead-Mail wird ignoriert
   }
 
-  // Antwort richtet sich nach der Kunden-Mail
   if (!kundeOk) {
     return {
       statusCode: 500,
