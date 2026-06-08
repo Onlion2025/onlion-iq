@@ -6,10 +6,10 @@
 <title>Datenschutzerklaerung &middot; ONLION IQ</title>
 <style>
   :root {
-    --bg: #0a0a0a;
-    --panel: #131313;
-    --border: #262626;
-    --text: #e8e8e8;
+    --bg: #060606;
+    --panel: rgba(20,20,20,0.72);
+    --border: rgba(255,255,255,0.08);
+    --text: #e9e9e9;
     --muted: #9a9a9a;
     --accent: #8cf04a;
   }
@@ -19,44 +19,55 @@
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.7;
+    line-height: 1.75;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+    min-height: 100vh;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
-  .logo {
-    font-size: 22px; font-weight: 800; letter-spacing: 4px; color: #fff;
-    margin-bottom: 8px;
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 20%, rgba(140,240,74,0.05), transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #060606 100%);
+    z-index: -2;
   }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 52px 22px 90px; }
+  .brand { margin-bottom: 6px; }
+  .logo { font-size: 24px; font-weight: 800; letter-spacing: 4px; color: #fff; }
   .logo span { color: var(--accent); }
+  .tagline { font-size: 11px; letter-spacing: 5px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
   .back {
-    display: inline-block; margin-bottom: 36px; color: var(--muted);
+    display: inline-block; margin: 26px 0 34px; color: var(--muted);
     text-decoration: none; font-size: 13px; letter-spacing: 1px;
   }
   .back:hover { color: var(--accent); }
-  h1 { font-size: 30px; font-weight: 700; margin: 0 0 4px; color: #fff; }
-  .sub { color: var(--muted); font-size: 14px; margin: 0 0 40px; }
+  h1 { font-size: 32px; font-weight: 700; margin: 0 0 8px; color: #fff; }
   h2 {
-    font-size: 16px; font-weight: 700; color: var(--accent);
-    letter-spacing: 1px; text-transform: uppercase;
-    margin: 38px 0 12px;
+    font-size: 19px; font-weight: 700; color: var(--accent);
+    margin: 36px 0 10px; padding-top: 8px;
   }
-  h3 { font-size: 15px; font-weight: 700; color: #fff; margin: 22px 0 8px; }
-  p, li { margin: 0 0 12px; color: var(--text); font-size: 15px; }
+  h3 { font-size: 16px; font-weight: 700; color: #fff; margin: 22px 0 6px; }
+  h4 { font-size: 14px; font-weight: 700; color: #d8d8d8; margin: 16px 0 4px; }
+  p, li { margin: 0 0 12px; font-size: 14.5px; }
   ul { padding-left: 20px; margin: 0 0 14px; }
-  .muted { color: var(--muted); font-size: 13px; }
-  a { color: var(--accent); text-decoration: none; }
+  li { margin-bottom: 8px; }
+  .muted { color: var(--muted); }
+  .upper { font-size: 12.5px; color: var(--muted); letter-spacing: 0.3px; }
+  a { color: var(--accent); text-decoration: none; word-break: break-word; }
   a:hover { text-decoration: underline; }
   .card {
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 12px; padding: 24px 26px; margin-bottom: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px 28px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(6px);
   }
-  .note {
-    margin-top: 48px; padding: 16px 18px; border-radius: 10px;
-    background: rgba(140,240,74,0.06); border: 1px solid rgba(140,240,74,0.2);
-    font-size: 13px; color: var(--muted);
-  }
+  .addr { color: #fff; }
+  strong { color: #fff; }
   footer {
-    margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border);
+    margin-top: 50px; padding-top: 24px; border-top: 1px solid var(--border);
     font-size: 12px; color: var(--muted);
   }
   footer a { color: var(--muted); }
@@ -66,104 +77,135 @@
 <body>
 <div class="wrap">
 
-  <div class="logo">ON<span>L</span>ION&nbsp;<span>IQ</span></div>
+  <div class="brand">
+    <div class="logo">ON<span>L</span>ION&nbsp;<span>IQ</span></div>
+    <div class="tagline">Intelligence Quotient</div>
+  </div>
   <a class="back" href="/">&larr; Zurueck zur App</a>
 
   <h1>Datenschutzerklaerung</h1>
-  <p class="sub">Informationen gemaess Art. 13 DSGVO</p>
 
   <div class="card">
+    <h2>1. Datenschutz auf einen Blick</h2>
 
-    <h2>1. Verantwortlicher</h2>
-    <p>
-      Verantwortlich fuer die Datenverarbeitung auf dieser Website ist:<br/><br/>
-      Adam Cebulla &middot; ONLION<br/>
-      Loher Hauptstrasse 81a<br/>
-      90427 Nuernberg<br/>
-      E-Mail: <a href="mailto:info@onlionapp.de">info@onlionapp.de</a>
-    </p>
+    <h3>Allgemeine Hinweise</h3>
+    <p>Die folgenden Hinweise geben einen einfachen Ueberblick darueber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persoenlich identifiziert werden koennen. Ausfuehrliche Informationen zum Thema Datenschutz entnehmen Sie unserer unter diesem Text aufgefuehrten Datenschutzerklaerung.</p>
 
-    <h2>2. Welche Daten wir verarbeiten</h2>
-    <p>Wir verarbeiten personenbezogene Daten nur, soweit dies fuer die Bereitstellung
-       unseres Angebots erforderlich ist. Im Rahmen des ONLION IQ Checks erheben wir:</p>
+    <h3>Datenerfassung auf dieser Website</h3>
+    <h4>Wer ist verantwortlich fuer die Datenerfassung auf dieser Website?</h4>
+    <p>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten koennen Sie dem Abschnitt "Hinweis zur verantwortlichen Stelle" in dieser Datenschutzerklaerung entnehmen.</p>
+
+    <h4>Wie erfassen wir Ihre Daten?</h4>
+    <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z. B. um Daten handeln, die Sie in ein Kontaktformular eingeben.</p>
+    <p>Andere Daten werden automatisch oder nach Ihrer Einwilligung beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem technische Daten (z. B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs). Die Erfassung dieser Daten erfolgt automatisch, sobald Sie diese Website betreten.</p>
+
+    <h4>Wofuer nutzen wir Ihre Daten?</h4>
+    <p>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewaehrleisten. Andere Daten koennen zur Analyse Ihres Nutzerverhaltens verwendet werden. Sofern ueber die Website Vertraege geschlossen oder angebahnt werden koennen, werden die uebermittelten Daten auch fuer Vertragsangebote, Bestellungen oder sonstige Auftragsanfragen verarbeitet.</p>
+
+    <h4>Welche Rechte haben Sie bezueglich Ihrer Daten?</h4>
+    <p>Sie haben jederzeit das Recht, unentgeltlich Auskunft ueber Herkunft, Empfaenger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben ausserdem ein Recht, die Berichtigung oder Loeschung dieser Daten zu verlangen. Wenn Sie eine Einwilligung zur Datenverarbeitung erteilt haben, koennen Sie diese Einwilligung jederzeit fuer die Zukunft widerrufen. Ausserdem haben Sie das Recht, unter bestimmten Umstaenden die Einschraenkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen. Des Weiteren steht Ihnen ein Beschwerderecht bei der zustaendigen Aufsichtsbehoerde zu.</p>
+    <p>Hierzu sowie zu weiteren Fragen zum Thema Datenschutz koennen Sie sich jederzeit an uns wenden.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Hosting</h2>
+    <p>Wir hosten die Inhalte unserer Website bei folgendem Anbieter:</p>
+
+    <h3>Externes Hosting</h3>
+    <p>Diese Website wird extern gehostet. Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters / der Hoster gespeichert. Hierbei kann es sich v. a. um IP-Adressen, Kontaktanfragen, Meta- und Kommunikationsdaten, Vertragsdaten, Kontaktdaten, Namen, Websitezugriffe und sonstige Daten, die ueber eine Website generiert werden, handeln.</p>
+    <p>Das externe Hosting erfolgt zum Zwecke der Vertragserfuellung gegenueber unseren potenziellen und bestehenden Kunden (Art. 6 Abs. 1 lit. b DSGVO) und im Interesse einer sicheren, schnellen und effizienten Bereitstellung unseres Online-Angebots durch einen professionellen Anbieter (Art. 6 Abs. 1 lit. f DSGVO). Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung ausschliesslich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO und Paragraf 25 Abs. 1 TDDDG, soweit die Einwilligung die Speicherung von Cookies oder den Zugriff auf Informationen im Endgeraet des Nutzers (z. B. Device-Fingerprinting) im Sinne des TDDDG umfasst. Die Einwilligung ist jederzeit widerrufbar.</p>
+    <p>Unser(e) Hoster wird bzw. werden Ihre Daten nur insoweit verarbeiten, wie dies zur Erfuellung seiner Leistungspflichten erforderlich ist und unsere Weisungen in Bezug auf diese Daten befolgen.</p>
+    <p>Wir setzen folgende(n) Hoster ein:</p>
+    <p class="addr">Netlify, Inc. (USA)</p>
+    <h4>Auftragsverarbeitung</h4>
+    <p>Wir haben einen Vertrag ueber Auftragsverarbeitung (AVV) zur Nutzung des oben genannten Dienstes geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gewaehrleistet, dass dieser die personenbezogenen Daten unserer Websitebesucher nur nach unseren Weisungen und unter Einhaltung der DSGVO verarbeitet.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Allgemeine Hinweise und Pflichtinformationen</h2>
+
+    <h3>Datenschutz</h3>
+    <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persoenlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklaerung.</p>
+    <p>Wenn Sie diese Website benutzen, werden verschiedene personenbezogene Daten erhoben. Personenbezogene Daten sind Daten, mit denen Sie persoenlich identifiziert werden koennen. Die vorliegende Datenschutzerklaerung erlaeutert, welche Daten wir erheben und wofuer wir sie nutzen. Sie erlaeutert auch, wie und zu welchem Zweck das geschieht.</p>
+    <p>Wir weisen darauf hin, dass die Datenuebertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitsluecken aufweisen kann. Ein lueckenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht moeglich.</p>
+
+    <h3>Hinweis zur verantwortlichen Stelle</h3>
+    <p>Die verantwortliche Stelle fuer die Datenverarbeitung auf dieser Website ist:</p>
+    <p class="addr">Adam Cebulla<br/>ONLION<br/>Loher Hauptstrasse 81a<br/>90427 Nuernberg</p>
+    <p class="addr">Telefon: 0162 9721250<br/>E-Mail: <a href="mailto:info@onlionapp.de">info@onlionapp.de</a></p>
+    <p>Verantwortliche Stelle ist die natuerliche oder juristische Person, die allein oder gemeinsam mit anderen ueber die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z. B. Namen, E-Mail-Adressen o. AE.) entscheidet.</p>
+
+    <h3>Speicherdauer</h3>
+    <p>Soweit innerhalb dieser Datenschutzerklaerung keine speziellere Speicherdauer genannt wurde, verbleiben Ihre personenbezogenen Daten bei uns, bis der Zweck fuer die Datenverarbeitung entfaellt. Wenn Sie ein berechtigtes Loeschersuchen geltend machen oder eine Einwilligung zur Datenverarbeitung widerrufen, werden Ihre Daten geloescht, sofern wir keine anderen rechtlich zulaessigen Gruende fuer die Speicherung Ihrer personenbezogenen Daten haben (z. B. steuer- oder handelsrechtliche Aufbewahrungsfristen); im letztgenannten Fall erfolgt die Loeschung nach Fortfall dieser Gruende.</p>
+
+    <h3>Allgemeine Hinweise zu den Rechtsgrundlagen der Datenverarbeitung auf dieser Website</h3>
+    <p>Sofern Sie in die Datenverarbeitung eingewilligt haben, verarbeiten wir Ihre personenbezogenen Daten auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO bzw. Art. 9 Abs. 2 lit. a DSGVO, sofern besondere Datenkategorien nach Art. 9 Abs. 1 DSGVO verarbeitet werden. Im Falle einer ausdruecklichen Einwilligung in die Uebertragung personenbezogener Daten in Drittstaaten erfolgt die Datenverarbeitung ausserdem auf Grundlage von Art. 49 Abs. 1 lit. a DSGVO. Sofern Sie in die Speicherung von Cookies oder in den Zugriff auf Informationen in Ihr Endgeraet (z. B. via Device-Fingerprinting) eingewilligt haben, erfolgt die Datenverarbeitung zusaetzlich auf Grundlage von Paragraf 25 Abs. 1 TDDDG. Die Einwilligung ist jederzeit widerrufbar. Sind Ihre Daten zur Vertragserfuellung oder zur Durchfuehrung vorvertraglicher Massnahmen erforderlich, verarbeiten wir Ihre Daten auf Grundlage des Art. 6 Abs. 1 lit. b DSGVO. Des Weiteren verarbeiten wir Ihre Daten, sofern diese zur Erfuellung einer rechtlichen Verpflichtung erforderlich sind, auf Grundlage von Art. 6 Abs. 1 lit. c DSGVO. Die Datenverarbeitung kann ferner auf Grundlage unseres berechtigten Interesses nach Art. 6 Abs. 1 lit. f DSGVO erfolgen. Ueber die jeweils im Einzelfall einschlaegigen Rechtsgrundlagen wird in den folgenden Absaetzen dieser Datenschutzerklaerung informiert.</p>
+
+    <h3>Empfaenger von personenbezogenen Daten</h3>
+    <p>Im Rahmen unserer Geschaeftstaetigkeit arbeiten wir mit verschiedenen externen Stellen zusammen. Dabei ist teilweise auch eine Uebermittlung von personenbezogenen Daten an diese externen Stellen erforderlich. Wir geben personenbezogene Daten nur dann an externe Stellen weiter, wenn dies im Rahmen einer Vertragserfuellung erforderlich ist, wenn wir gesetzlich hierzu verpflichtet sind (z. B. Weitergabe von Daten an Steuerbehoerden), wenn wir ein berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO an der Weitergabe haben oder wenn eine sonstige Rechtsgrundlage die Datenweitergabe erlaubt. Beim Einsatz von Auftragsverarbeitern geben wir personenbezogene Daten unserer Kunden nur auf Grundlage eines gueltigen Vertrags ueber Auftragsverarbeitung weiter. Im Falle einer gemeinsamen Verarbeitung wird ein Vertrag ueber gemeinsame Verarbeitung geschlossen.</p>
+
+    <h3>Widerruf Ihrer Einwilligung zur Datenverarbeitung</h3>
+    <p>Viele Datenverarbeitungsvorgaenge sind nur mit Ihrer ausdruecklichen Einwilligung moeglich. Sie koennen eine bereits erteilte Einwilligung jederzeit widerrufen. Die Rechtmaessigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf unberuehrt.</p>
+
+    <h3>Widerspruchsrecht gegen die Datenerhebung in besonderen Faellen sowie gegen Direktwerbung (Art. 21 DSGVO)</h3>
+    <p class="upper">WENN DIE DATENVERARBEITUNG AUF GRUNDLAGE VON ART. 6 ABS. 1 LIT. E ODER F DSGVO ERFOLGT, HABEN SIE JEDERZEIT DAS RECHT, AUS GRUENDEN, DIE SICH AUS IHRER BESONDEREN SITUATION ERGEBEN, GEGEN DIE VERARBEITUNG IHRER PERSONENBEZOGENEN DATEN WIDERSPRUCH EINZULEGEN; DIES GILT AUCH FUER EIN AUF DIESE BESTIMMUNGEN GESTUETZTES PROFILING. DIE JEWEILIGE RECHTSGRUNDLAGE, AUF DENEN EINE VERARBEITUNG BERUHT, ENTNEHMEN SIE DIESER DATENSCHUTZERKLAERUNG. WENN SIE WIDERSPRUCH EINLEGEN, WERDEN WIR IHRE BETROFFENEN PERSONENBEZOGENEN DATEN NICHT MEHR VERARBEITEN, ES SEI DENN, WIR KOENNEN ZWINGENDE SCHUTZWUERDIGE GRUENDE FUER DIE VERARBEITUNG NACHWEISEN, DIE IHRE INTERESSEN, RECHTE UND FREIHEITEN UEBERWIEGEN ODER DIE VERARBEITUNG DIENT DER GELTENDMACHUNG, AUSUEBUNG ODER VERTEIDIGUNG VON RECHTSANSPRUECHEN (WIDERSPRUCH NACH ART. 21 ABS. 1 DSGVO).</p>
+    <p class="upper">WERDEN IHRE PERSONENBEZOGENEN DATEN VERARBEITET, UM DIREKTWERBUNG ZU BETREIBEN, SO HABEN SIE DAS RECHT, JEDERZEIT WIDERSPRUCH GEGEN DIE VERARBEITUNG SIE BETREFFENDER PERSONENBEZOGENER DATEN ZUM ZWECKE DERARTIGER WERBUNG EINZULEGEN; DIES GILT AUCH FUER DAS PROFILING, SOWEIT ES MIT SOLCHER DIREKTWERBUNG IN VERBINDUNG STEHT. WENN SIE WIDERSPRECHEN, WERDEN IHRE PERSONENBEZOGENEN DATEN ANSCHLIESSEND NICHT MEHR ZUM ZWECKE DER DIREKTWERBUNG VERWENDET (WIDERSPRUCH NACH ART. 21 ABS. 2 DSGVO).</p>
+
+    <h3>Beschwerderecht bei der zustaendigen Aufsichtsbehoerde</h3>
+    <p>Im Falle von Verstoessen gegen die DSGVO steht den Betroffenen ein Beschwerderecht bei einer Aufsichtsbehoerde, insbesondere in dem Mitgliedstaat ihres gewoehnlichen Aufenthalts, ihres Arbeitsplatzes oder des Orts des mutmasslichen Verstosses zu. Das Beschwerderecht besteht unbeschadet anderweitiger verwaltungsrechtlicher oder gerichtlicher Rechtsbehelfe.</p>
+
+    <h3>Recht auf Datenuebertragbarkeit</h3>
+    <p>Sie haben das Recht, Daten, die wir auf Grundlage Ihrer Einwilligung oder in Erfuellung eines Vertrags automatisiert verarbeiten, an sich oder an einen Dritten in einem gaengigen, maschinenlesbaren Format aushaendigen zu lassen. Sofern Sie die direkte Uebertragung der Daten an einen anderen Verantwortlichen verlangen, erfolgt dies nur, soweit es technisch machbar ist.</p>
+
+    <h3>Auskunft, Berichtigung und Loeschung</h3>
+    <p>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche Auskunft ueber Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfaenger und den Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung oder Loeschung dieser Daten. Hierzu sowie zu weiteren Fragen zum Thema personenbezogene Daten koennen Sie sich jederzeit an uns wenden.</p>
+
+    <h3>Recht auf Einschraenkung der Verarbeitung</h3>
+    <p>Sie haben das Recht, die Einschraenkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen. Hierzu koennen Sie sich jederzeit an uns wenden. Das Recht auf Einschraenkung der Verarbeitung besteht in folgenden Faellen:</p>
     <ul>
-      <li>Angaben, die du im Fragebogen machst (z. B. Unternehmen, Branche, Antworten zur KI-Reife)</li>
-      <li>deine E-Mail-Adresse und ggf. dein Name und deine Telefonnummer (zur Zusendung des Reports)</li>
-      <li>technische Zugriffsdaten (z. B. IP-Adresse, Browsertyp, Zeitpunkt des Zugriffs)</li>
+      <li>Wenn Sie die Richtigkeit Ihrer bei uns gespeicherten personenbezogenen Daten bestreiten, benoetigen wir in der Regel Zeit, um dies zu ueberpruefen. Fuer die Dauer der Pruefung haben Sie das Recht, die Einschraenkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.</li>
+      <li>Wenn die Verarbeitung Ihrer personenbezogenen Daten unrechtmaessig geschah/geschieht, koennen Sie statt der Loeschung die Einschraenkung der Datenverarbeitung verlangen.</li>
+      <li>Wenn wir Ihre personenbezogenen Daten nicht mehr benoetigen, Sie sie jedoch zur Ausuebung, Verteidigung oder Geltendmachung von Rechtsanspruechen benoetigen, haben Sie das Recht, statt der Loeschung die Einschraenkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.</li>
+      <li>Wenn Sie einen Widerspruch nach Art. 21 Abs. 1 DSGVO eingelegt haben, muss eine Abwaegung zwischen Ihren und unseren Interessen vorgenommen werden. Solange noch nicht feststeht, wessen Interessen ueberwiegen, haben Sie das Recht, die Einschraenkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.</li>
     </ul>
+    <p>Wenn Sie die Verarbeitung Ihrer personenbezogenen Daten eingeschraenkt haben, duerfen diese Daten - von ihrer Speicherung abgesehen - nur mit Ihrer Einwilligung oder zur Geltendmachung, Ausuebung oder Verteidigung von Rechtsanspruechen oder zum Schutz der Rechte einer anderen natuerlichen oder juristischen Person oder aus Gruenden eines wichtigen oeffentlichen Interesses der Europaeischen Union oder eines Mitgliedstaats verarbeitet werden.</p>
 
-    <h2>3. Zwecke und Rechtsgrundlagen</h2>
-    <h3>Durchfuehrung des KI-Checks und Zusendung des Reports</h3>
-    <p>Wir nutzen deine Eingaben und deine E-Mail-Adresse, um die Analyse zu erstellen und
-       dir das Ergebnis per E-Mail zuzusenden. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO
-       (Durchfuehrung vorvertraglicher Massnahmen) bzw. lit. a (Einwilligung).</p>
-    <h3>Kontaktaufnahme</h3>
-    <p>Wenn du Kontakt aufnimmst oder einen Termin buchst, verarbeiten wir deine Angaben zur
-       Bearbeitung der Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b oder lit. f DSGVO
-       (berechtigtes Interesse an der Beantwortung).</p>
+    <h3>SSL- bzw. TLS-Verschluesselung</h3>
+    <p>Diese Seite nutzt aus Sicherheitsgruenden und zum Schutz der Uebertragung vertraulicher Inhalte, wie zum Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw. TLS-Verschluesselung. Eine verschluesselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von "http://" auf "https://" wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.</p>
+    <p>Wenn die SSL- bzw. TLS-Verschluesselung aktiviert ist, koennen die Daten, die Sie an uns uebermitteln, nicht von Dritten mitgelesen werden.</p>
+  </div>
 
-    <h2>4. Eingesetzte Dienste und Auftragsverarbeiter</h2>
-    <p class="muted">Zur Bereitstellung unseres Angebots setzen wir folgende Dienstleister ein.
-       Mit diesen bestehen, soweit erforderlich, Vertraege zur Auftragsverarbeitung (Art. 28 DSGVO):</p>
+  <div class="card">
+    <h2>4. Datenerfassung auf dieser Website</h2>
 
-    <h3>Hosting (Netlify)</h3>
-    <p>Unsere Website wird bei Netlify gehostet (Netlify, Inc., USA). Dabei koennen technische
-       Zugriffsdaten verarbeitet werden. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</p>
+    <h3>Cookies</h3>
+    <p>Unsere Internetseiten verwenden so genannte "Cookies". Cookies sind kleine Datenpakete und richten auf Ihrem Endgeraet keinen Schaden an. Sie werden entweder voruebergehend fuer die Dauer einer Sitzung (Session-Cookies) oder dauerhaft (permanente Cookies) auf Ihrem Endgeraet gespeichert. Session-Cookies werden nach Ende Ihres Besuchs automatisch geloescht. Permanente Cookies bleiben auf Ihrem Endgeraet gespeichert, bis Sie diese selbst loeschen oder eine automatische Loeschung durch Ihren Webbrowser erfolgt.</p>
+    <p>Cookies koennen von uns (First-Party-Cookies) oder von Drittunternehmen stammen (sog. Third-Party-Cookies). Third-Party-Cookies ermoeglichen die Einbindung bestimmter Dienstleistungen von Drittunternehmen innerhalb von Webseiten (z. B. Cookies zur Abwicklung von Zahlungsdienstleistungen).</p>
+    <p>Cookies haben verschiedene Funktionen. Zahlreiche Cookies sind technisch notwendig, da bestimmte Webseitenfunktionen ohne diese nicht funktionieren wuerden (z. B. die Warenkorbfunktion oder die Anzeige von Videos). Andere Cookies koennen zur Auswertung des Nutzerverhaltens oder zu Werbezwecken verwendet werden.</p>
+    <p>Cookies, die zur Durchfuehrung des elektronischen Kommunikationsvorgangs, zur Bereitstellung bestimmter, von Ihnen erwuenschter Funktionen oder zur Optimierung der Website (z. B. Cookies zur Messung des Webpublikums) erforderlich sind (notwendige Cookies), werden auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO gespeichert, sofern keine andere Rechtsgrundlage angegeben wird. Der Websitebetreiber hat ein berechtigtes Interesse an der Speicherung von notwendigen Cookies zur technisch fehlerfreien und optimierten Bereitstellung seiner Dienste. Sofern eine Einwilligung zur Speicherung von Cookies und vergleichbaren Wiedererkennungstechnologien abgefragt wurde, erfolgt die Verarbeitung ausschliesslich auf Grundlage dieser Einwilligung (Art. 6 Abs. 1 lit. a DSGVO und Paragraf 25 Abs. 1 TDDDG); die Einwilligung ist jederzeit widerrufbar.</p>
+    <p>Sie koennen Ihren Browser so einstellen, dass Sie ueber das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies fuer bestimmte Faelle oder generell ausschliessen sowie das automatische Loeschen der Cookies beim Schliessen des Browsers aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalitaet dieser Website eingeschraenkt sein.</p>
+
+    <h3>Anfrage per E-Mail, Telefon oder Telefax</h3>
+    <p>Wenn Sie uns per E-Mail, Telefon oder Telefax kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Anfrage) zum Zwecke der Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
+    <p>Die Verarbeitung dieser Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage mit der Erfuellung eines Vertrags zusammenhaengt oder zur Durchfuehrung vorvertraglicher Massnahmen erforderlich ist. In allen uebrigen Faellen beruht die Verarbeitung auf unserem berechtigten Interesse an der effektiven Bearbeitung der an uns gerichteten Anfragen (Art. 6 Abs. 1 lit. f DSGVO) oder auf Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) sofern diese abgefragt wurde; die Einwilligung ist jederzeit widerrufbar.</p>
+    <p>Die von Ihnen an uns per Kontaktanfragen uebersandten Daten verbleiben bei uns, bis Sie uns zur Loeschung auffordern, Ihre Einwilligung zur Speicherung widerrufen oder der Zweck fuer die Datenspeicherung entfaellt (z. B. nach abgeschlossener Bearbeitung Ihres Anliegens). Zwingende gesetzliche Bestimmungen - insbesondere gesetzliche Aufbewahrungsfristen - bleiben unberuehrt.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Tools und Dienste von Drittanbietern</h2>
+    <p>Im Rahmen des ONLION IQ Checks und der Kontaktaufnahme setzen wir die folgenden Dienste ein. Mit diesen bestehen, soweit erforderlich, Vertraege zur Auftragsverarbeitung (Art. 28 DSGVO). Bei Uebermittlungen in die USA stuetzen wir uns, soweit einschlaegig, auf das EU-US Data Privacy Framework bzw. EU-Standardvertragsklauseln.</p>
 
     <h3>E-Mail-Versand (Resend)</h3>
-    <p>Fuer den Versand der Report- und Benachrichtigungs-E-Mails nutzen wir Resend
-       (Resend, Inc., USA). Dabei wird deine E-Mail-Adresse verarbeitet.
-       Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</p>
+    <p>Fuer den Versand der Report- und Benachrichtigungs-E-Mails nutzen wir den Dienst Resend (Resend, Inc., USA). Dabei wird Ihre E-Mail-Adresse sowie der Inhalt der jeweiligen Nachricht verarbeitet, um Ihnen das Ergebnis des Checks zuzusenden. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Durchfuehrung vorvertraglicher Massnahmen) bzw. Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).</p>
 
     <h3>Terminbuchung (Calendly)</h3>
-    <p>Fuer die Buchung von Terminen nutzen wir Calendly (Calendly LLC, USA). Wenn du einen
-       Termin buchst, werden die von dir dort eingegebenen Daten durch Calendly verarbeitet.
-       Es gilt zusaetzlich die Datenschutzerklaerung von Calendly.
-       Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</p>
+    <p>Fuer die Vereinbarung von Terminen nutzen wir den Dienst Calendly (Calendly LLC, USA). Wenn Sie einen Termin buchen, werden die von Ihnen dort eingegebenen Daten (z. B. Name, E-Mail-Adresse, Terminwunsch) durch Calendly verarbeitet. Es gilt zusaetzlich die Datenschutzerklaerung von Calendly. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an effizienter Terminvereinbarung).</p>
 
-    <h3>KI-Analyse (Anthropic)</h3>
-    <p>Zur Erstellung der Auswertung nutzen wir die Schnittstelle (API) von Anthropic
-       (Anthropic PBC, USA). Dabei werden die von dir gemachten Angaben zur Analyse uebermittelt.
-       Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</p>
-
-    <p class="muted">Bei Uebermittlungen in die USA stuetzen wir uns, soweit einschlaegig,
-       auf das EU-US Data Privacy Framework bzw. EU-Standardvertragsklauseln.</p>
-
-    <h2>5. Speicherdauer</h2>
-    <p>Wir speichern personenbezogene Daten nur so lange, wie es fuer die genannten Zwecke
-       erforderlich ist oder gesetzliche Aufbewahrungsfristen bestehen. Anschliessend werden
-       die Daten geloescht.</p>
-
-    <h2>6. Deine Rechte</h2>
-    <p>Du hast jederzeit das Recht auf:</p>
-    <ul>
-      <li>Auskunft (Art. 15 DSGVO)</li>
-      <li>Berichtigung (Art. 16 DSGVO)</li>
-      <li>Loeschung (Art. 17 DSGVO)</li>
-      <li>Einschraenkung der Verarbeitung (Art. 18 DSGVO)</li>
-      <li>Datenuebertragbarkeit (Art. 20 DSGVO)</li>
-      <li>Widerspruch (Art. 21 DSGVO)</li>
-    </ul>
-    <p>Eine erteilte Einwilligung kannst du jederzeit mit Wirkung fuer die Zukunft widerrufen.
-       Zudem steht dir ein Beschwerderecht bei einer Aufsichtsbehoerde zu (Art. 77 DSGVO).
-       Zustaendig ist u. a. das Bayerische Landesamt fuer Datenschutzaufsicht (BayLDA).</p>
-
-    <h2>7. Kontakt in Datenschutzfragen</h2>
-    <p>Bei Fragen zum Datenschutz erreichst du uns unter
-       <a href="mailto:info@onlionapp.de">info@onlionapp.de</a>.</p>
-
-    <p class="muted" style="margin-top:24px">Stand: Juni 2026</p>
-
+    <h3>KI-gestuetzte Analyse (Anthropic)</h3>
+    <p>Zur Erstellung der Auswertung und Empfehlungen im Rahmen des ONLION IQ Checks nutzen wir die Programmierschnittstelle (API) von Anthropic (Anthropic PBC, USA). Dabei werden die von Ihnen im Fragebogen gemachten Angaben zur Verarbeitung an Anthropic uebermittelt. Es werden hierbei keine direkten Identifikationsmerkmale zur dauerhaften Speicherung uebertragen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Durchfuehrung vorvertraglicher Massnahmen).</p>
   </div>
 
-  <div class="note">
-    <strong style="color:var(--text)">Wichtig vor Veroeffentlichung:</strong>
-    Diese Datenschutzerklaerung ist eine sorgfaeltig erstellte Vorlage, ersetzt aber
-    keine Rechtsberatung. Bitte gleiche sie mit einem kostenlosen Datenschutz-Generator
-    (z. B. e-recht24.de) ab und ergaenze ggf. weitere Dienste, die du nutzt
-    (z. B. Brevo, falls noch aktiv, Analyse-Tools, Cookies). Pruefe ausserdem, ob du
-    einen Cookie-Hinweis benoetigst.
-  </div>
+  <p class="muted" style="text-align:center; margin-top:24px">Stand: Juni 2026</p>
 
   <footer>
     &copy; 2026 ONLION &middot; <a href="/impressum.html">Impressum</a> &middot; <a href="/">Startseite</a>
