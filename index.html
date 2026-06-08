@@ -1935,8 +1935,9 @@ function App(){
       <Logo lang={lang} setLang={setLang}/>
       <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
       <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>{t("impressumTitle")}</h1>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("imprAngaben")}</div><p style={{fontSize:14,color:TX,marginBottom:4}}>Adam Cebulla</p><p style={{fontSize:13,color:T2,marginBottom:2}}>ONLION (Einzelunternehmen)</p><p style={{fontSize:13,color:T2,marginBottom:2}}>Loher Hauptstrasse 81a</p><p style={{fontSize:13,color:T2,marginBottom:16}}>90427 Nürnberg</p><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{t("imprKontakt")}</div><p style={{fontSize:13,color:T2}}>E-Mail: onlion-@outlook.de</p></div>
+      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("imprAngaben")}</div><p style={{fontSize:14,color:TX,marginBottom:4}}>Adam Cebulla</p><p style={{fontSize:13,color:T2,marginBottom:2}}>ONLION (Einzelunternehmen)</p><p style={{fontSize:13,color:T2,marginBottom:2}}>Loher Hauptstrasse 81a</p><p style={{fontSize:13,color:T2,marginBottom:16}}>90427 Nürnberg</p><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:8}}>{t("imprKontakt")}</div><p style={{fontSize:13,color:T2,marginBottom:2}}>Telefon: 0162 9721250</p><p style={{fontSize:13,color:T2}}>E-Mail: info@onlionapp.de</p></div>
       <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("imprVerantw")}</div><p style={{fontSize:13,color:T2}}>Adam Cebulla, Loher Hauptstrasse 81a, 90427 Nürnberg</p></div>
+      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>Umsatzsteuer</div><p style={{fontSize:13,color:T2,lineHeight:1.7}}>Als Kleinunternehmer im Sinne von Paragraf 19 UStG wird keine Umsatzsteuer berechnet und keine Umsatzsteuer-Identifikationsnummer ausgewiesen.</p></div>
       <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("imprHaftung")}</div><p style={{fontSize:12,color:T2,lineHeight:1.7}}>{t("imprHaftungText")}</p></div>
     </div>
   );
@@ -1946,10 +1947,64 @@ function App(){
       <Logo lang={lang} setLang={setLang}/>
       <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
       <h1 style={{fontSize:20,fontWeight:500,margin:"0 0 20px"}}>{t("dsTitle")}</h1>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("dsVerantw")}</div><p style={{fontSize:13,color:T2,lineHeight:1.7}}>Adam Cebulla · ONLION · Loher Hauptstrasse 81a · 90427 Nürnberg · onlion-@outlook.de</p></div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("dsWelche")}</div>{[t("dsData1"),t("dsData2"),t("dsData3"),t("dsData4")].map(function(it,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G,flexShrink:0}}>→</span><span style={{fontSize:13,color:T2}}>{it}</span></div>);})}</div>
-      <div style={{...card,marginBottom:16}}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("dsDritt")}</div>{[["Anthropic API","anthropic.com/privacy"],["Netlify","netlify.com/privacy"],["Calendly","calendly.com/privacy"],["Brevo","brevo.com/legal/privacypolicy"]].map(function(it,i){return(<div key={i} style={{marginBottom:10}}><p style={{fontSize:13,color:TX,marginBottom:3}}>{it[0]}</p><p style={{fontSize:11,color:T2}}>{it[1]}</p></div>);})}</div>
-      <div style={card}><div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("dsRechte")}</div>{[t("dsRecht1"),t("dsRecht2"),t("dsRecht3"),t("dsRecht4")].map(function(it,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{it}</span></div>);})}<p style={{fontSize:12,color:T2,marginTop:10}}>{t("dsAnfragen")} onlion-@outlook.de</p></div>
+
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:15,fontWeight:600,color:G,marginBottom:12}}>1. Datenschutz auf einen Blick</div>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Allgemeine Hinweise</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Die folgenden Hinweise geben einen einfachen Ueberblick darueber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persoenlich identifiziert werden koennen.</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Wer ist verantwortlich fuer die Datenerfassung?</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten finden Sie im Abschnitt "Verantwortliche Stelle".</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Wie erfassen wir Ihre Daten?</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen (z. B. Angaben im Check oder per E-Mail). Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst (z. B. Browser, Betriebssystem, Uhrzeit des Seitenaufrufs).</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Welche Rechte haben Sie?</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Sie haben jederzeit das Recht auf unentgeltliche Auskunft, Berichtigung oder Loeschung Ihrer Daten. Erteilte Einwilligungen koennen Sie jederzeit widerrufen. Zudem steht Ihnen ein Beschwerderecht bei der zustaendigen Aufsichtsbehoerde zu.</p>
+      </div>
+
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:15,fontWeight:600,color:G,marginBottom:12}}>2. Hosting</div>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Externes Hosting (Netlify, Inc., USA)</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Diese Website wird extern gehostet. Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters gespeichert. Hierbei kann es sich v. a. um IP-Adressen, Kontaktanfragen, Meta- und Kommunikationsdaten, Kontaktdaten, Namen und Websitezugriffe handeln. Das externe Hosting erfolgt zum Zwecke der Vertragserfuellung (Art. 6 Abs. 1 lit. b DSGVO) und im Interesse einer sicheren, schnellen Bereitstellung unseres Online-Angebots (Art. 6 Abs. 1 lit. f DSGVO).</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Auftragsverarbeitung</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Wir haben einen Vertrag ueber Auftragsverarbeitung (AVV) zur Nutzung des oben genannten Dienstes geschlossen. Dieser gewaehrleistet, dass personenbezogene Daten nur nach unseren Weisungen und unter Einhaltung der DSGVO verarbeitet werden.</p>
+      </div>
+
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:15,fontWeight:600,color:G,marginBottom:12}}>3. Allgemeine Hinweise und Pflichtinformationen</div>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Verantwortliche Stelle</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Adam Cebulla &middot; ONLION &middot; Loher Hauptstrasse 81a &middot; 90427 Nuernberg &middot; Telefon: 0162 9721250 &middot; E-Mail: info@onlionapp.de</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Speicherdauer</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Soweit keine speziellere Speicherdauer genannt wurde, verbleiben Ihre personenbezogenen Daten bei uns, bis der Zweck fuer die Datenverarbeitung entfaellt. Bei einem berechtigten Loeschersuchen oder Widerruf einer Einwilligung werden Ihre Daten geloescht, sofern keine gesetzlichen Aufbewahrungsfristen entgegenstehen.</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Rechtsgrundlagen</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Die Verarbeitung erfolgt je nach Fall auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), zur Vertragserfuellung bzw. fuer vorvertragliche Massnahmen (Art. 6 Abs. 1 lit. b DSGVO), zur Erfuellung rechtlicher Verpflichtungen (Art. 6 Abs. 1 lit. c DSGVO) oder auf Basis unseres berechtigten Interesses (Art. 6 Abs. 1 lit. f DSGVO).</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Widerruf und Widerspruch</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Bereits erteilte Einwilligungen koennen Sie jederzeit mit Wirkung fuer die Zukunft widerrufen. Bei Verarbeitungen auf Grundlage von Art. 6 Abs. 1 lit. e oder f DSGVO haben Sie das Recht, aus Gruenden Ihrer besonderen Situation jederzeit Widerspruch einzulegen (Art. 21 DSGVO); dies gilt auch fuer Direktwerbung.</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Beschwerderecht</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:14}}>Im Falle von Verstoessen gegen die DSGVO steht Ihnen ein Beschwerderecht bei einer Aufsichtsbehoerde zu, insbesondere im Mitgliedstaat Ihres gewoehnlichen Aufenthalts, Ihres Arbeitsplatzes oder des Orts des mutmasslichen Verstosses.</p>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>SSL- bzw. TLS-Verschluesselung</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Diese Seite nutzt aus Sicherheitsgruenden eine SSL- bzw. TLS-Verschluesselung. Eine verschluesselte Verbindung erkennen Sie daran, dass die Adresszeile von "http://" auf "https://" wechselt und am Schloss-Symbol in Ihrer Browserzeile.</p>
+      </div>
+
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:15,fontWeight:600,color:G,marginBottom:12}}>4. Datenerfassung auf dieser Website</div>
+        <p style={{fontSize:13,color:TX,fontWeight:600,marginBottom:4}}>Welche Daten wir erheben</p>
+        {[t("dsData1"),t("dsData2"),t("dsData3"),t("dsData4")].map(function(it,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G,flexShrink:0}}>→</span><span style={{fontSize:13,color:T2}}>{it}</span></div>);})}
+        <p style={{fontSize:13,color:TX,fontWeight:600,margin:"14px 0 4px"}}>Anfrage per E-Mail oder Telefon</p>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7}}>Wenn Sie uns kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten zum Zwecke der Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
+      </div>
+
+      <div style={{...card,marginBottom:16}}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("dsDritt")}</div>
+        <p style={{fontSize:13,color:T2,lineHeight:1.7,marginBottom:12}}>Bei Uebermittlungen in die USA stuetzen wir uns, soweit einschlaegig, auf das EU-US Data Privacy Framework bzw. EU-Standardvertragsklauseln.</p>
+        {[["Anthropic PBC (USA) - KI-Analyse","anthropic.com/privacy"],["Netlify, Inc. (USA) - Hosting","netlify.com/privacy"],["Calendly LLC (USA) - Terminbuchung","calendly.com/privacy"],["Resend, Inc. (USA) - E-Mail-Versand","resend.com/legal/privacy-policy"]].map(function(it,i){return(<div key={i} style={{marginBottom:10}}><p style={{fontSize:13,color:TX,marginBottom:3}}>{it[0]}</p><p style={{fontSize:11,color:T2}}>{it[1]}</p></div>);})}
+      </div>
+
+      <div style={card}>
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("dsRechte")}</div>
+        {[t("dsRecht1"),t("dsRecht2"),t("dsRecht3"),t("dsRecht4")].map(function(it,i){return(<div key={i} style={{display:"flex",gap:8,marginBottom:6}}><span style={{color:G}}>✓</span><span style={{fontSize:13,color:T2}}>{it}</span></div>);})}
+        <p style={{fontSize:12,color:T2,marginTop:10}}>{t("dsAnfragen")} info@onlionapp.de</p>
+      </div>
+
+      <p style={{fontSize:11,color:T2,textAlign:"center",marginTop:18}}>Stand: Juni 2026</p>
     </div>
   );
 
