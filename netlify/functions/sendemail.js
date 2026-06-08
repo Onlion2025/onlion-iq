@@ -20,12 +20,12 @@ exports.handler = async (event) => {
     };
   }
 
-  const apiKey = process.env.BREVO_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: "Brevo API key not configured" })
+      body: JSON.stringify({ error: "Resend API key not configured" })
     };
   }
 
@@ -48,6 +48,20 @@ exports.handler = async (event) => {
   var score    = body.score    || 0;
   var potential = 100 - score;
   var bereiche = body.bereiche || "";
+
+  // ===========================================================
+  // ABSENDER-EINSTELLUNGEN
+  // -----------------------------------------------------------
+  // ABSENDER: Solange onlionapp.de in Resend NICHT verifiziert
+  // ist, MUSS hier "onboarding@resend.dev" stehen, sonst lehnt
+  // Resend die Mail ab. Du kannst dann nur an deine EIGENE
+  // (im Resend-Konto registrierte) Mail-Adresse testen.
+  //
+  // SOBALD onlionapp.de in Resend "Verified" zeigt:
+  // ABSENDER auf "ONLION IQ <info@onlionapp.de>" umstellen.
+  // ===========================================================
+  var ABSENDER = "ONLION IQ <onboarding@resend.dev>";
+  var ABSENDER_LEADS = "ONLION IQ Leads <onboarding@resend.dev>";
 
   // Adresse, an die deine Lead-Benachrichtigungen gehen
   var LEAD_EMPFAENGER = "onlion-@outlook.de";
@@ -77,13 +91,13 @@ body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-syste
   <div class="logo">ON<span>L</span>ION <span>IQ</span></div>
 
   <p class="text">Hallo <span class="highlight">${name}</span>,</p>
-  <p class="text">vielen Dank für die Teilnahme am ONLION IQ Check 🚀</p>
+  <p class="text">vielen Dank fuer die Teilnahme am ONLION IQ Check 🚀</p>
 
   <div class="hero">
     <div class="label">Erkanntes KI-Potenzial</div>
     <div class="score-big">${potential}%</div>
     <p style="font-size:13px;color:#777;margin:8px 0 0">
-      ${firma ? `<strong style="color:#1a1a1a">${firma}</strong> · ` : ""}${branche}
+      ${firma ? `<strong style="color:#1a1a1a">${firma}</strong> &middot; ` : ""}${branche}
     </p>
   </div>
 
@@ -94,35 +108,35 @@ body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-syste
   </p>
 
   <p class="text">
-    Gerade Themen wie <span class="highlight">${bereiche}</span> können heute bereits mit einfachen Lösungen
+    Gerade Themen wie <span class="highlight">${bereiche}</span> koennen heute bereits mit einfachen Loesungen
     Zeit sparen, Prozesse vereinfachen und langfristig Kosten reduzieren. 🤖
   </p>
 
   <div class="divider"></div>
 
   <p class="text">
-    Ich denke, es wäre spannend, wenn wir uns dazu einmal persönlich austauschen und gemeinsam anschauen,
-    welche konkreten Möglichkeiten es für <span class="highlight">${firma || "Ihr Unternehmen"}</span> gibt
-    und welche Maßnahmen schnell und sinnvoll umsetzbar wären.
+    Ich denke, es waere spannend, wenn wir uns dazu einmal persoenlich austauschen und gemeinsam anschauen,
+    welche konkreten Moeglichkeiten es fuer <span class="highlight">${firma || "Ihr Unternehmen"}</span> gibt
+    und welche Massnahmen schnell und sinnvoll umsetzbar waeren.
   </p>
 
-  <p class="text">👉 Hier können Sie sich direkt einen unverbindlichen Termin sichern:</p>
+  <p class="text">👉 Hier koennen Sie sich direkt einen unverbindlichen Termin sichern:</p>
 
   <a href="https://calendly.com/ridge-linear5958-eagereverest/30min" class="cta">
     📅 Kostenlosen Termin buchen
   </a>
 
   <p class="text">
-    Vielleicht steckt genau in den <span class="highlight">${potential}%</span> Potenzial die Möglichkeit,
-    zukünftig deutlich effizienter zu arbeiten und gleichzeitig Geld zu sparen. 💪
+    Vielleicht steckt genau in den <span class="highlight">${potential}%</span> Potenzial die Moeglichkeit,
+    zukuenftig deutlich effizienter zu arbeiten und gleichzeitig Geld zu sparen. 💪
   </p>
 
   <div class="footer">
-    <p>Mit freundlichen Grüßen</p>
+    <p>Mit freundlichen Gruessen</p>
     <p style="color:#5a9500;font-weight:600;margin-top:4px">ONLION</p>
-    <p style="margin-top:4px">info@onlionapp.de · onlionapp.de</p>
+    <p style="margin-top:4px">info@onlionapp.de &middot; onlionapp.de</p>
     <div class="divider"></div>
-    <p style="margin-top:4px"><a href="https://onlion-iq.netlify.app" style="color:#999">Impressum & Datenschutz</a></p>
+    <p style="margin-top:4px"><a href="https://onlion-iq.netlify.app" style="color:#999">Impressum &amp; Datenschutz</a></p>
   </div>
 </div>
 </body>
@@ -155,25 +169,25 @@ body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-syste
   var kundeOk = false;
   var kundeFehler = "";
   try {
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "api-key": apiKey
+        "Authorization": "Bearer " + apiKey
       },
       body: JSON.stringify({
-        sender: { name: "ONLION IQ", email: "info@onlionapp.de" },
-        to: [{ email: email, name: name }],
-        replyTo: { email: "onlion-@outlook.de", name: "ONLION" },
+        from: ABSENDER,
+        to: [email],
+        reply_to: "onlion-@outlook.de",
         subject: `Ihr ONLION IQ Ergebnis: ${potential}% KI-Potenzial erkannt 🚀`,
-        htmlContent: htmlContent
+        html: htmlContent
       })
     });
     const data = await response.json();
     if (response.ok) {
       kundeOk = true;
     } else {
-      kundeFehler = data.message || "E-Mail Fehler";
+      kundeFehler = (data && data.message) ? data.message : "E-Mail Fehler";
     }
   } catch (err) {
     kundeFehler = err.message;
@@ -181,18 +195,18 @@ body { background: #f4f5f2; color: #1a1a1a; font-family: system-ui, -apple-syste
 
   // 2) Lead-Benachrichtigung an ONLION senden (unabhaengig - blockiert die Kunden-Mail nicht)
   try {
-    await fetch("https://api.brevo.com/v3/smtp/email", {
+    await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "api-key": apiKey
+        "Authorization": "Bearer " + apiKey
       },
       body: JSON.stringify({
-        sender: { name: "ONLION IQ Leads", email: "info@onlionapp.de" },
-        to: [{ email: LEAD_EMPFAENGER, name: "ONLION" }],
-        replyTo: { email: email, name: firma || name },
+        from: ABSENDER_LEADS,
+        to: [LEAD_EMPFAENGER],
+        reply_to: email,
         subject: `🎯 Neuer Lead: ${firma || branche || "Unbekannt"} (${potential}% Potenzial)`,
-        htmlContent: leadHtml
+        html: leadHtml
       })
     });
   } catch (err) {
