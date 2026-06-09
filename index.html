@@ -884,6 +884,31 @@ function KatCard(props){
   );
 }
 
+function cleanMd(s){
+  if(!s)return "";
+  var x=String(s);
+  x=x.replace(/\*\*/g,"");
+  x=x.replace(/\*/g,"");
+  x=x.replace(/^#+\s*/,"");
+  x=x.replace(/^\d+[.)]\s*/,"");
+  x=x.replace(/^[-\u2022]\s*/,"");
+  x=x.replace(/^(Name|Beschreibung|Description|Nazwa|Opis|URL|Url|Zeitersparnis|Time saved|Oszczednosc czasu|Oszczednosc)\s*:\s*/i,"");
+  return x.trim();
+}
+
+function getInitialLang(){
+  try{
+    if(typeof localStorage!=="undefined"){
+      var saved=localStorage.getItem("onlionLang");
+      if(saved==="de"||saved==="en"||saved==="pl")return saved;
+    }
+  }catch(e){}
+  var nav=(typeof navigator!=="undefined"&&navigator.language)?navigator.language.slice(0,2):"de";
+  if(nav==="pl")return "pl";
+  if(nav==="en")return "en";
+  return "de";
+}
+
 function App(){
   var useState=React.useState;
   var r1=useState("intro"),step=r1[0],setStep=r1[1];
@@ -917,7 +942,8 @@ function App(){
   var r17=useState(false),mailSent=r17[0],setMailSent=r17[1];
   var r18=useState(false),emailSent=r18[0],setEmailSent=r18[1];
   var r19=useState(false),dsgvo=r19[0],setDsgvo=r19[1];
-  var rLang=useState((typeof navigator!=="undefined"&&navigator.language&&navigator.language.slice(0,2)==="pl")?"pl":(typeof navigator!=="undefined"&&navigator.language&&navigator.language.slice(0,2)==="en")?"en":"de"),lang=rLang[0],setLang=rLang[1];
+  var rLang=useState(getInitialLang()),lang=rLang[0],setLangRaw=rLang[1];
+  function setLang(v){try{if(typeof localStorage!=="undefined")localStorage.setItem("onlionLang",v);}catch(e){}setLangRaw(v);}
   function t(k){var L=I18N[lang]||I18N.de;return (L[k]!==undefined)?L[k]:(I18N.de[k]!==undefined?I18N.de[k]:k);}
   function scrollTop(){try{window.scrollTo(0,0);}catch(e){}if(document.documentElement)document.documentElement.scrollTop=0;if(document.body)document.body.scrollTop=0;}
   function brLabel(v){for(var i=0;i<BRANCHEN.length;i++){if(BRANCHEN[i].v===v)return t(BRANCHEN[i].k);}return v;}
@@ -966,7 +992,7 @@ function App(){
   async function sendeEmail(g){
     try{
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,3).join(", ");
-      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach})});
+      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach,lang:lang})});
       setEmailSent(true);
     }catch(e){console.log("E-Mail Fehler:",e);}
   }
@@ -990,9 +1016,41 @@ function App(){
     }else{
       setErr("KI-Analyse fehlgeschlagen"+(lastErr?(": "+lastErr):"")+". Standardbereiche wurden geladen. Bitte erneut versuchen.");
       var df=getDefault(branche);
+      if(lang!=="de"){
+        try{var dfu=await uebersetzeBereiche(df);if(dfu&&dfu.length)df=dfu;}catch(e){}
+      }
       setBereiche(df);setAktiv(df.map(function(b){return b.id;}));setStep("bereiche");
     }
     setLoadB(false);
+  }
+
+  async function uebersetzeBereiche(bereiche){
+    // Uebersetzt die statischen Standardbereiche in die aktuelle Sprache.
+    // Struktur (id, icon, kiKat) bleibt unveraendert, nur Texte werden ersetzt.
+    var payload=bereiche.map(function(b){
+      return {id:b.id,label:b.label,hint:b.hint,fragen:b.fragen.map(function(f){return {f:f.f,o:f.o};})};
+    });
+    var prompt="Uebersetze die Texte im folgenden JSON ins "+t("aiLang")+". Uebersetze NUR die Werte von 'label', 'hint', 'f' und die Eintraege in 'o'. Aendere KEINE 'id'-Werte. Behalte die exakte JSON-Struktur und alle Schluessel bei. Gib AUSSCHLIESSLICH gueltiges JSON zurueck, ohne Markdown, ohne Backticks, ohne Erklaerung.\n\n"+JSON.stringify(payload);
+    var raw=await callApi(prompt,2000);
+    var clean=raw.replace(/```json/g,"").replace(/```/g,"").trim();
+    var s=clean.indexOf("["),e=clean.lastIndexOf("]");
+    if(s>=0&&e>s)clean=clean.substring(s,e+1);
+    var arr=JSON.parse(clean);
+    // Uebersetzte Texte zurueck in Originalstruktur mappen (Icons/kiKat erhalten)
+    return bereiche.map(function(b,i){
+      var u=arr[i]||{};
+      return {
+        id:b.id,
+        label:u.label||b.label,
+        icon:b.icon,
+        kiKat:b.kiKat,
+        hint:u.hint||b.hint,
+        fragen:b.fragen.map(function(f,j){
+          var uf=(u.fragen&&u.fragen[j])?u.fragen[j]:{};
+          return {f:uf.f||f.f,o:(uf.o&&uf.o.length===f.o.length)?uf.o:f.o};
+        })
+      };
+    });
   }
 
   async function analysiereReport(){
@@ -1023,7 +1081,10 @@ function App(){
         else if(pl.indexOf("analytic")>=0||pl.indexOf("dashboard")>=0)kat="daten";
         var url=lines.filter(function(l){return l.indexOf("http")>=0;})[0]||"https://google.com/search?q="+encodeURIComponent(lines[0]);
         var esp=lines.filter(function(l){return l.indexOf("h/")>=0||l.indexOf("tunden")>=0;})[0]||"bis zu 5h/Woche";
-        result.push({name:lines[0],tag:KL[kat],icon:icons[kat],kategorie:kat,desc:lines[1]||"",url:url,einsparung:esp});
+        var nm=cleanMd(lines[0]);
+        var ds=cleanMd(lines[1]||"");
+        esp=cleanMd(esp);
+        result.push({name:nm,tag:KL[kat],icon:icons[kat],kategorie:kat,desc:ds,url:url,einsparung:esp});
       }
       setLoes(result);
     }catch(e){setLoes([]);}
@@ -1377,7 +1438,7 @@ function App(){
       <p style={{color:T2,fontSize:13,marginBottom:16}}>{t("fuer")} <span style={{color:G}}>{firma||brLabel(branche)}</span></p>
       {loadL?<LoadBox msg={t("loesLoadMsg")} sub={t("loesLoadSub")} steps={[t("loesS1"),t("loesS2"),t("loesS3")]}/>:
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-          {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}<a href={l.url} style={{fontSize:10,color:kc,textDecoration:"none"}} target="_blank">{t("loesMehr")}</a></div>);})}
+          {loes.map(function(l,i){var kc=KC[l.kategorie]||G;return(<div key={i} style={{...card,marginBottom:0,borderTop:"2px solid "+kc+"44"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><span style={{fontSize:22}}>{l.icon}</span><span style={{...bdg(kc),fontSize:9}}>{l.tag}</span></div><div style={{fontSize:13,fontWeight:500,color:TX,marginBottom:5}}>{l.name}</div><div style={{fontSize:11,color:T2,lineHeight:1.5,marginBottom:6}}>{l.desc}</div>{l.einsparung&&<div style={{fontSize:10,color:G,marginBottom:6}}>💰 {l.einsparung}</div>}</div>);})}
         </div>
       }
       <div style={{...cardG,textAlign:"center",padding:"1.5rem"}}><div style={{fontSize:24,marginBottom:8}}>🎯</div><div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>{t("loesBeratungTitle")}</div><p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>{t("loesBeratungText")}</p><button onClick={function(){setStep("termin");}} style={{...btnG,marginTop:0}}>{t("loesBeratungBtn")}</button></div>
