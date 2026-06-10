@@ -310,7 +310,12 @@ var I18N={
     rbud_open:"Noch offen",
     rexp_none:"Noch keine",
     rexp_first:"Erste Cobots",
-    rexp_adv:"Erfahren"
+    rexp_adv:"Erfahren",
+    roboGateTitle:"📧 Fast geschafft - wohin dürfen wir deine Robotik-Empfehlung schicken?",
+    roboGateSub:"Du erhältst deine persönliche Roboter-Analyse mit Modellen, Herstellern und Preisen per E-Mail.",
+    roboGateBtn:"Analyse erstellen →",
+    roboPdfBtn:"📄 Als PDF speichern",
+    roboPdfLabel:"Robotik-Integrationsanalyse"
   },
   en:{
     langName:"English",
@@ -567,7 +572,12 @@ var I18N={
     rbud_open:"Still open",
     rexp_none:"None yet",
     rexp_first:"First cobots",
-    rexp_adv:"Experienced"
+    rexp_adv:"Experienced",
+    roboGateTitle:"📧 Almost there - where should we send your robotics recommendation?",
+    roboGateSub:"You'll receive your personal robot analysis with models, manufacturers and prices by email.",
+    roboGateBtn:"Create analysis →",
+    roboPdfBtn:"📄 Save as PDF",
+    roboPdfLabel:"Robotics Integration Analysis"
   },
   pl:{
     langName:"Polski",
@@ -824,7 +834,12 @@ var I18N={
     rbud_open:"Jeszcze otwarte",
     rexp_none:"Jeszcze brak",
     rexp_first:"Pierwsze coboty",
-    rexp_adv:"Doswiadczony"
+    rexp_adv:"Doswiadczony",
+    roboGateTitle:"📧 Prawie gotowe - gdzie wyslac Twoja rekomendacje robotyki?",
+    roboGateSub:"Otrzymasz osobista analize robotow z modelami, producentami i cenami e-mailem.",
+    roboGateBtn:"Utworz analize →",
+    roboPdfBtn:"📄 Zapisz jako PDF",
+    roboPdfLabel:"Analiza integracji robotow"
   }
 };
 var PKG={
@@ -1150,6 +1165,7 @@ function App(){
   var rRoUrlI=useState(""),roboUrlInput=rRoUrlI[0],setRoboUrlInput=rRoUrlI[1];
   var rRoUrlL=useState(false),roboUrlLoading=rRoUrlL[0],setRoboUrlLoading=rRoUrlL[1];
   var rRoUrlE=useState(""),roboUrlError=rRoUrlE[0],setRoboUrlError=rRoUrlE[1];
+  var rRoGate=useState(false),roboGate=rRoGate[0],setRoboGate=rRoGate[1];
   var rLang=useState(getInitialLang()),lang=rLang[0],setLangRaw=rLang[1];
   function setLang(v){try{if(typeof localStorage!=="undefined")localStorage.setItem("onlionLang",v);}catch(e){}setLangRaw(v);}
   function t(k){var L=I18N[lang]||I18N.de;return (L[k]!==undefined)?L[k]:(I18N.de[k]!==undefined?I18N.de[k]:k);}
@@ -1368,7 +1384,7 @@ function App(){
       }catch(ex){lastErr=ex.message;}
     }
     if(res){
-      setRoboRes(res);setStep("robotik_ergebnis");scrollTop();
+      setRoboRes(res);setRoboGate(false);setStep("robotik_ergebnis");scrollTop();
       try{
         var fitTxt=(res.fit||"")+" / Aufgaben: "+taskTxt+" / "+(res.summary||"").substring(0,100);
         await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email||"",telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:"Robotik-Analyse",score:0,bereiche:fitTxt,lang:lang})});
@@ -1377,6 +1393,43 @@ function App(){
       setRoboErr(t("roboErr")+(lastErr?(" ("+lastErr+")"):""));
     }
     setRoboLoad(false);
+  }
+
+  function generateRoboPDF(){
+    if(!roboRes)return;
+    var rr=roboRes;
+    var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
+    var esc=function(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+    var useHTML=(rr.useCases||[]).map(function(u){return "<li style='margin:6px 0;color:#888;line-height:1.6'>"+esc(u)+"</li>";}).join("");
+    var robHTML=(rr.robots||[]).map(function(rb){
+      return "<div style='background:rgba(255,119,0,0.06);border:0.5px solid #2a2a2a;border-radius:8px;padding:14px 16px;margin-bottom:12px'>"
+        +"<div style='font-size:16px;font-weight:600;color:#f0f0f0;margin-bottom:4px'>"+esc(rb.name)+"</div>"
+        +"<div style='font-size:12px;color:#888;margin-bottom:8px'>"+esc(rb.maker)+(rb.type?(" &middot; "+esc(rb.type)):"")+"</div>"
+        +(rb.desc?"<div style='font-size:13px;color:#aaa;line-height:1.6;margin-bottom:8px'>"+esc(rb.desc)+"</div>":"")
+        +"<div>"
+        +(rb.price?"<span style='display:inline-block;background:rgba(255,119,0,0.12);border:0.5px solid rgba(255,119,0,0.4);border-radius:6px;padding:4px 10px;margin-right:8px;font-size:13px;color:#ff7700;font-weight:600'>"+esc(rb.price)+"</span>":"")
+        +(rb.payback?"<span style='display:inline-block;background:rgba(122,200,0,0.12);border:0.5px solid rgba(122,200,0,0.4);border-radius:6px;padding:4px 10px;font-size:13px;color:#7AC800;font-weight:600'>ROI "+esc(rb.payback)+"</span>":"")
+        +"</div></div>";
+    }).join("");
+    var roadHTML=(rr.roadmap||[]).map(function(rd,i){return "<div style='display:flex;gap:12px;margin-bottom:12px'><div style='width:24px;height:24px;border-radius:50%;background:rgba(255,119,0,0.2);border:0.5px solid rgba(255,119,0,0.5);color:#ff7700;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0'>"+(i+1)+"</div><span style='font-size:13px;color:#888;line-height:1.6'>"+esc(rd)+"</span></div>";}).join("");
+    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ - Robotik</title><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body>"
+      +"<div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'>"
+      +"<div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div>"
+      +"<div><div style='font-size:11px;color:#ff7700;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>"+esc(t("roboPdfLabel"))+"</div>"
+      +"<h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+esc(firma||t("deinUnternehmen"))+"</h1>"
+      +"<p style='font-size:14px;color:#888;margin-bottom:40px'>"+esc(branche||"")+" - "+datum+"</p>"
+      +"<div style='display:inline-block;background:rgba(255,119,0,0.1);border:1px solid rgba(255,119,0,0.4);border-radius:10px;padding:16px 24px'>"
+      +"<div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>EIGNUNG</div>"
+      +"<div style='font-size:32px;font-weight:700;color:#ff7700'>"+esc(rr.fit||"-")+"</div></div></div>"
+      +"<div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlionapp.de</p></div></div>"
+      +"<div style='background:#0a0a0a;min-height:100vh;padding:48px'>"
+      +"<div style='background:#1a0d00;border:0.5px solid rgba(255,119,0,0.3);border-radius:8px;padding:18px;margin-bottom:28px'><div style='font-size:11px;color:#ff7700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px'>Einschaetzung</div><p style='font-size:14px;color:#f0f0f0;line-height:1.7'>"+esc(rr.summary||"")+"</p>"+(rr.fitReason?"<p style='font-size:12px;color:#888;line-height:1.6;margin-top:6px'>"+esc(rr.fitReason)+"</p>":"")+"</div>"
+      +(useHTML?"<h2 style='font-size:16px;font-weight:600;color:#fff;margin-bottom:12px'>Empfohlene Einsatzbereiche</h2><ul style='margin:0 0 28px 20px'>"+useHTML+"</ul>":"")
+      +"<h2 style='font-size:16px;font-weight:600;color:#fff;margin-bottom:14px'>Empfohlene Roboter &amp; Hersteller</h2>"+robHTML
+      +(roadHTML?"<h2 style='font-size:16px;font-weight:600;color:#fff;margin:28px 0 14px'>Integration in 3 Schritten</h2>"+roadHTML:"")
+      +"<div style='margin-top:40px;padding:24px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:14px;font-weight:600;color:#f0f0f0;margin-bottom:12px'>Robotik im eigenen Betrieb umsetzen?</div><a href='https://calendly.com/ridge-linear5958-eagereverest/30min' style='display:inline-block;background:#7AC800;color:#000;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700'>Kostenloses Beratungsgespraech buchen</a><div style='font-size:11px;color:#888;margin-top:10px'>onlionapp.de</div></div></div></body></html>";
+    var w=window.open("","_blank");
+    if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
 
   function generatePDF(){
@@ -1552,7 +1605,7 @@ function App(){
 
         {roboLoad
           ?<LoadBox msg={t("roboLoadMsg")} sub={t("roboLoadSub")} steps={[t("roboLoadStep1"),t("roboLoadStep2"),t("roboLoadStep3")]}/>
-          :<button disabled={!roboValid||!roboDsgvo} onClick={callRobotik} style={{width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+roboColor,background:roboColor+"18",cursor:"pointer",fontSize:14,color:roboColor,fontWeight:500,opacity:(roboValid&&roboDsgvo)?1:0.4}}>{t("roboStartBtn")}</button>
+          :<button disabled={!roboValid||!roboDsgvo} onClick={function(){setErr("");setRoboGate(true);}} style={{width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+roboColor,background:roboColor+"18",cursor:"pointer",fontSize:14,color:roboColor,fontWeight:500,opacity:(roboValid&&roboDsgvo)?1:0.4}}>{t("roboStartBtn")}</button>
         }
 
         {roboUrlModal&&(
@@ -1572,6 +1625,31 @@ function App(){
                 <div style={{display:"flex",gap:8}}>
                   <button onClick={function(){setRoboUrlModal(false);setRoboUrlError("");}} style={{flex:1,padding:"11px",background:"transparent",border:"0.5px solid "+BD,borderRadius:8,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>Abbrechen</button>
                   <button onClick={analyzeRoboUrl} style={{flex:2,padding:"11px",background:roboColor,border:"none",borderRadius:8,color:"#000",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Analysieren →</button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {roboGate&&(
+          <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.8)",backdropFilter:"blur(4px)",WebkitBackdropFilter:"blur(4px)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:9999,padding:"1rem"}} onClick={function(e){if(e.target===e.currentTarget&&!roboLoad)setRoboGate(false);}}>
+            <div style={{background:D2,border:"1px solid "+roboColor+"40",borderRadius:14,padding:"1.5rem",maxWidth:420,width:"100%"}}>
+              <div style={{fontSize:16,fontWeight:500,marginBottom:6,lineHeight:1.4}}>{t("roboGateTitle")}</div>
+              <p style={{fontSize:12,color:T2,lineHeight:1.6,marginBottom:16}}>{t("roboGateSub")}</p>
+              {roboLoad?(
+                <div style={{textAlign:"center",padding:"10px 0"}}>
+                  <LoadBox msg={t("roboLoadMsg")} sub={t("roboLoadSub")} steps={[t("roboLoadStep1"),t("roboLoadStep2"),t("roboLoadStep3")]}/>
+                </div>
+              ):(
+                <div>
+                  <input placeholder={t("reportEmailPh")} value={email} onChange={function(e){setEmail(e.target.value);setRoboErr("");}} type="email" style={{marginBottom:10}}/>
+                  <input placeholder={t("reportPhonePh")} value={telefon} onChange={function(e){setTelefon(e.target.value);setRoboErr("");}} type="tel" style={{marginBottom:10}}/>
+                  {roboErr&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{roboErr}</p>}
+                  <div style={{display:"flex",gap:8}}>
+                    <button onClick={function(){setRoboGate(false);}} style={{flex:1,padding:"11px",background:"transparent",border:"0.5px solid "+BD,borderRadius:8,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t("back")}</button>
+                    <button onClick={function(){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setRoboErr(t("reportEmailErr"));return;}if(telefon.replace(/[^0-9]/g,"").length<6){setRoboErr(t("reportPhoneErr"));return;}callRobotik();}} style={{flex:2,padding:"11px",background:roboColor,border:"none",borderRadius:8,color:"#000",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{t("roboGateBtn")}</button>
+                  </div>
+                  <p style={{fontSize:11,color:T2,marginTop:10,textAlign:"center"}}>{t("spamNote")}</p>
                 </div>
               )}
             </div>
@@ -1654,6 +1732,8 @@ function App(){
           </div>
         )}
 
+        <button onClick={generateRoboPDF} style={{width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+roboColor,background:roboColor+"18",cursor:"pointer",fontSize:14,color:roboColor,fontWeight:500,marginBottom:16}}>{t("roboPdfBtn")}</button>
+
         <div style={{...cardG,textAlign:"center",padding:"1.5rem",marginBottom:16}}>
           <div style={{fontSize:24,marginBottom:8}}>🎯</div>
           <div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>{t("roboCtaTitle")}</div>
@@ -1663,7 +1743,7 @@ function App(){
 
         <div style={{display:"flex",gap:8}}>
           <button onClick={function(){setStep("robotik_intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("roboBackBtn")}</button>
-          <button onClick={function(){setRoboRes(null);setRoboDesc("");setRoboDsgvo(false);setRoboErr("");setRoboTasks([]);setRoboEnv("");setRoboBud("");setRoboExp("");setRoboWebText("");setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("roboNeuBtn")}</button>
+          <button onClick={function(){setRoboRes(null);setRoboDesc("");setRoboDsgvo(false);setRoboErr("");setRoboTasks([]);setRoboEnv("");setRoboBud("");setRoboExp("");setRoboWebText("");setRoboGate(false);setEmail("");setTelefon("");setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("roboNeuBtn")}</button>
         </div>
       </div>
     );
