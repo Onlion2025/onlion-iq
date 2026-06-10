@@ -50,6 +50,10 @@ var KT={
   daten:"Echtzeit-Dashboards und KI-gestützte Analysen ersetzen manuelle Excel-Auswertungen - Entscheidungen basieren auf aktuellen Daten, nicht auf Bauchgefühl."
 };
 var BRANCHEN=[{v:"Produktion / Fertigung",k:"br_prod"},{v:"Handwerk",k:"br_handwerk"},{v:"Dienstleistung / Büro",k:"br_dienst"},{v:"Handel / Logistik",k:"br_handel"},{v:"IT / Technologie",k:"br_it"},{v:"Gesundheit / Pflege",k:"br_health"},{v:"Bildung",k:"br_bildung"},{v:"Finanzen / Versicherung",k:"br_finanz"},{v:"Sonstige",k:"br_sonst"}];
+var ROBO_TASKS=[{id:"lift",k:"rtask_lift",i:"📦"},{id:"assembly",k:"rtask_assembly",i:"🔩"},{id:"weld",k:"rtask_weld",i:"🔥"},{id:"pack",k:"rtask_pack",i:"🏷️"},{id:"quality",k:"rtask_quality",i:"🔍"},{id:"transport",k:"rtask_transport",i:"🚚"},{id:"service",k:"rtask_service",i:"🛎️"},{id:"machine",k:"rtask_machine",i:"⚙️"}];
+var ROBO_ENV=[{id:"prod",k:"renv_prod",i:"🏭"},{id:"warehouse",k:"renv_warehouse",i:"📦"},{id:"workshop",k:"renv_workshop",i:"🔧"},{id:"office",k:"renv_office",i:"🏢"},{id:"outdoor",k:"renv_outdoor",i:"🌤️"}];
+var ROBO_BUDGET=[{id:"low",k:"rbud_low"},{id:"mid",k:"rbud_mid"},{id:"high",k:"rbud_high"},{id:"open",k:"rbud_open"}];
+var ROBO_EXP=[{id:"none",k:"rexp_none"},{id:"first",k:"rexp_first"},{id:"adv",k:"rexp_adv"}];
 var I18N={
   de:{
     langName:"Deutsch",
@@ -244,7 +248,69 @@ var I18N={
     reportEmailErr:"Bitte gib eine gültige E-Mail-Adresse ein.",
     reportPhonePh:"Deine Telefonnummer *",
     reportPhoneErr:"Bitte gib eine gültige Telefonnummer ein.",
-    aiLang:"Deutsch"
+    aiLang:"Deutsch",
+    roboCatHint:"Humanoide & Leichtbau-Roboter",
+    roboTitle:"Robotik-Integrationsanalyse",
+    roboSub:"Finde heraus, wie du humanoide oder Leichtbau-Roboter in deinem Unternehmen einsetzen kannst - mit konkreten Modellen, Herstellern und Preisen.",
+    roboFeat1:"Passende Roboter-Typen fuer deine Prozesse",
+    roboFeat2:"Konkrete Hersteller & Modelle",
+    roboFeat3:"Realistische Preisspannen & ROI",
+    roboFeat4:"Schritt-fuer-Schritt Integrationsplan",
+    roboDescLabel:"Beschreibe dein Unternehmen & deine Aufgaben",
+    roboDescPh:"z.B. Wir sind ein Metallverarbeiter mit 18 Mitarbeitern. Viele schwere Werkstuecke werden von Hand bewegt, Schweissen und Verpacken laufen manuell...",
+    roboStartBtn:"Robotik-Analyse starten →",
+    roboLoadMsg:"KI analysiert dein Robotik-Potenzial...",
+    roboLoadSub:"Wir pruefen passende Roboter-Typen, Hersteller und Kosten.",
+    roboLoadStep1:"Prozesse werden analysiert",
+    roboLoadStep2:"Passende Roboter werden gesucht",
+    roboLoadStep3:"Hersteller & Preise werden ermittelt",
+    roboResTitle:"Deine Robotik-Empfehlung",
+    roboSummaryTitle:"Einschaetzung",
+    roboFitTitle:"Eignung fuer Robotik",
+    roboUseTitle:"Empfohlene Einsatzbereiche",
+    roboRobotsTitle:"Empfohlene Roboter & Hersteller",
+    roboPriceLabel:"Preis (Richtwert)",
+    roboTypeLabel:"Typ",
+    roboMakerLabel:"Hersteller",
+    roboRoadmapTitle:"Integration in 3 Schritten",
+    roboBackBtn:"← Zurueck",
+    roboNeuBtn:"Neue Analyse",
+    roboCtaTitle:"Robotik im eigenen Betrieb umsetzen?",
+    roboCtaText:"In einem kostenlosen Gespraech klaeren wir, welcher Roboter sich fuer dich rechnet und wie die Foerderung aussieht.",
+    roboCtaBtn:"Kostenloses Gespraech buchen",
+    roboErr:"Robotik-Analyse fehlgeschlagen. Bitte erneut versuchen.",
+    roboHeroTitle:"Welcher Roboter passt in dein Unternehmen?",
+    roboHeroSub:"ONLION IQ analysiert mit KI, wie du humanoide oder Leichtbau-Roboter konkret einsetzen kannst - mit Modellen, Herstellern und Preisen in ",
+    roboHeroHi:"3 Minuten",
+    roboHeroPost:".",
+    roboKritTitle:"Was soll der Roboter koennen?",
+    roboKritSub:"Waehle aus, was am besten passt - das macht die Analyse praeziser.",
+    roboStepTask:"Aufgaben (Mehrfachauswahl)",
+    roboStepEnv:"Arbeitsumgebung",
+    roboStepBudget:"Budget-Rahmen",
+    roboStepExp:"Erfahrung mit Robotik",
+    roboUrlBtn:"✨ Beschreibung automatisch aus deiner Webseite erstellen",
+    roboPflichtHint:"Bitte mindestens eine Aufgabe waehlen und dein Unternehmen kurz beschreiben.",
+    rtask_lift:"Heben & Tragen",
+    rtask_assembly:"Montage & Schrauben",
+    rtask_weld:"Schweissen",
+    rtask_pack:"Verpacken & Palettieren",
+    rtask_quality:"Qualitaetspruefung",
+    rtask_transport:"Transport & Logistik",
+    rtask_service:"Bedienung & Service",
+    rtask_machine:"Maschinen bestuecken",
+    renv_prod:"Produktionshalle",
+    renv_warehouse:"Lager",
+    renv_workshop:"Werkstatt",
+    renv_office:"Buero / Empfang",
+    renv_outdoor:"Aussenbereich",
+    rbud_low:"bis 30.000 EUR",
+    rbud_mid:"30.000 - 80.000 EUR",
+    rbud_high:"ueber 80.000 EUR",
+    rbud_open:"Noch offen",
+    rexp_none:"Noch keine",
+    rexp_first:"Erste Cobots",
+    rexp_adv:"Erfahren"
   },
   en:{
     langName:"English",
@@ -439,7 +505,69 @@ var I18N={
     reportEmailErr:"Please enter a valid email address.",
     reportPhonePh:"Your phone number *",
     reportPhoneErr:"Please enter a valid phone number.",
-    aiLang:"English"
+    aiLang:"English",
+    roboCatHint:"Humanoid & lightweight robots",
+    roboTitle:"Robotics Integration Analysis",
+    roboSub:"Find out how you can deploy humanoid or lightweight robots in your company - with concrete models, manufacturers and prices.",
+    roboFeat1:"Robot types matching your processes",
+    roboFeat2:"Concrete manufacturers & models",
+    roboFeat3:"Realistic price ranges & ROI",
+    roboFeat4:"Step-by-step integration plan",
+    roboDescLabel:"Describe your company & tasks",
+    roboDescPh:"e.g. We are a metal processor with 18 employees. Many heavy workpieces are moved by hand, welding and packaging are manual...",
+    roboStartBtn:"Start robotics analysis →",
+    roboLoadMsg:"AI is analyzing your robotics potential...",
+    roboLoadSub:"We check suitable robot types, manufacturers and costs.",
+    roboLoadStep1:"Analyzing processes",
+    roboLoadStep2:"Searching matching robots",
+    roboLoadStep3:"Determining manufacturers & prices",
+    roboResTitle:"Your robotics recommendation",
+    roboSummaryTitle:"Assessment",
+    roboFitTitle:"Suitability for robotics",
+    roboUseTitle:"Recommended use cases",
+    roboRobotsTitle:"Recommended robots & manufacturers",
+    roboPriceLabel:"Price (guide)",
+    roboTypeLabel:"Type",
+    roboMakerLabel:"Manufacturer",
+    roboRoadmapTitle:"Integration in 3 steps",
+    roboBackBtn:"← Back",
+    roboNeuBtn:"New analysis",
+    roboCtaTitle:"Implement robotics in your own operation?",
+    roboCtaText:"In a free consultation we clarify which robot pays off for you and what funding is available.",
+    roboCtaBtn:"Book free consultation",
+    roboErr:"Robotics analysis failed. Please try again.",
+    roboHeroTitle:"Which robot fits your company?",
+    roboHeroSub:"ONLION IQ uses AI to analyze how you can deploy humanoid or lightweight robots - with models, manufacturers and prices in ",
+    roboHeroHi:"3 minutes",
+    roboHeroPost:".",
+    roboKritTitle:"What should the robot do?",
+    roboKritSub:"Select what fits best - it makes the analysis more precise.",
+    roboStepTask:"Tasks (multiple choice)",
+    roboStepEnv:"Work environment",
+    roboStepBudget:"Budget range",
+    roboStepExp:"Robotics experience",
+    roboUrlBtn:"✨ Create description automatically from your website",
+    roboPflichtHint:"Please select at least one task and briefly describe your company.",
+    rtask_lift:"Lifting & carrying",
+    rtask_assembly:"Assembly & screwing",
+    rtask_weld:"Welding",
+    rtask_pack:"Packing & palletizing",
+    rtask_quality:"Quality inspection",
+    rtask_transport:"Transport & logistics",
+    rtask_service:"Operation & service",
+    rtask_machine:"Machine tending",
+    renv_prod:"Production hall",
+    renv_warehouse:"Warehouse",
+    renv_workshop:"Workshop",
+    renv_office:"Office / reception",
+    renv_outdoor:"Outdoor",
+    rbud_low:"up to 30,000 EUR",
+    rbud_mid:"30,000 - 80,000 EUR",
+    rbud_high:"over 80,000 EUR",
+    rbud_open:"Still open",
+    rexp_none:"None yet",
+    rexp_first:"First cobots",
+    rexp_adv:"Experienced"
   },
   pl:{
     langName:"Polski",
@@ -634,7 +762,69 @@ var I18N={
     reportEmailErr:"Proszę podać prawidłowy adres e-mail.",
     reportPhonePh:"Twój numer telefonu *",
     reportPhoneErr:"Proszę podać prawidłowy numer telefonu.",
-    aiLang:"Polnisch (Polski)"
+    aiLang:"Polnisch (Polski)",
+    roboCatHint:"Roboty humanoidalne i lekkie",
+    roboTitle:"Analiza integracji robotow",
+    roboSub:"Dowiedz sie, jak wdrozyc roboty humanoidalne lub lekkie w swojej firmie - z konkretnymi modelami, producentami i cenami.",
+    roboFeat1:"Typy robotow pasujace do procesow",
+    roboFeat2:"Konkretni producenci i modele",
+    roboFeat3:"Realistyczne przedzialy cenowe i ROI",
+    roboFeat4:"Plan wdrozenia krok po kroku",
+    roboDescLabel:"Opisz swoja firme i zadania",
+    roboDescPh:"np. Jestesmy zakladem metalowym z 18 pracownikami. Wiele ciezkich elementow przenosimy recznie, spawanie i pakowanie sa reczne...",
+    roboStartBtn:"Rozpocznij analize robotyki →",
+    roboLoadMsg:"AI analizuje Twoj potencjal robotyki...",
+    roboLoadSub:"Sprawdzamy odpowiednie typy robotow, producentow i koszty.",
+    roboLoadStep1:"Analiza procesow",
+    roboLoadStep2:"Szukanie pasujacych robotow",
+    roboLoadStep3:"Ustalanie producentow i cen",
+    roboResTitle:"Twoja rekomendacja robotyki",
+    roboSummaryTitle:"Ocena",
+    roboFitTitle:"Przydatnosc do robotyki",
+    roboUseTitle:"Zalecane zastosowania",
+    roboRobotsTitle:"Zalecane roboty i producenci",
+    roboPriceLabel:"Cena (orientacyjna)",
+    roboTypeLabel:"Typ",
+    roboMakerLabel:"Producent",
+    roboRoadmapTitle:"Integracja w 3 krokach",
+    roboBackBtn:"← Wstecz",
+    roboNeuBtn:"Nowa analiza",
+    roboCtaTitle:"Wdrozyc robotyke we wlasnej firmie?",
+    roboCtaText:"W bezplatnej rozmowie wyjasnimy, ktory robot sie oplaca i jakie jest dofinansowanie.",
+    roboCtaBtn:"Umow bezplatna rozmowe",
+    roboErr:"Analiza robotyki nie powiodla sie. Sprobuj ponownie.",
+    roboHeroTitle:"Ktory robot pasuje do Twojej firmy?",
+    roboHeroSub:"ONLION IQ analizuje z pomoca AI, jak wdrozyc roboty humanoidalne lub lekkie - z modelami, producentami i cenami w ",
+    roboHeroHi:"3 minuty",
+    roboHeroPost:".",
+    roboKritTitle:"Co ma robic robot?",
+    roboKritSub:"Wybierz, co pasuje najlepiej - to uczyni analize bardziej precyzyjna.",
+    roboStepTask:"Zadania (wielokrotny wybor)",
+    roboStepEnv:"Srodowisko pracy",
+    roboStepBudget:"Zakres budzetu",
+    roboStepExp:"Doswiadczenie z robotyka",
+    roboUrlBtn:"✨ Utworz opis automatycznie ze swojej strony",
+    roboPflichtHint:"Wybierz co najmniej jedno zadanie i krotko opisz swoja firme.",
+    rtask_lift:"Podnoszenie i przenoszenie",
+    rtask_assembly:"Montaz i skrecanie",
+    rtask_weld:"Spawanie",
+    rtask_pack:"Pakowanie i paletyzacja",
+    rtask_quality:"Kontrola jakosci",
+    rtask_transport:"Transport i logistyka",
+    rtask_service:"Obsluga i serwis",
+    rtask_machine:"Obsluga maszyn",
+    renv_prod:"Hala produkcyjna",
+    renv_warehouse:"Magazyn",
+    renv_workshop:"Warsztat",
+    renv_office:"Biuro / recepcja",
+    renv_outdoor:"Na zewnatrz",
+    rbud_low:"do 30 000 EUR",
+    rbud_mid:"30 000 - 80 000 EUR",
+    rbud_high:"powyzej 80 000 EUR",
+    rbud_open:"Jeszcze otwarte",
+    rexp_none:"Jeszcze brak",
+    rexp_first:"Pierwsze coboty",
+    rexp_adv:"Doswiadczony"
   }
 };
 var PKG={
@@ -870,14 +1060,16 @@ function KatCard(props){
   var rH=React.useState(false);
   var hovered=rH[0],setHovered=rH[1];
   var kc=KC[k.k];
+  var clickable=!!props.onClick;
   return React.createElement("div",{
-    style:{background:"rgba(20,20,20,0.35)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",border:"0.5px solid "+(hovered?kc+"60":BD),borderRadius:10,padding:"0.75rem",display:"flex",gap:10,alignItems:"flex-start",transition:"border-color 0.2s,transform 0.2s",cursor:"default",transform:hovered?"translateY(-1px)":"none"},
+    onClick:props.onClick||null,
+    style:{background:"rgba(20,20,20,0.35)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",border:"0.5px solid "+(hovered?kc+"60":(clickable?kc+"45":BD)),borderRadius:10,padding:"0.75rem",display:"flex",gap:10,alignItems:"flex-start",transition:"border-color 0.2s,transform 0.2s",cursor:clickable?"pointer":"default",transform:hovered?"translateY(-1px)":"none"},
     onMouseEnter:function(){setHovered(true);},
     onMouseLeave:function(){setHovered(false);}
   },
     React.createElement("span",{style:{fontSize:20,flexShrink:0}},k.i),
     React.createElement("div",{style:{flex:1}},
-      React.createElement("div",{style:{fontSize:12,fontWeight:500,color:TX}},k.l),
+      React.createElement("div",{style:{fontSize:12,fontWeight:500,color:TX,display:"flex",alignItems:"center",gap:6}},k.l,clickable?React.createElement("span",{style:{fontSize:12,color:kc}},"→"):null),
       React.createElement("div",{style:{fontSize:11,color:T2,marginTop:2}},k.d),
       hovered&&React.createElement("div",{style:{fontSize:11,color:T2,marginTop:8,lineHeight:1.6,borderTop:"0.5px solid "+kc+"30",paddingTop:8,animation:"fadeUp 0.2s ease"}},props.desc||KT[k.k])
     )
@@ -944,6 +1136,20 @@ function App(){
   var r17=useState(false),mailSent=r17[0],setMailSent=r17[1];
   var r18=useState(false),emailSent=r18[0],setEmailSent=r18[1];
   var r19=useState(false),dsgvo=r19[0],setDsgvo=r19[1];
+  var rRoDesc=useState(""),roboDesc=rRoDesc[0],setRoboDesc=rRoDesc[1];
+  var rRoLoad=useState(false),roboLoad=rRoLoad[0],setRoboLoad=rRoLoad[1];
+  var rRoRes=useState(null),roboRes=rRoRes[0],setRoboRes=rRoRes[1];
+  var rRoDsgvo=useState(false),roboDsgvo=rRoDsgvo[0],setRoboDsgvo=rRoDsgvo[1];
+  var rRoErr=useState(""),roboErr=rRoErr[0],setRoboErr=rRoErr[1];
+  var rRoTasks=useState([]),roboTasks=rRoTasks[0],setRoboTasks=rRoTasks[1];
+  var rRoEnv=useState(""),roboEnv=rRoEnv[0],setRoboEnv=rRoEnv[1];
+  var rRoBud=useState(""),roboBud=rRoBud[0],setRoboBud=rRoBud[1];
+  var rRoExp=useState(""),roboExp=rRoExp[0],setRoboExp=rRoExp[1];
+  var rRoWeb=useState(""),roboWebText=rRoWeb[0],setRoboWebText=rRoWeb[1];
+  var rRoUrlM=useState(false),roboUrlModal=rRoUrlM[0],setRoboUrlModal=rRoUrlM[1];
+  var rRoUrlI=useState(""),roboUrlInput=rRoUrlI[0],setRoboUrlInput=rRoUrlI[1];
+  var rRoUrlL=useState(false),roboUrlLoading=rRoUrlL[0],setRoboUrlLoading=rRoUrlL[1];
+  var rRoUrlE=useState(""),roboUrlError=rRoUrlE[0],setRoboUrlError=rRoUrlE[1];
   var rLang=useState(getInitialLang()),lang=rLang[0],setLangRaw=rLang[1];
   function setLang(v){try{if(typeof localStorage!=="undefined")localStorage.setItem("onlionLang",v);}catch(e){}setLangRaw(v);}
   function t(k){var L=I18N[lang]||I18N.de;return (L[k]!==undefined)?L[k]:(I18N.de[k]!==undefined?I18N.de[k]:k);}
@@ -982,6 +1188,31 @@ function App(){
       }
     }catch(e){setUrlError("Fehler: "+e.message);}
     setUrlLoading(false);
+  }
+
+  async function analyzeRoboUrl(){
+    if(!roboUrlInput.trim()){setRoboUrlError("Bitte URL eingeben");return;}
+    setRoboUrlError("");setRoboUrlLoading(true);
+    try{
+      var response=await fetch("/.netlify/functions/analyzeurl",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({url:roboUrlInput.trim()})
+      });
+      var data=await response.json();
+      if(data.error){setRoboUrlError(data.error);setRoboUrlLoading(false);return;}
+      if(data.beschreibung){
+        setRoboDesc(data.beschreibung);
+        if(data.webText)setRoboWebText(data.webText);
+        setRoboUrlModal(false);
+        setRoboUrlInput("");
+      }
+    }catch(e){setRoboUrlError("Fehler: "+e.message);}
+    setRoboUrlLoading(false);
+  }
+
+  function toggleRoboTask(id){
+    setRoboTasks(function(p){return p.indexOf(id)>=0?p.filter(function(x){return x!==id;}):[...p,id];});
   }
 
   async function callApi(prompt,mt){
@@ -1097,6 +1328,57 @@ function App(){
     setLoadL(false);
   }
 
+  async function callRobotik(){
+    if(roboDesc.trim().length<10||roboTasks.length===0){setRoboErr(t("roboPflichtHint"));return;}
+    setRoboLoad(true);setRoboErr("");
+    var langName=t("aiLang");
+    var taskTxt=roboTasks.map(function(id){var x=ROBO_TASKS.filter(function(o){return o.id===id;})[0];return x?t(x.k):id;}).join(", ");
+    var envTxt=roboEnv?(function(){var x=ROBO_ENV.filter(function(o){return o.id===roboEnv;})[0];return x?t(x.k):roboEnv;})():"";
+    var budTxt=roboBud?(function(){var x=ROBO_BUDGET.filter(function(o){return o.id===roboBud;})[0];return x?t(x.k):roboBud;})():"";
+    var expTxt=roboExp?(function(){var x=ROBO_EXP.filter(function(o){return o.id===roboExp;})[0];return x?t(x.k):roboExp;})():"";
+    var kritBlock="\n\nVom Kunden ausgewaehlte Kriterien (sehr wichtig, richte Empfehlung genau danach aus):\n"
+      +"- Aufgaben fuer den Roboter: "+taskTxt+"\n"
+      +(envTxt?("- Arbeitsumgebung: "+envTxt+"\n"):"")
+      +(budTxt?("- Budget-Rahmen: "+budTxt+" (empfiehl bevorzugt Modelle in diesem Rahmen)\n"):"")
+      +(expTxt?("- Robotik-Erfahrung des Unternehmens: "+expTxt+" (passe Komplexitaet und Bedienbarkeit daran an)\n"):"");
+    var webBlock=roboWebText?("\n\nORIGINAL-INHALT DER FIRMEN-WEBSEITE (nutze diese konkreten Infos):\n"+safe(roboWebText).substring(0,1800)):"";
+    var prompt="WICHTIG: Antworte ausschliesslich auf "+langName+". Alle Texte muessen in dieser Sprache sein, UNABHAENGIG von der Sprache der Eingabe.\n\n"
+      +"Du bist Experte fuer industrielle Robotik, humanoide Roboter und kollaborative Leichtbau-Roboter (Cobots). Ein Unternehmen beschreibt sich. Analysiere, wie es humanoide oder Leichtbau-Roboter sinnvoll integrieren kann.\n\n"
+      +"Firmenname: "+safe(firma||"")+"\nBranche: "+safe(branche||"")+"\nBeschreibung: "+safe(roboDesc)+kritBlock+webBlock+"\n\n"
+      +"Gib AUSSCHLIESSLICH gueltiges JSON zurueck, ohne Markdown, ohne Backticks, ohne Erklaerung. Struktur exakt so:\n"
+      +"{\n"
+      +'"summary": "2-3 Saetze Einschaetzung des Robotik-Potenzials fuer dieses Unternehmen",\n'
+      +'"fit": "Hoch | Mittel | Niedrig",\n'
+      +'"fitReason": "1 Satz Begruendung",\n'
+      +'"useCases": ["konkreter Einsatzbereich 1", "Einsatzbereich 2", "Einsatzbereich 3"],\n'
+      +'"robots": [{"name":"konkretes Modell","maker":"realer Hersteller","type":"Humanoid | Cobot | Leichtbau-Arm | Mobiler Roboter","desc":"1 Satz warum passend fuer dieses Unternehmen","price":"realistische Preisspanne in EUR z.B. 25.000-45.000 EUR","payback":"grobe Amortisationszeit z.B. 12-18 Monate"}],\n'
+      +'"roadmap": ["Schritt 1", "Schritt 2", "Schritt 3"]\n'
+      +"}\n\n"
+      +"Regeln:\n- Nenne 3-4 ECHTE, am Markt verfuegbare Roboter-Modelle und Hersteller (z.B. Universal Robots UR10e, KUKA LBR iisy, Franka Emika, Agility Robotics Digit, Unitree G1, Fanuc CRX, Doosan, ABB GoFa). Erfinde KEINE Modelle.\n- Waehle die Modelle passend zu den ausgewaehlten Aufgaben, der Umgebung und dem Budget.\n- Preise als realistische Richtwerte in EUR.\n- Beziehe useCases und robots konkret auf die beschriebenen Aufgaben und Kriterien.\n- Halte Texte kurz und in einfacher Sprache.";
+    var res=null,lastErr="";
+    for(var attempt=0;attempt<2&&!res;attempt++){
+      try{
+        var raw=await callApi(prompt,1800);
+        var clean=raw.replace(/```json/g,"").replace(/```/g,"").trim();
+        var s=clean.indexOf("{"),e=clean.lastIndexOf("}");
+        if(s>=0&&e>s)clean=clean.substring(s,e+1);
+        var parsed=JSON.parse(clean);
+        if(parsed&&parsed.robots&&parsed.robots.length)res=parsed;
+        else lastErr="leer";
+      }catch(ex){lastErr=ex.message;}
+    }
+    if(res){
+      setRoboRes(res);setStep("robotik_ergebnis");scrollTop();
+      try{
+        var fitTxt=(res.fit||"")+" / Aufgaben: "+taskTxt+" / "+(res.summary||"").substring(0,100);
+        await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email||"",telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:"Robotik-Analyse",score:0,bereiche:fitTxt,lang:lang})});
+      }catch(ee){}
+    }else{
+      setRoboErr(t("roboErr")+(lastErr?(" ("+lastErr+")"):""));
+    }
+    setRoboLoad(false);
+  }
+
   function generatePDF(){
     var g=ges(),p=100-g;
     var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
@@ -1175,6 +1457,218 @@ function App(){
   var btnO={width:"100%",padding:"10px",borderRadius:8,border:"0.5px solid "+BD,background:"transparent",cursor:"pointer",fontSize:13,color:T2,marginTop:8};
   function bdg(c){return{display:"inline-block",padding:"2px 8px",borderRadius:20,background:c+"22",border:"0.5px solid "+c+"66",fontSize:10,color:c};}
 
+  var roboColor="#ff7700";
+
+  if(step==="robotik_intro"){
+    var roboValid=roboDesc.trim().length>=10&&roboTasks.length>0;
+    var chip=function(active){return{padding:"8px 12px",borderRadius:8,border:"0.5px solid "+(active?roboColor:BD),background:active?roboColor+"1a":"transparent",color:active?roboColor:T2,fontSize:12,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:6,transition:"all 0.15s",textAlign:"left"};};
+    return(
+      <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
+        <Logo lang={lang} setLang={setLang}/>
+        <button onClick={function(){setStep("intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("back")}</button>
+
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+          <span style={{fontSize:28}}>🦾</span>
+          <h1 style={{fontSize:22,fontWeight:500,margin:0}}>{t("roboHeroTitle")}</h1>
+        </div>
+        <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>{t("roboHeroSub")}<strong style={{color:roboColor,fontWeight:500}}>{t("roboHeroHi")}</strong>{t("roboHeroPost")}</p>
+
+        <div style={{...card,marginBottom:20}}>
+          <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>{t("in5Title")}</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            {[["🎯",t("roboFeat1")],["🏭",t("roboFeat2")],["💶",t("roboFeat3")],["🗺️",t("roboFeat4")]].map(function(x,i){return(
+              <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+                <span style={{fontSize:16,flexShrink:0}}>{x[0]}</span>
+                <span style={{fontSize:13,color:T2}}>{x[1]}</span>
+              </div>
+            );})}
+          </div>
+        </div>
+
+        <input placeholder={t("firmaPh")} value={firma} onChange={function(e){setFirma(e.target.value);}}/>
+        <select value={branche} onChange={function(e){setBranche(e.target.value);}} style={{marginBottom:10}}>
+          <option value="">{t("branchePh")}</option>
+          {BRANCHEN.map(function(b){return <option key={b.v} value={b.v}>{t(b.k)}</option>;})}
+        </select>
+
+        {/* Kriterien-Block */}
+        <div style={{...card,marginBottom:16}}>
+          <div style={{fontSize:14,color:TX,fontWeight:500,marginBottom:2}}>{t("roboKritTitle")}</div>
+          <div style={{fontSize:12,color:T2,marginBottom:16}}>{t("roboKritSub")}</div>
+
+          <div style={{fontSize:11,color:roboColor,letterSpacing:0.5,textTransform:"uppercase",marginBottom:8}}>{t("roboStepTask")}</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:18}}>
+            {ROBO_TASKS.map(function(o){var a=roboTasks.indexOf(o.id)>=0;return(
+              <div key={o.id} onClick={function(){toggleRoboTask(o.id);}} style={chip(a)}>
+                <span style={{fontSize:14}}>{o.i}</span>{t(o.k)}
+              </div>
+            );})}
+          </div>
+
+          <div style={{fontSize:11,color:roboColor,letterSpacing:0.5,textTransform:"uppercase",marginBottom:8}}>{t("roboStepEnv")}</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:18}}>
+            {ROBO_ENV.map(function(o){var a=roboEnv===o.id;return(
+              <div key={o.id} onClick={function(){setRoboEnv(a?"":o.id);}} style={chip(a)}>
+                <span style={{fontSize:14}}>{o.i}</span>{t(o.k)}
+              </div>
+            );})}
+          </div>
+
+          <div style={{fontSize:11,color:roboColor,letterSpacing:0.5,textTransform:"uppercase",marginBottom:8}}>{t("roboStepBudget")}</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:18}}>
+            {ROBO_BUDGET.map(function(o){var a=roboBud===o.id;return(
+              <div key={o.id} onClick={function(){setRoboBud(a?"":o.id);}} style={chip(a)}>{t(o.k)}</div>
+            );})}
+          </div>
+
+          <div style={{fontSize:11,color:roboColor,letterSpacing:0.5,textTransform:"uppercase",marginBottom:8}}>{t("roboStepExp")}</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+            {ROBO_EXP.map(function(o){var a=roboExp===o.id;return(
+              <div key={o.id} onClick={function(){setRoboExp(a?"":o.id);}} style={chip(a)}>{t(o.k)}</div>
+            );})}
+          </div>
+        </div>
+
+        <button onClick={function(){setRoboUrlModal(true);setRoboUrlError("");}} style={{width:"100%",padding:"10px 14px",marginBottom:10,background:roboColor+"14",border:"1px solid "+roboColor+"40",borderRadius:8,color:roboColor,fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontFamily:"inherit",fontWeight:500}}>
+          {t("roboUrlBtn")}
+        </button>
+
+        <div style={{marginBottom:10,background:D3,border:"0.5px solid "+(roboDesc.trim().length>=10?roboColor:BD),borderRadius:8,padding:"9px 12px",transition:"border-color 0.2s"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+            <span style={{fontSize:14,color:TX}}>{t("roboDescLabel")}</span>
+            <span style={{fontSize:10,color:"#e05a5a"}}>{t("descPflicht")}</span>
+          </div>
+          <textarea placeholder={t("roboDescPh")} value={roboDesc} onChange={function(e){setRoboDesc(e.target.value);}} rows={4} style={{resize:"vertical",lineHeight:1.6,marginBottom:0,background:"transparent",border:"none",padding:0,fontSize:12,color:TX,width:"100%",outline:"none"}}/>
+        </div>
+
+        {roboErr&&<p style={{color:"#e05a5a",fontSize:12,marginBottom:10}}>{roboErr}</p>}
+
+        <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:14,padding:"10px 12px",background:"rgba(20,20,20,0.35)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",border:"0.5px solid "+BD,borderRadius:8}}>
+          <input type="checkbox" id="roboDsgvo" checked={roboDsgvo} onChange={function(e){setRoboDsgvo(e.target.checked);}} style={{width:16,height:16,flexShrink:0,marginTop:2,marginBottom:0,accentColor:roboColor,cursor:"pointer"}}/>
+          <label htmlFor="roboDsgvo" style={{fontSize:12,color:T2,lineHeight:1.6,cursor:"pointer"}}>
+            {t("dsgvoPre")}<button onClick={function(e){e.preventDefault();setStep("datenschutz");}} style={{background:"none",border:"none",color:roboColor,cursor:"pointer",fontSize:12,textDecoration:"underline",padding:0}}>{t("dsgvoLink")}</button>{t("dsgvoPost")}
+          </label>
+        </div>
+
+        {roboLoad
+          ?<LoadBox msg={t("roboLoadMsg")} sub={t("roboLoadSub")} steps={[t("roboLoadStep1"),t("roboLoadStep2"),t("roboLoadStep3")]}/>
+          :<button disabled={!roboValid||!roboDsgvo} onClick={callRobotik} style={{width:"100%",padding:"11px",borderRadius:8,border:"1px solid "+roboColor,background:roboColor+"18",cursor:"pointer",fontSize:14,color:roboColor,fontWeight:500,opacity:(roboValid&&roboDsgvo)?1:0.4}}>{t("roboStartBtn")}</button>
+        }
+
+        {roboUrlModal&&(
+          <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.8)",backdropFilter:"blur(4px)",WebkitBackdropFilter:"blur(4px)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:9999,padding:"1rem"}} onClick={function(e){if(e.target===e.currentTarget&&!roboUrlLoading)setRoboUrlModal(false);}}>
+            <div style={{background:D2,border:"1px solid "+BD,borderRadius:14,padding:"1.5rem",maxWidth:420,width:"100%"}}>
+              <div style={{fontSize:18,fontWeight:500,marginBottom:6}}>🌐 Webseite analysieren</div>
+              <div style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.5}}>{t("urlModalTitle")}</div>
+              <input type="url" value={roboUrlInput} onChange={function(e){setRoboUrlInput(e.target.value);setRoboUrlError("");}} placeholder="www.deine-firma.de" disabled={roboUrlLoading} style={{marginBottom:roboUrlError?6:14}} autoFocus/>
+              {roboUrlError&&<div style={{fontSize:12,color:"#e05a5a",marginBottom:10,lineHeight:1.4}}>{roboUrlError}</div>}
+              {roboUrlLoading?(
+                <div style={{textAlign:"center",padding:"20px 0",color:T2,fontSize:13}}>
+                  <div style={{display:"inline-block",width:24,height:24,border:"2px solid "+roboColor,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",marginBottom:10}}/>
+                  <div>{t("urlModalReading")}</div>
+                  <div style={{fontSize:11,color:"#555",marginTop:4}}>KI erstellt Beschreibung...</div>
+                </div>
+              ):(
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={function(){setRoboUrlModal(false);setRoboUrlError("");}} style={{flex:1,padding:"11px",background:"transparent",border:"0.5px solid "+BD,borderRadius:8,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>Abbrechen</button>
+                  <button onClick={analyzeRoboUrl} style={{flex:2,padding:"11px",background:roboColor,border:"none",borderRadius:8,color:"#000",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Analysieren →</button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if(step==="robotik_ergebnis"&&roboRes){
+    var rr=roboRes;
+    var fitC=(rr.fit&&(rr.fit.toLowerCase().indexOf("hoch")>=0||rr.fit.toLowerCase().indexOf("high")>=0||rr.fit.toLowerCase().indexOf("wysok")>=0))?G:((rr.fit&&(rr.fit.toLowerCase().indexOf("niedr")>=0||rr.fit.toLowerCase().indexOf("low")>=0||rr.fit.toLowerCase().indexOf("nisk")>=0))?"#e05a5a":"#d0a000");
+    return(
+      <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
+        <Logo lang={lang} setLang={setLang}/>
+        <button onClick={function(){setStep("robotik_intro");}} style={{background:"transparent",border:"none",color:T2,cursor:"pointer",fontSize:13,padding:"0 0 16px 0",display:"block"}}>{t("roboBackBtn")}</button>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:6}}>
+          <span style={{fontSize:28}}>🦾</span>
+          <div><h1 style={{fontSize:18,fontWeight:500,margin:"0 0 4px"}}>{t("roboResTitle")}</h1><p style={{color:T2,fontSize:12,margin:0}}>{firma||t("deinUnternehmen")}{branche?(" - "+brLabel(branche)):""}</p></div>
+        </div>
+
+        <div style={{...cardG,marginBottom:16,borderColor:roboColor+"40",background:"#1a0d00"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+            <span style={{fontSize:11,color:roboColor,letterSpacing:1,textTransform:"uppercase"}}>{t("roboFitTitle")}</span>
+            <span style={{...bdg(fitC),fontSize:12,padding:"3px 12px"}}>{rr.fit||"-"}</span>
+          </div>
+          <p style={{fontSize:14,color:TX,lineHeight:1.7,marginBottom:rr.fitReason?6:0}}>{rr.summary||""}</p>
+          {rr.fitReason&&<p style={{fontSize:12,color:T2,lineHeight:1.6,margin:0}}>{rr.fitReason}</p>}
+        </div>
+
+        {rr.useCases&&rr.useCases.length>0&&(
+          <div style={{...card,marginBottom:16}}>
+            <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("roboUseTitle")}</div>
+            {rr.useCases.map(function(u,i){return(
+              <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:i<rr.useCases.length-1?8:0}}>
+                <span style={{color:roboColor,fontSize:14,flexShrink:0}}>▸</span>
+                <span style={{fontSize:13,color:T2,lineHeight:1.6}}>{u}</span>
+              </div>
+            );})}
+          </div>
+        )}
+
+        <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>{t("roboRobotsTitle")}</div>
+        {rr.robots.map(function(rb,i){return(
+          <div key={i} style={{...card,marginBottom:10}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:6}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:15,fontWeight:500,color:TX,marginBottom:2}}>{rb.name}</div>
+                <div style={{fontSize:12,color:T2}}><span style={{color:T2+"99"}}>{t("roboMakerLabel")}:</span> {rb.maker}</div>
+              </div>
+              {rb.type&&<span style={bdg(roboColor)}>{rb.type}</span>}
+            </div>
+            {rb.desc&&<p style={{fontSize:12,color:T2,lineHeight:1.6,margin:"6px 0 8px"}}>{rb.desc}</p>}
+            <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+              {rb.price&&(
+                <div style={{display:"inline-block",background:roboColor+"14",border:"0.5px solid "+roboColor+"40",borderRadius:6,padding:"4px 10px"}}>
+                  <span style={{fontSize:10,color:T2,marginRight:6}}>{t("roboPriceLabel")}</span>
+                  <span style={{fontSize:13,color:roboColor,fontWeight:600}}>{rb.price}</span>
+                </div>
+              )}
+              {rb.payback&&(
+                <div style={{display:"inline-block",background:G+"14",border:"0.5px solid "+G+"40",borderRadius:6,padding:"4px 10px"}}>
+                  <span style={{fontSize:10,color:T2,marginRight:6}}>⏱️ ROI</span>
+                  <span style={{fontSize:13,color:G,fontWeight:600}}>{rb.payback}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        );})}
+
+        {rr.roadmap&&rr.roadmap.length>0&&(
+          <div style={{...card,marginTop:6,marginBottom:16}}>
+            <div style={{fontSize:11,color:T2,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>{t("roboRoadmapTitle")}</div>
+            {rr.roadmap.map(function(rd,i){return(
+              <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:i<rr.roadmap.length-1?12:0}}>
+                <div style={{width:24,height:24,borderRadius:"50%",background:roboColor+"22",border:"0.5px solid "+roboColor+"66",color:roboColor,fontSize:12,fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</div>
+                <span style={{fontSize:13,color:T2,lineHeight:1.7,paddingTop:2}}>{rd}</span>
+              </div>
+            );})}
+          </div>
+        )}
+
+        <div style={{...cardG,textAlign:"center",padding:"1.5rem",marginBottom:16}}>
+          <div style={{fontSize:24,marginBottom:8}}>🎯</div>
+          <div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>{t("roboCtaTitle")}</div>
+          <p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>{t("roboCtaText")}</p>
+          <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");}} style={{...btnG,marginTop:0}}>{t("roboCtaBtn")}</button>
+        </div>
+
+        <div style={{display:"flex",gap:8}}>
+          <button onClick={function(){setStep("robotik_intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("roboBackBtn")}</button>
+          <button onClick={function(){setRoboRes(null);setRoboDesc("");setRoboDsgvo(false);setRoboErr("");setRoboTasks([]);setRoboEnv("");setRoboBud("");setRoboExp("");setRoboWebText("");setStep("intro");}} style={{...btnO,flex:1,marginTop:0}}>{t("roboNeuBtn")}</button>
+        </div>
+      </div>
+    );
+  }
+
   if(step==="intro") return(
     <div style={{background:"transparent",minHeight:"100vh",color:TX,padding:"1.5rem",maxWidth:620,margin:"0 auto"}}>
       <Logo showLogin={true} lang={lang} setLang={setLang} loginLabel={t("login")}/>
@@ -1182,7 +1676,7 @@ function App(){
       <p style={{color:T2,lineHeight:1.7,fontSize:14,marginBottom:20}}>{t("heroSubPre")}<strong style={{color:G,fontWeight:500,fontSize:16,display:"inline-block",animation:"softGlow 4s ease-in-out infinite"}}>{t("heroSubHi")}</strong>{t("heroSubPost")}</p>
 
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20}}>
-        {[{k:"ki",l:t("catKiTitle"),i:"🤖",d:t("catKiSub"),desc:t("descKi")},{k:"rpa",l:t("catAutoTitle"),i:"⚙️",d:t("catAutoSub"),desc:t("descRpa")},{k:"robotik",l:t("catRoboTitle"),i:"🦾",d:t("catRoboSub"),desc:t("descRobotik")},{k:"daten",l:t("catDataTitle"),i:"📊",d:t("catDataSub"),desc:t("descDaten")}].map(function(k){return <KatCard key={k.k} k={k} desc={k.desc}/>;})
+        {[{k:"ki",l:t("catKiTitle"),i:"🤖",d:t("catKiSub"),desc:t("descKi")},{k:"rpa",l:t("catAutoTitle"),i:"⚙️",d:t("catAutoSub"),desc:t("descRpa")},{k:"robotik",l:t("catRoboTitle"),i:"🦾",d:t("catRoboSub"),desc:t("descRobotik")},{k:"daten",l:t("catDataTitle"),i:"📊",d:t("catDataSub"),desc:t("descDaten")}].map(function(k){return <KatCard key={k.k} k={k} desc={k.desc} onClick={k.k==="robotik"?function(){setRoboErr("");setStep("robotik_intro");scrollTop();}:null}/>;})
         }
       </div>
 
