@@ -1258,8 +1258,9 @@ function App(){
     try{
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,3).join(", ");
       await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach,lang:lang})});
-      // Angebotsmappe mit PDF an Kunde + intern senden
-      fetch("/api/sendoffer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,firma:firma||"",branche:branche||"",score:g,lang:lang})}).catch(function(e){console.log("Angebot E-Mail Fehler:",e);});
+      // Personalisierte Angebotsmappe an Kunde + intern senden
+      var schwachOffer=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,5);
+      fetch("/api/sendoffer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,firma:firma||"",branche:branche||"",score:g,lang:lang,bereiche:schwachOffer})}).catch(function(e){console.log("Angebot E-Mail Fehler:",e);});
       setEmailSent(true);
     }catch(e){console.log("E-Mail Fehler:",e);}
   }
