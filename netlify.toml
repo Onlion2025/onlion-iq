@@ -1,4 +1,5 @@
 [build]
+  command = "npm install"
   publish = "."
   functions = "netlify/functions"
 
@@ -11,4 +12,7 @@
   timeout = 26
 
 [functions."analyzeurl"]
+  timeout = 26
+
+[functions."sendoffer"]
   timeout = 26
