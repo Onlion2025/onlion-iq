@@ -3,8 +3,5 @@
   "version": "1.0.0",
   "scripts": {
     "build": "echo 'Static site – no build step needed'"
-  },
-  "dependencies": {
-    "pdfkit": "^0.14.0"
   }
 }
