@@ -1041,11 +1041,9 @@ function Logo(props){
   ):null;
   return React.createElement("div",{style:{marginBottom:28,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
     React.createElement("div",null,
-      React.createElement("div",{onClick:function(){if(window.__goHome)window.__goHome();},title:"Zur Startseite",style:{fontWeight:700,fontSize:22,letterSpacing:3,color:TX,display:"flex",cursor:"pointer"}},
-        React.createElement("span",null,"ON"),
-        React.createElement("span",{style:{color:G}},"L"),
-        React.createElement("span",null,"ION"),
-        React.createElement("span",{style:{color:G,marginLeft:6}},"IQ")
+      React.createElement("div",{onClick:function(){if(window.__goHome)window.__goHome();},title:"Zur Startseite",style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},
+        React.createElement("img",{src:"lion.png",alt:"ONLION",style:{height:48,width:"auto"}}),
+        React.createElement("span",{style:{color:G,fontWeight:700,fontSize:26,letterSpacing:1,lineHeight:1}},"IQ")
       ),
       React.createElement("div",{style:{fontSize:11,color:T2,letterSpacing:2,marginTop:2}},"INTELLIGENCE QUOTIENT")
     ),
@@ -1257,7 +1255,8 @@ function App(){
   async function sendeEmail(g){
     try{
       var schwach=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,3).join(", ");
-      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach,lang:lang})});
+      var alleBereicheScores=gefB.map(function(b){return {label:b.label,icon:b.icon||"",score:gs(b.id)};});
+      await fetch("/api/sendemail",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,telefon:telefon||"",name:firma||"dort",firma:firma||"",branche:branche||"",score:g,bereiche:schwach,alleBereicheScores:alleBereicheScores,lang:lang})});
       // Personalisierte Angebotsmappe an Kunde + intern senden
       var schwachOffer=gefB.filter(function(b){return gs(b.id)<60;}).map(function(b){return b.label;}).slice(0,5);
       fetch("/api/sendoffer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,firma:firma||"",branche:branche||"",score:g,lang:lang,bereiche:schwachOffer})}).catch(function(e){console.log("Angebot E-Mail Fehler:",e);});
@@ -1454,7 +1453,7 @@ function App(){
       +(useHTML?"<h2 style='font-size:16px;font-weight:600;color:#fff;margin-bottom:12px'>Empfohlene Einsatzbereiche</h2><ul style='margin:0 0 28px 20px'>"+useHTML+"</ul>":"")
       +"<h2 style='font-size:16px;font-weight:600;color:#fff;margin-bottom:14px'>Empfohlene Roboter &amp; Hersteller</h2>"+robHTML
       +(roadHTML?"<h2 style='font-size:16px;font-weight:600;color:#fff;margin:28px 0 14px'>Integration in 3 Schritten</h2>"+roadHTML:"")
-      +"<div style='margin-top:40px;padding:24px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:14px;font-weight:600;color:#f0f0f0;margin-bottom:12px'>Robotik im eigenen Betrieb umsetzen?</div><a href='https://calendly.com/ridge-linear5958-eagereverest/30min' style='display:inline-block;background:#7AC800;color:#000;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700'>Kostenloses Beratungsgespraech buchen</a><div style='font-size:11px;color:#888;margin-top:10px'>onlionapp.de</div></div></div></body></html>";
+      +"<div style='margin-top:40px;padding:24px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:14px;font-weight:600;color:#f0f0f0;margin-bottom:12px'>Robotik im eigenen Betrieb umsetzen?</div><a href='https://calendly.com/onlion/30min' style='display:inline-block;background:#7AC800;color:#000;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700'>Kostenloses Beratungsgespraech buchen</a><div style='font-size:11px;color:#888;margin-top:10px'>onlionapp.de</div></div></div></body></html>";
     var w=window.open("","_blank");
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
@@ -1464,7 +1463,7 @@ function App(){
     var datum=new Date().toLocaleDateString("de-DE",{year:"numeric",month:"long",day:"numeric"});
     var bHTML=gefB.map(function(b){var sc=gs(b.id),bc=sc>66?"#7AC800":sc>33?"#a0a000":"#7a2a2a";return "<div style='margin-bottom:14px'><div style='display:flex;justify-content:space-between;margin-bottom:5px'><span style='font-size:13px;color:#f0f0f0'>"+b.icon+" "+b.label+"</span><span style='font-size:12px;color:#7AC800'>"+sc+"%</span></div><div style='height:6px;background:#1e1e1e;border-radius:3px'><div style='height:100%;width:"+sc+"%;background:"+bc+";border-radius:3px'></div></div></div>";}).join("");
     var rHTML=renderMd(bericht);
-    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ</title><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body><div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'><div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>Automatisierungs-Analyse</div><h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+safe(firma||branche)+"</h1><p style='font-size:14px;color:#888;margin-bottom:40px'>"+safe(branche)+" - "+datum+"</p><div style='display:flex;gap:48px'><div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>IQ-SCORE</div><div style='font-size:52px;font-weight:700;color:#fff'>"+g+"%</div></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:6px'>KI-POTENZIAL</div><div style='font-size:52px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div></div><div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlion-iq.netlify.app</p></div></div><div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'><h2 style='font-size:20px;font-weight:600;color:#fff;margin-bottom:24px'>Ergebnisse je Bereich</h2>"+bHTML+"</div><div style='background:#0a0a0a;min-height:100vh;padding:48px'><div style='font-size:13px;color:#888;line-height:1.8'>"+rHTML+"</div><div style='margin-top:40px;padding:24px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:14px;font-weight:600;color:#f0f0f0;margin-bottom:12px'>Bereit fuer den naechsten Schritt?</div><a href='https://calendly.com/ridge-linear5958-eagereverest/30min' style='display:inline-block;background:#7AC800;color:#000;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700'>Kostenloses Beratungsgespraech buchen</a><div style='font-size:11px;color:#888;margin-top:10px'>onlionapp.de</div></div></div></body></html>";
+    var html="<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>ONLION IQ</title><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body><div style='background:#000;min-height:100vh;padding:48px;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always'><div style='text-align:right'><span style='font-size:24px;font-weight:800;letter-spacing:4px;color:#fff'>ON<span style=\"color:#7AC800\">L</span>ION <span style=\"color:#7AC800\">IQ</span></span></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px'>Automatisierungs-Analyse</div><h1 style='font-size:40px;font-weight:700;color:#fff;margin-bottom:12px'>"+safe(firma||branche)+"</h1><p style='font-size:14px;color:#888;margin-bottom:40px'>"+safe(branche)+" - "+datum+"</p><div style='display:flex;gap:48px'><div><div style='font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px'>IQ-SCORE</div><div style='font-size:52px;font-weight:700;color:#fff'>"+g+"%</div></div><div><div style='font-size:11px;color:#7AC800;letter-spacing:2px;margin-bottom:6px'>KI-POTENZIAL</div><div style='font-size:52px;font-weight:700;color:#7AC800'>"+p+"%</div></div></div></div><div style='border-top:1px solid #222;padding-top:16px'><p style='font-size:11px;color:#444'>ONLION IQ - onlion-iq.netlify.app</p></div></div><div style='background:#0a0a0a;min-height:100vh;padding:48px;page-break-after:always'><h2 style='font-size:20px;font-weight:600;color:#fff;margin-bottom:24px'>Ergebnisse je Bereich</h2>"+bHTML+"</div><div style='background:#0a0a0a;min-height:100vh;padding:48px'><div style='font-size:13px;color:#888;line-height:1.8'>"+rHTML+"</div><div style='margin-top:40px;padding:24px;background:#081200;border:1px solid rgba(122,200,0,0.3);border-radius:8px;text-align:center'><div style='font-size:14px;font-weight:600;color:#f0f0f0;margin-bottom:12px'>Bereit fuer den naechsten Schritt?</div><a href='https://calendly.com/onlion/30min' style='display:inline-block;background:#7AC800;color:#000;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700'>Kostenloses Beratungsgespraech buchen</a><div style='font-size:11px;color:#888;margin-top:10px'>onlionapp.de</div></div></div></body></html>";
     var w=window.open("","_blank");
     if(w){w.document.write(html);w.document.close();setTimeout(function(){w.print();},800);}
   }
@@ -1758,7 +1757,7 @@ function App(){
           <div style={{fontSize:24,marginBottom:8}}>🎯</div>
           <div style={{fontSize:15,fontWeight:500,color:G,marginBottom:8}}>{t("roboCtaTitle")}</div>
           <p style={{fontSize:13,color:T2,marginBottom:16,lineHeight:1.6}}>{t("roboCtaText")}</p>
-          <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");}} style={{...btnG,marginTop:0}}>{t("roboCtaBtn")}</button>
+          <button onClick={function(){window.open("https://calendly.com/onlion/30min","_blank");}} style={{...btnG,marginTop:0}}>{t("roboCtaBtn")}</button>
         </div>
 
         <div style={{display:"flex",gap:8}}>
@@ -2085,7 +2084,7 @@ function App(){
             <div style={{fontSize:12,color:T2,lineHeight:1.5}}>{t("terminNachTextPre")} <strong style={{color:TX}}>{100-tg}%</strong> {t("terminNachTextPost")}</div>
           </div>
         </div>
-        <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");setStep("pakete");}} style={btnG}>{t("terminBookBtn")}</button>
+        <button onClick={function(){window.open("https://calendly.com/onlion/30min","_blank");setStep("pakete");}} style={btnG}>{t("terminBookBtn")}</button>
         <button onClick={function(){setStep("pakete");}} style={{...btn,marginTop:10,color:G,borderColor:G+"40"}}>{t("terminAngebotBtn")}</button>
       </div>
     );
@@ -2205,7 +2204,7 @@ function App(){
           <h3 style={{fontSize:16,fontWeight:500,marginBottom:6}}>{t("pktCtaTitle")}</h3>
           <p style={{fontSize:13,color:T2,lineHeight:1.6,marginBottom:16}}>{t("pktCtaTextPre")} {pFirma} {t("pktCtaTextPost")}</p>
           <div style={{display:"flex",gap:10}}>
-            <button onClick={function(){window.open("https://calendly.com/ridge-linear5958-eagereverest/30min","_blank");}} style={{flex:2,padding:"12px",borderRadius:10,background:G,border:"none",color:"#000",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontFamily:"inherit"}}>{t("pktCtaBook")}</button>
+            <button onClick={function(){window.open("https://calendly.com/onlion/30min","_blank");}} style={{flex:2,padding:"12px",borderRadius:10,background:G,border:"none",color:"#000",fontSize:14,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,fontFamily:"inherit"}}>{t("pktCtaBook")}</button>
             <button onClick={function(){setStep("foerderung");}} style={{flex:1,padding:"12px",borderRadius:10,background:D3,border:"0.5px solid "+BD,color:T2,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t("pktCtaFoerder")}</button>
           </div>
         </div>
