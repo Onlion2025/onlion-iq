@@ -25,7 +25,7 @@ exports.handler = async (event) => {
 
   const ABSENDER     = "ONLION IQ <info@onlionapp.de>";
   const INTERN_EMAIL = "onlion-@outlook.de";
-  const CALENDLY     = "https://calendly.com/ridge-linear5958-eagereverest/30min";
+  const CALENDLY     = "https://calendly.com/onlion/30min";
   const PDF_URL      = "https://onlionapp.de/onlion-angebotsmappe.pdf";
   const isDE = lang !== "en" && lang !== "pl";
 
